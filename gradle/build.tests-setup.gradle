@@ -1,0 +1,70 @@
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
+plugins.withId("java") {
+  project.sourceSets {
+    // Additional source set for integration tests
+    integrationTest {
+      java {
+        // Adding compile path from main and test source sets
+        compileClasspath += project.sourceSets.main.output + project.sourceSets.test.output
+        // Adding runtime path from main and test source sets
+        runtimeClasspath += project.sourceSets.main.output + project.sourceSets.test.output
+        // Sources directory
+        srcDir file('src/integrationTest/java')
+      }
+      resources {
+        // Resources directory
+        srcDir file('src/integrationTest/resources')
+      }
+    }
+  }
+
+  plugins.withId("idea") {
+    it.ideaModel.module {
+      sourceDirs -= project.sourceSets.integrationTest.java.srcDirs
+      resourceDirs -= project.sourceSets.integrationTest.resources.srcDirs
+      testSourceDirs += project.sourceSets.integrationTest.java.srcDirs
+      testResourceDirs += project.sourceSets.integrationTest.resources.srcDirs
+    }
+  }
+
+  // Adding dependencies from default gradle scopes to new scopes for new source set
+  project.configurations {
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestAnnotationProcessor.extendsFrom testAnnotationProcessor
+  }
+
+  project.tasks.register("integrationTest", Test) {
+    it.group = 'verification'
+    it.description = "Run integration tests (located in src/integrationTest/)."
+
+    it.testClassesDirs = project.sourceSets.integrationTest.output.classesDirs
+    it.classpath = project.sourceSets.integrationTest.runtimeClasspath
+
+    /*
+    If you want to ensure that your integration tests are run every time when you run the integrationTest task,
+    you have to tell Gradle that the outputs of the integrationTest task should always be considered out of date.
+    A Gradle task has a property called outputs, and the type of this property is TaskOutputs.
+    If you want that the outputs of the integrationTest task are always considered out of date,
+    you have to ensure that the upToDateWhen() method of the TaskOutputs interface always returns false.
+
+    outputs.upToDateWhen { false }
+    */
+  }
+
+  // Configure all test tasks
+  project.tasks.withType(Test).configureEach {
+    it.useJUnitPlatform()
+    // Make show result of tests in logs
+    it.testLogging {
+      it.setEvents([TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED])
+    }
+  }
+
+  // Make integrations tests run after unit tests
+  project.tasks.named("check").configure {
+    dependsOn integrationTest
+  }
+}

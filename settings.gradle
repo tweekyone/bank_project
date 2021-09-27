@@ -1,0 +1,4 @@
+rootProject.name = 'bank-project'
+
+include 'bom'
+include 'atm'
