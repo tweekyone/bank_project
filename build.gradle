@@ -1,0 +1,10 @@
+allprojects {
+  apply plugin: 'idea'
+  apply from:  "${project.rootDir.absolutePath}/gradle/build.java-setup.gradle"
+  apply from:  "${project.rootDir.absolutePath}/gradle/build.tests-setup.gradle"
+  apply from:  "${project.rootDir.absolutePath}/gradle/build.checkstyle-setup.gradle"
+}
+
+subprojects {
+
+}

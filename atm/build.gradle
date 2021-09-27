@@ -1,0 +1,26 @@
+plugins {
+  id "java"
+}
+
+group 'com.epam.bank'
+version '0.0.1'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  // Importing BOM
+  implementation(platform(project(":bom")))
+
+  testImplementation "org.junit.jupiter:junit-jupiter-api"
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+}
+
+jar {
+  manifest {
+    attributes(
+      'Main-Class': 'com.epam.bank.atm.App'
+    )
+  }
+}
