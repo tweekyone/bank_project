@@ -1,6 +1,7 @@
 package com.epam.bank.atm.controller;
 
 import com.epam.bank.atm.controller.di.DIContainer;
+import com.epam.bank.atm.controller.session.TokenSessionService;
 import com.epam.bank.atm.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

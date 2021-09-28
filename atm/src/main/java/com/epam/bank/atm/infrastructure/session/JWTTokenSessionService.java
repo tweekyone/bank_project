@@ -1,7 +1,7 @@
 package com.epam.bank.atm.infrastructure.session;
 
 import com.auth0.jwt.JWT;
-import com.epam.bank.atm.controller.TokenSessionService;
+import com.epam.bank.atm.controller.session.TokenSessionService;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
 import java.util.Calendar;
 

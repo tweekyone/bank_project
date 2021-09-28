@@ -1,4 +1,4 @@
-package com.epam.bank.atm.controller;
+package com.epam.bank.atm.controller.session;
 
 import com.epam.bank.atm.domain.model.AuthDescriptor;
 

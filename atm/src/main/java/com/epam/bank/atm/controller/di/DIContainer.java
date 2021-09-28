@@ -1,7 +1,7 @@
 package com.epam.bank.atm.controller.di;
 
 import com.auth0.jwt.algorithms.Algorithm;
-import com.epam.bank.atm.controller.TokenSessionService;
+import com.epam.bank.atm.controller.session.TokenSessionService;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
 import com.epam.bank.atm.infrastructure.session.JWTTokenPolicy;
 import com.epam.bank.atm.infrastructure.session.JWTTokenSessionService;
