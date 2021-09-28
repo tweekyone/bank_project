@@ -15,6 +15,7 @@ dependencies {
   // Importing BOM
   implementation(platform(project(":bom")))
   compileOnly "jakarta.servlet:jakarta.servlet-api"
+  implementation 'com.auth0:java-jwt'
 
   testImplementation "org.junit.jupiter:junit-jupiter-api"
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
