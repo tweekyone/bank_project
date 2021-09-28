@@ -1,5 +1,7 @@
 plugins {
   id "java"
+  id "application"
+  id "war"
 }
 
 group 'com.epam.bank'
@@ -12,15 +14,14 @@ repositories {
 dependencies {
   // Importing BOM
   implementation(platform(project(":bom")))
+  compileOnly "jakarta.servlet:jakarta.servlet-api"
 
   testImplementation "org.junit.jupiter:junit-jupiter-api"
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 }
 
-jar {
-  manifest {
-    attributes(
-      'Main-Class': 'com.epam.bank.atm.App'
-    )
-  }
+mainClassName = 'com.epam.bank.atm.App'
+
+war {
+  archiveName 'atm.war'
 }
