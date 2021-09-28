@@ -3,7 +3,7 @@ version : "3.8"
 services :
 
   tomcat :
-    image : tomcat:10.1
+    image : tomcat:10-jre11
     container_name : tomcat
     environment :
       - JPDA_ADDRESS=*:8100
