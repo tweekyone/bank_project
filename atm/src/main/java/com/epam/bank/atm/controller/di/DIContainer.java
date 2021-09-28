@@ -50,7 +50,7 @@ public class DIContainer {
     private AuthService createAuthService() {
         return new AuthService() {
             @Override
-            public AuthDescriptor login(String login, String password) {
+            public AuthDescriptor login(String cardNumber, String pin) {
                 return new AuthDescriptor();
             }
         };

@@ -13,23 +13,23 @@ public class AuthServlet extends BaseServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        if (!req.getParameterMap().containsKey("login")) {
+        if (!req.getParameterMap().containsKey("cardNumber")) {
             resp.setStatus(400);
-            resp.getWriter().println("Parameter login is required");
+            resp.getWriter().println("Parameter cardNumber is required");
             return;
         }
 
-        if (!req.getParameterMap().containsKey("password")) {
+        if (!req.getParameterMap().containsKey("pin")) {
             resp.setStatus(400);
-            resp.getWriter().println("Parameter password is required");
+            resp.getWriter().println("Parameter pin is required");
             return;
         }
 
-        var login = req.getParameter("login");
-        var password = req.getParameter("password");
+        var cardNumber = req.getParameter("cardNumber");
+        var pin = req.getParameter("pin");
 
         try {
-            var authDescriptor = this.authService.login(login, password);
+            var authDescriptor = this.authService.login(cardNumber, pin);
             var token = this.sessionService.start(authDescriptor);
 
             resp.setStatus(204);
@@ -40,4 +40,3 @@ public class AuthServlet extends BaseServlet {
         }
     }
 }
-

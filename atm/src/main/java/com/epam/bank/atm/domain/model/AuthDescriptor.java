@@ -1,5 +1,5 @@
 package com.epam.bank.atm.domain.model;
 
-// ToDo: fill this value object by user and account after they have been developed
+// ToDo: fill this value object by card after it has been developed
 public class AuthDescriptor {
 }

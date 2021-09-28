@@ -7,7 +7,7 @@ import java.util.Calendar;
 
 public class JWTTokenSessionService implements TokenSessionService {
     private final JWTTokenPolicy jwtTokenPolicy;
-    private ThreadLocal<SessionBag> sessionBag = new ThreadLocal<>();
+    private final ThreadLocal<SessionBag> sessionBag = new ThreadLocal<>();
 
     public JWTTokenSessionService(JWTTokenPolicy jwtTokenPolicy) {
         this.jwtTokenPolicy = jwtTokenPolicy;
@@ -23,7 +23,7 @@ public class JWTTokenSessionService implements TokenSessionService {
         this.sessionBag.get().setAuthDescriptor(this.getAuthDescriptorByToken(token));
     }
 
-    // ToDo: provide account id after account has been developed
+    // ToDo: provide card id after card has been developed
     @Override
     public String start(AuthDescriptor authDescriptor) {
         var calendar = Calendar.getInstance();
@@ -32,7 +32,7 @@ public class JWTTokenSessionService implements TokenSessionService {
         return JWT
             .create()
             .withExpiresAt(calendar.getTime())
-            .withSubject("accountId")
+            .withSubject("cardId")
             .sign(this.jwtTokenPolicy.getAlgorithm());
     }
 
@@ -46,7 +46,7 @@ public class JWTTokenSessionService implements TokenSessionService {
         return authDescriptor;
     }
 
-    // ToDo: implement this method after account and user have been developed
+    // ToDo: implement this method after card has been developed
     private AuthDescriptor getAuthDescriptorByToken(String token) {
         return new AuthDescriptor();
     }
