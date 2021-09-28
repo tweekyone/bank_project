@@ -18,6 +18,7 @@ javaPlatform {
 dependencies {
   constraints {
     api "org.projectlombok:lombok:1.18.20"
+    api 'jakarta.servlet:jakarta.servlet-api:5.0.0'
 
     api "org.junit.jupiter:junit-jupiter-api:5.7.2"
     api "org.junit.jupiter:junit-jupiter-engine:5.7.2"
