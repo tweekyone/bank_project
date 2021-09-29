@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TransactionEntity {
+public class Transaction {
 
     private long id;
     private long sourceAccount;

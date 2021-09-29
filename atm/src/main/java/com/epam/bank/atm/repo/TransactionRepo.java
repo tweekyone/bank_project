@@ -1,34 +1,33 @@
 package com.epam.bank.atm.repo;
 
-import com.epam.bank.atm.entity.TransactionEntity;
+import com.epam.bank.atm.entity.Transaction;
 import java.util.List;
 
-/* CRUD repo
-* Read transaction and transactions
-* Update transaction
-* Delete transaction
-*/
+/* CRUD transactions repo
+ */
 public class TransactionRepo {
 
-    public TransactionRepo(TransactionEntity transactionEntity) {
+    public TransactionRepo(Transaction transaction) {
     }
 
-    public TransactionEntity createTransaction(TransactionEntity transaction) {
-        return null;
-    };
-
-    public TransactionEntity updateTransaction(TransactionEntity transaction) {
+    public Transaction createTransaction(Transaction transaction) {
         return null;
     }
 
-    public void deleteTransaction(long transactionId) {
-    }
 
-    public TransactionEntity findTransaction(long transaction) {
+    public Transaction updateTransaction(Transaction transaction) {
         return null;
     }
 
-    public List<TransactionEntity> findAllTransactions() {
+    public long deleteTransaction(long transactionId) {
+        return transactionId;
+    }
+
+    public Transaction findTransaction(long transaction) {
+        return null;
+    }
+
+    public List<Transaction> findAllTransactions() {
         return null;
     }
 
