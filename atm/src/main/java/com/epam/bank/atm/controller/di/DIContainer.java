@@ -3,8 +3,14 @@ package com.epam.bank.atm.controller.di;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.epam.bank.atm.controller.session.TokenSessionService;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
+import com.epam.bank.atm.entity.Account;
+import com.epam.bank.atm.entity.Card;
+import com.epam.bank.atm.entity.User;
 import com.epam.bank.atm.infrastructure.session.JWTTokenPolicy;
 import com.epam.bank.atm.infrastructure.session.JWTTokenSessionService;
+import com.epam.bank.atm.repository.AccountRepository;
+import com.epam.bank.atm.repository.CardRepository;
+import com.epam.bank.atm.repository.UserRepository;
 import com.epam.bank.atm.service.AuthService;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
@@ -32,6 +38,12 @@ public class DIContainer {
         this.prototypes.putIfAbsent(AuthService.class, this::createAuthService);
         this.singletons.putIfAbsent(TokenSessionService.class, this.createTokenSessionService());
         this.prototypes.putIfAbsent(TokenSessionService.class, this::createTokenSessionService);
+        this.singletons.putIfAbsent(UserRepository.class, this.createUserRepository());
+        this.prototypes.putIfAbsent(UserRepository.class, this::createUserRepository);
+        this.singletons.putIfAbsent(AccountRepository.class, this.createAccountRepository());
+        this.prototypes.putIfAbsent(AccountRepository.class, this::createAccountRepository);
+        this.singletons.putIfAbsent(CardRepository.class, this.createCardRepository());
+        this.prototypes.putIfAbsent(CardRepository.class, this::createCardRepository);
     }
 
     public <U extends T, T> U getSingleton(Class<T> aClass) {
@@ -40,33 +52,72 @@ public class DIContainer {
         });
     }
 
+    private <U extends T, T> U getSingleton(Class<T> aClass, Supplier<U> supplier) {
+        return (U) singletons.computeIfAbsent(aClass, k -> supplier.get());
+    }
+
     public <U extends T, T> U getPrototype(Class<T> aClass) {
         return (U) prototypes.computeIfAbsent(aClass, k -> {
             throw new RuntimeException("Service is not configured");
         }).get();
     }
 
-    // ToDo: implement service interface after repository and entities have created
+    private <U extends T, T> U getPrototype(Class<T> aClass, Supplier<U> supplier) {
+        return (U) prototypes.computeIfAbsent(aClass, k -> supplier).get();
+    }
+
     private AuthService createAuthService() {
         return new AuthService() {
             @Override
             public AuthDescriptor login(String cardNumber, String pin) {
-                return new AuthDescriptor();
+                return new AuthDescriptor(new User(1L), new Account(1L, 1L), new Card(1L, 1L));
+            }
+        };
+    }
+
+    private UserRepository createUserRepository() {
+        return new UserRepository() {
+            @Override
+            public User getById(long id) {
+                return new User(1L);
+            }
+        };
+    }
+
+    private AccountRepository createAccountRepository() {
+        return new AccountRepository() {
+            @Override
+            public Account getById(long id) {
+                return new Account(1L, 1L);
+            }
+        };
+    }
+
+    private CardRepository createCardRepository() {
+        return new CardRepository() {
+            @Override
+            public Card getById(long id) {
+                return new Card(1L, 1L);
             }
         };
     }
 
     private TokenSessionService createTokenSessionService() {
-        return new JWTTokenSessionService(new JWTTokenPolicy() {
-            @Override
-            public int getExpirationPeriod() {
-                return 86400;
-            }
+        return new JWTTokenSessionService(
+            new JWTTokenPolicy() {
+                @Override
+                public int getExpirationPeriod() {
+                    return 86400;
+                }
 
-            @Override
-            public Algorithm getAlgorithm() {
-                return Algorithm.HMAC512("secret");
-            }
-        });
+                @Override
+                public Algorithm getAlgorithm() {
+                    return Algorithm.HMAC512("secret");
+                }
+            },
+            this.getSingleton(UserRepository.class, this::createUserRepository),
+            this.getSingleton(AccountRepository.class, this::createAccountRepository),
+            this.getSingleton(CardRepository.class, this::createCardRepository)
+        );
     }
 }
