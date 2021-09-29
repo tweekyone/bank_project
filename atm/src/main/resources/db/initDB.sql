@@ -76,5 +76,5 @@ CREATE TABLE transaction
     FOREIGN KEY (source_account_id) REFERENCES account (id) ON DELETE CASCADE,
     FOREIGN KEY (destination_account_id) REFERENCES account (id) ON DELETE CASCADE
 );
-CREATE UNIQUE INDEX transaction_unique_acc_source_idx ON transaction (source_account_id) WHERE source_account_id IS NOT NULL;
-CREATE UNIQUE INDEX transaction_unique_acc_dest_idx ON transaction (destination_account_id) WHERE destination_account_id IS NOT NULL;
+CREATE INDEX transaction_unique_acc_source_idx ON transaction (source_account_id) WHERE source_account_id IS NOT NULL;
+CREATE INDEX transaction_unique_acc_dest_idx ON transaction (destination_account_id) WHERE destination_account_id IS NOT NULL;
