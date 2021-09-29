@@ -1,6 +1,7 @@
 package com.epam.bank.atm.controller.di;
 
 import com.auth0.jwt.algorithms.Algorithm;
+import com.epam.bank.atm.controller.session.TokenService;
 import com.epam.bank.atm.controller.session.TokenSessionService;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
 import com.epam.bank.atm.entity.Account;
@@ -44,6 +45,11 @@ public class DIContainer {
         this.prototypes.putIfAbsent(AccountRepository.class, this::createAccountRepository);
         this.singletons.putIfAbsent(CardRepository.class, this.createCardRepository());
         this.prototypes.putIfAbsent(CardRepository.class, this::createCardRepository);
+        this.singletons.putIfAbsent(
+            TokenService.class,
+            this.getSingleton(TokenSessionService.class, this::createTokenSessionService)
+        );
+        this.prototypes.putIfAbsent(TokenService.class, this::createTokenSessionService);
     }
 
     public <U extends T, T> U getSingleton(Class<T> aClass) {

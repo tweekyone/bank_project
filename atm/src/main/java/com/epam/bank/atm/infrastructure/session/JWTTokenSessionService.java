@@ -1,16 +1,18 @@
 package com.epam.bank.atm.infrastructure.session;
 
 import com.auth0.jwt.JWT;
+import com.epam.bank.atm.controller.session.TokenService;
 import com.epam.bank.atm.controller.session.TokenSessionService;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
 import com.epam.bank.atm.repository.AccountRepository;
 import com.epam.bank.atm.repository.CardRepository;
 import com.epam.bank.atm.repository.UserRepository;
 import java.util.Calendar;
+import java.util.Date;
 
-public class JWTTokenSessionService implements TokenSessionService {
+public class JWTTokenSessionService implements TokenSessionService, TokenService {
     private final JWTTokenPolicy jwtTokenPolicy;
-    private final ThreadLocal<SessionBag> sessionBag = new ThreadLocal<>();
+    private final ThreadLocal<SessionBag> sessionBag = ThreadLocal.withInitial(SessionBag::new);
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
     private final CardRepository cardRepository;
@@ -90,6 +92,21 @@ public class JWTTokenSessionService implements TokenSessionService {
         }
 
         return new AuthDescriptor(user, account, card);
+    }
+
+    @Override
+    public boolean isExpired(String token) {
+        if (token == null) {
+            throw new RuntimeException("Token is malformed");
+        }
+
+        var expiresAt = JWT.decode(token).getExpiresAt();
+
+        if (expiresAt == null) {
+            throw new RuntimeException("Token is malformed");
+        }
+
+        return expiresAt.before(new Date());
     }
 
     class SessionBag {

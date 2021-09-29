@@ -26,4 +26,14 @@
     <url-pattern>/login</url-pattern>
   </servlet-mapping>
 
+  <filter>
+    <filter-name>AuthMiddleware</filter-name>
+    <filter-class>com.epam.bank.atm.controller.middleware.AuthMiddleware</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>AuthMiddleware</filter-name>
+    <url-pattern>/test</url-pattern>
+  </filter-mapping>
+
 </web-app>
