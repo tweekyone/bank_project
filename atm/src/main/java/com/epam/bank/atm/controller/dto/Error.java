@@ -14,18 +14,18 @@ public class Error {
     }
 
     public String getType() {
-        return type;
+        return this.type;
     }
 
     public short getStatus() {
-        return status;
+        return this.status;
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public String getDetail() {
-        return detail;
+        return this.detail;
     }
 }

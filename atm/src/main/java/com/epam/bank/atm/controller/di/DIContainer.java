@@ -47,23 +47,23 @@ public class DIContainer {
     }
 
     public <U extends T, T> U getSingleton(Class<T> aClass) {
-        return (U) singletons.computeIfAbsent(aClass, k -> {
+        return (U) this.singletons.computeIfAbsent(aClass, k -> {
             throw new RuntimeException("Service is not configured");
         });
     }
 
     private <U extends T, T> U getSingleton(Class<T> aClass, Supplier<U> supplier) {
-        return (U) singletons.computeIfAbsent(aClass, k -> supplier.get());
+        return (U) this.singletons.computeIfAbsent(aClass, k -> supplier.get());
     }
 
     public <U extends T, T> U getPrototype(Class<T> aClass) {
-        return (U) prototypes.computeIfAbsent(aClass, k -> {
+        return (U) this.prototypes.computeIfAbsent(aClass, k -> {
             throw new RuntimeException("Service is not configured");
         }).get();
     }
 
     private <U extends T, T> U getPrototype(Class<T> aClass, Supplier<U> supplier) {
-        return (U) prototypes.computeIfAbsent(aClass, k -> supplier).get();
+        return (U) this.prototypes.computeIfAbsent(aClass, k -> supplier).get();
     }
 
     private AuthService createAuthService() {
