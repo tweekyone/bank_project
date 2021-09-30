@@ -16,8 +16,13 @@ dependencies {
   implementation(platform(project(":bom")))
   compileOnly "jakarta.servlet:jakarta.servlet-api"
 
+  compileOnly 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+  implementation 'com.google.code.gson:gson:2.8.8'
+
   testImplementation "org.junit.jupiter:junit-jupiter-api"
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+  //compileOnly 'javax.servlet:servlet-api:2.5'
+
 }
 
 mainClassName = 'com.epam.bank.atm.App'
