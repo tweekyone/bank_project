@@ -10,3 +10,6 @@ target/
 *.iws
 *.iml
 *.ipr
+
+# Docker data
+db-data/
