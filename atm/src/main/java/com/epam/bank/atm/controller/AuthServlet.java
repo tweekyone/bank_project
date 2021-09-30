@@ -12,8 +12,18 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class AuthServlet extends BaseServlet {
-    private final AuthService authService = DIContainer.instance().getSingleton(AuthService.class);
-    private final TokenSessionService sessionService = DIContainer.instance().getSingleton(TokenSessionService.class);
+    private final AuthService authService;
+    private final TokenSessionService sessionService;
+
+    public AuthServlet() {
+        this.authService = DIContainer.instance().getSingleton(AuthService.class);
+        this.sessionService = DIContainer.instance().getSingleton(TokenSessionService.class);
+    }
+
+    public AuthServlet(AuthService authService, TokenSessionService sessionService) {
+        this.authService = authService;
+        this.sessionService = sessionService;
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
