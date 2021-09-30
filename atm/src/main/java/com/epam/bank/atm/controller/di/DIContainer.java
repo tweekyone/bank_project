@@ -3,6 +3,7 @@ package com.epam.bank.atm.controller.di;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.epam.bank.atm.controller.session.TokenService;
 import com.epam.bank.atm.controller.session.TokenSessionService;
+import com.epam.bank.atm.domain.model.AuthDescriptor;
 import com.epam.bank.atm.entity.Account;
 import com.epam.bank.atm.entity.Card;
 import com.epam.bank.atm.entity.User;
@@ -12,7 +13,6 @@ import com.epam.bank.atm.repository.AccountRepository;
 import com.epam.bank.atm.repository.CardRepository;
 import com.epam.bank.atm.repository.UserRepository;
 import com.epam.bank.atm.service.AuthService;
-import com.epam.bank.atm.service.AuthServiceImpl;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
@@ -73,11 +73,12 @@ public class DIContainer {
     }
 
     private AuthService createAuthService() {
-        return new AuthServiceImpl(
-            this.getSingleton(UserRepository.class, this::createUserRepository),
-            this.getSingleton(AccountRepository.class, this::createAccountRepository),
-            this.getSingleton(CardRepository.class, this::createCardRepository)
-        );
+        return new AuthService() {
+            @Override
+            public AuthDescriptor login(String cardNumber, String pin) {
+                return new AuthDescriptor(new User(1L), new Account(1L, 1L), new Card(1L, "123456", 1L, "1234"));
+            }
+        };
     }
 
     private UserRepository createUserRepository() {
