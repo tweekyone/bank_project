@@ -1,7 +1,6 @@
 package com.epam.bank.atm.controller;
 
 import com.epam.bank.atm.controller.di.DIContainer;
-import com.epam.bank.atm.controller.dto.response.ErrorResponse;
 import com.epam.bank.atm.controller.dto.request.LoginRequest;
 import com.epam.bank.atm.controller.session.TokenSessionService;
 import com.epam.bank.atm.service.AuthService;
@@ -16,32 +15,15 @@ public class AuthServlet extends BaseServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.setContentType("text/json");
-        resp.setCharacterEncoding("UTF-8");
-
         var loginRequest = new Gson().fromJson(req.getReader(), LoginRequest.class);
 
         if (loginRequest.getCardNumber() == null || loginRequest.getCardNumber().isBlank()) {
-            var error = new ErrorResponse(
-                "card_number_is_empty",
-                (short) 400,
-                "Card number is empty",
-                "Card number is empty"
-            );
-            resp.setStatus(400);
-            resp.getWriter().write(new Gson().toJson(error));
+            this.sendError(resp, "card_number_is_empty", (short) 400, "Number is empty", "Number is empty");
             return;
         }
 
         if (loginRequest.getPin() == null || loginRequest.getPin().isBlank()) {
-            var error = new ErrorResponse(
-                "card_pin_is_empty",
-                (short) 400,
-                "Card pin is empty",
-                "Card pin is empty"
-            );
-            resp.setStatus(400);
-            resp.getWriter().write(new Gson().toJson(error));
+            this.sendError(resp, "card_pin_is_empty", (short) 400, "Pin is empty", "Pin is empty");
             return;
         }
 
@@ -49,17 +31,12 @@ public class AuthServlet extends BaseServlet {
             var authDescriptor = this.authService.login(loginRequest.getCardNumber(), loginRequest.getPin());
             var token = this.sessionService.start(authDescriptor);
 
+            resp.setContentType("text/json");
+            resp.setCharacterEncoding("UTF-8");
             resp.setStatus(204);
             resp.setHeader("Authorization", String.format("Bearer %s", token));
         } catch (RuntimeException e) {
-            var error = new ErrorResponse(
-                "unauthorized",
-                (short) 401,
-                "Unauthorized",
-                "Card number or password is incorrect"
-            );
-            resp.setStatus(401);
-            resp.getWriter().write(new Gson().toJson(error));
+            this.sendError(resp, "unauthorized", (short) 401, "Unauthorized", "Number or pin is incorrect");
         }
     }
 }
