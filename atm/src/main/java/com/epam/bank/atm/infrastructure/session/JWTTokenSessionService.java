@@ -1,6 +1,8 @@
 package com.epam.bank.atm.infrastructure.session;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.epam.bank.atm.controller.session.TokenService;
 import com.epam.bank.atm.controller.session.TokenSessionService;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
@@ -35,8 +37,13 @@ public class JWTTokenSessionService implements TokenSessionService, TokenService
             return;
         }
 
+        var authDescriptor = this.getAuthDescriptorByToken(token);
+        if (authDescriptor == null) {
+            return;
+        }
+
         this.sessionBag.get().setToken(token);
-        this.sessionBag.get().setAuthDescriptor(this.getAuthDescriptorByToken(token));
+        this.sessionBag.get().setAuthDescriptor(authDescriptor);
     }
 
     @Override
@@ -53,42 +60,44 @@ public class JWTTokenSessionService implements TokenSessionService, TokenService
 
     @Override
     public AuthDescriptor curSession() {
-        var authDescriptor = this.sessionBag.get().getAuthDescriptor();
-        if (authDescriptor == null) {
-            throw new RuntimeException("Session is empty");
-        }
-
-        return authDescriptor;
+        return this.sessionBag.get().getAuthDescriptor();
     }
 
     private AuthDescriptor getAuthDescriptorByToken(String token) {
         if (token == null) {
-            throw new RuntimeException("Token is malformed");
+            return null;
         }
 
-        var subject = JWT.decode(token).getSubject();
+        DecodedJWT decodedJWT;
+        try {
+            decodedJWT = JWT.decode(token);
+        } catch (JWTDecodeException e) {
+            return null;
+        }
+
+        var subject = decodedJWT.getSubject();
 
         if (subject == null) {
-            throw new RuntimeException("Token is malformed");
+            return null;
         }
 
         var cardId = Integer.parseInt(subject);
         var card = this.cardRepository.getById(cardId);
 
         if (card == null) {
-            throw new RuntimeException("Token is malformed");
+            return null;
         }
 
         var account = this.accountRepository.getById(card.getAccountId());
 
         if (account == null) {
-            throw new RuntimeException("Token is malformed");
+            return null;
         }
 
         var user = this.userRepository.getById(account.getUserId());
 
         if (user == null) {
-            throw new RuntimeException("Token is malformed");
+            return null;
         }
 
         return new AuthDescriptor(user, account, card);

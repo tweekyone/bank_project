@@ -23,9 +23,9 @@ import static org.mockito.Mockito.*;
 public class AuthServletTest extends BaseServletTest {
     @Test
     void shouldLoginIfCardNumberAndPinAreCorrect() throws IOException {
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        HttpServletResponse response = mock(HttpServletResponse.class);
-        AuthService authService = mock(AuthService.class);
+        var request = mock(HttpServletRequest.class);
+        var response = mock(HttpServletResponse.class);
+        var authService = mock(AuthService.class);
 
         var cardNumber = "234567";
         var pin = "2345";
@@ -46,8 +46,8 @@ public class AuthServletTest extends BaseServletTest {
 
     @Test
     void shouldHandleErrorIfJsonBodyIsInvalid() throws IOException {
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        HttpServletResponse response = mock(HttpServletResponse.class);
+        var request = mock(HttpServletRequest.class);
+        var response = mock(HttpServletResponse.class);
 
         var jsonBody = "{asdas";
         var stringWriter = new StringWriter();
@@ -66,8 +66,8 @@ public class AuthServletTest extends BaseServletTest {
 
     @Test
     void shouldHandleErrorIfCardNumberIsEmpty() throws IOException {
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        HttpServletResponse response = mock(HttpServletResponse.class);
+        var request = mock(HttpServletRequest.class);
+        var response = mock(HttpServletResponse.class);
 
         var pin = "2345";
         var jsonBody = String.format("{\"pin\": \"%s\"}", pin);
@@ -93,8 +93,8 @@ public class AuthServletTest extends BaseServletTest {
 
     @Test
     void shouldHandleErrorIfPinNumberIsEmpty() throws IOException {
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        HttpServletResponse response = mock(HttpServletResponse.class);
+        var request = mock(HttpServletRequest.class);
+        var response = mock(HttpServletResponse.class);
 
         var cardNumber = "234567";
         var jsonBody = String.format("{\"cardNumber\": \"%s\"}", cardNumber);
