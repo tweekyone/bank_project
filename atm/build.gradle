@@ -17,10 +17,10 @@ dependencies {
   compileOnly "jakarta.servlet:jakarta.servlet-api"
   implementation 'com.auth0:java-jwt'
   implementation 'com.google.code.gson:gson'
+  implementation 'com.google.code.gson:gson:2.8.8'
 
   testImplementation "org.junit.jupiter:junit-jupiter-api"
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
-  testImplementation "jakarta.servlet:jakarta.servlet-api"
   testImplementation 'org.mockito:mockito-core'
 }
 
