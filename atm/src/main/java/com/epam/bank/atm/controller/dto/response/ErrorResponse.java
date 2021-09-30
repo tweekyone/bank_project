@@ -1,12 +1,12 @@
-package com.epam.bank.atm.controller.dto;
+package com.epam.bank.atm.controller.dto.response;
 
-public class Error {
+public class ErrorResponse {
     private final String type;
     private final short status;
     private final String title;
     private final String detail;
 
-    public Error(String type, short status, String title, String detail) {
+    public ErrorResponse(String type, short status, String title, String detail) {
         this.type = type;
         this.status = status;
         this.title = title;

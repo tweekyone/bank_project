@@ -1,7 +1,7 @@
 package com.epam.bank.atm.controller.middleware;
 
 import com.epam.bank.atm.controller.di.DIContainer;
-import com.epam.bank.atm.controller.dto.Error;
+import com.epam.bank.atm.controller.dto.response.ErrorResponse;
 import com.epam.bank.atm.controller.session.TokenService;
 import com.epam.bank.atm.controller.session.TokenSessionService;
 import com.google.gson.Gson;
@@ -27,7 +27,7 @@ public class AuthMiddleware implements Filter {
         var token = req.getHeader("Authorization");
 
         if (token == null || !token.startsWith("Bearer") || token.replace("Bearer ", "").isBlank()) {
-            var error = new Error("token_is_empty", (short) 401, "Unauthorized", "Token is empty");
+            var error = new ErrorResponse("token_is_empty", (short) 401, "Unauthorized", "Token is empty");
             resp.setStatus(401);
             resp.setContentType("text/json");
             resp.setCharacterEncoding("UTF-8");
@@ -38,7 +38,7 @@ public class AuthMiddleware implements Filter {
         token = token.replace("Bearer ", "");
 
         if (this.tokenService.isExpired(token)) {
-            var error = new Error("token_is_expired", (short) 401, "Unauthorized", "Token is expired");
+            var error = new ErrorResponse("token_is_expired", (short) 401, "Unauthorized", "Token is expired");
             resp.setStatus(401);
             resp.setContentType("text/json");
             resp.setCharacterEncoding("UTF-8");
