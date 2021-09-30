@@ -20,6 +20,8 @@ dependencies {
 
   testImplementation "org.junit.jupiter:junit-jupiter-api"
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+  testImplementation "jakarta.servlet:jakarta.servlet-api"
+  testImplementation 'org.mockito:mockito-core'
 }
 
 mainClassName = 'com.epam.bank.atm.App'
