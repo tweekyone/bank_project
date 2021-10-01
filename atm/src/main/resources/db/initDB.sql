@@ -73,6 +73,7 @@ CREATE TABLE transaction
     source_account_id      BIGINT,
     destination_account_id BIGINT,
     amount                 NUMERIC(13, 2) DEFAULT 0.00 NOT NULL,
+    operation_type         VARCHAR(20)                 NOT NULL,
     date_time              TIMESTAMP                   NOT NULL,
     state                  VARCHAR(20)                 NOT NULL,
     PRIMARY KEY (id),
