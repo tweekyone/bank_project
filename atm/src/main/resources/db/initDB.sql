@@ -70,8 +70,8 @@ CREATE UNIQUE INDEX cards_unique_number_idx ON card (account_id, number);
 CREATE TABLE transaction
 (
     id                     BIGINT GENERATED ALWAYS AS IDENTITY,
-    source_account_id      NUMERIC(20, 0),
-    destination_account_id NUMERIC(20, 0),
+    source_account_id      BIGINT,
+    destination_account_id BIGINT,
     amount                 NUMERIC(13, 2) DEFAULT 0.00 NOT NULL,
     date_time              TIMESTAMP                   NOT NULL,
     state                  VARCHAR(20)                 NOT NULL,
