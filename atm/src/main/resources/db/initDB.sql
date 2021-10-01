@@ -18,7 +18,8 @@ CREATE TABLE "user"
     email        VARCHAR     NOT NULL,
     password     VARCHAR     NOT NULL,
     phone_number VARCHAR(16) NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    CONSTRAINT user_constraint UNIQUE (email)
 );
 CREATE UNIQUE INDEX users_unique_email_idx ON "user" (email);
 
@@ -40,15 +41,17 @@ CREATE TABLE user_role
 
 CREATE TABLE account
 (
-    id         NUMERIC(20, 0)              NOT NULL,
+    id         BIGINT GENERATED ALWAYS AS IDENTITY,
+    number     NUMERIC(20, 0)              NOT NULL,
     is_default BOOL           DEFAULT TRUE NOT NULL,
     plan       VARCHAR                     NOT NULL,
     amount     NUMERIC(13, 2) DEFAULT 0.00 NOT NULL,
     user_id    BIGINT                      NOT NULL,
     PRIMARY KEY (id),
+    CONSTRAINT account_constraint UNIQUE (number),
     FOREIGN KEY (user_id) REFERENCES "user" (id) ON DELETE CASCADE
 );
-CREATE UNIQUE INDEX accounts_unique_number_idx ON account (user_id, id);
+CREATE UNIQUE INDEX accounts_unique_number_idx ON account (user_id, number);
 
 CREATE TABLE card
 (
