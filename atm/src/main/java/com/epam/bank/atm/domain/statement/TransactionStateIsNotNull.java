@@ -1,11 +1,9 @@
 package com.epam.bank.atm.domain.statement;
 
-import com.epam.bank.atm.domain.statement.DomainException;
-import com.epam.bank.atm.domain.statement.Statement;
 import com.epam.bank.atm.entity.Transaction;
 
 public class TransactionStateIsNotNull extends Statement {
-    private Transaction.State state;
+    private final Transaction.State state;
 
     public TransactionStateIsNotNull(Transaction.State state) {
         this.state = state;

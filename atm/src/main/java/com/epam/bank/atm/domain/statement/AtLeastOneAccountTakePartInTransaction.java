@@ -1,11 +1,8 @@
 package com.epam.bank.atm.domain.statement;
 
-import com.epam.bank.atm.domain.statement.DomainException;
-import com.epam.bank.atm.domain.statement.Statement;
-
 public class AtLeastOneAccountTakePartInTransaction extends Statement {
-    private Long sourceAccountId;
-    private Long destinationAccountId;
+    private final Long sourceAccountId;
+    private final Long destinationAccountId;
 
     public AtLeastOneAccountTakePartInTransaction(Long sourceAccountId, Long destinationAccountId) {
         this.sourceAccountId = sourceAccountId;

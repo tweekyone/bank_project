@@ -1,13 +1,11 @@
 package com.epam.bank.atm.domain.statement;
 
-import com.epam.bank.atm.domain.statement.DomainException;
-import com.epam.bank.atm.domain.statement.Statement;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class TransactionDateTimeIsNotNull extends Statement {
-    private Date dateTime;
+    private final LocalDateTime dateTime;
 
-    public TransactionDateTimeIsNotNull(Date dateTime) {
+    public TransactionDateTimeIsNotNull(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
 
