@@ -3,9 +3,9 @@ package com.epam.bank.atm.infrastructure.persistence;
 import com.epam.bank.atm.entity.Transaction;
 import com.epam.bank.atm.repository.TransactionRepository;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +27,7 @@ public final class JDBCTransactionRepository implements TransactionRepository {
             statement.setLong(1, transaction.getSourceAccountId());
             statement.setLong(2, transaction.getDestinationAccountId());
             statement.setLong(3, transaction.getAmount());
-            statement.setDate(4, new Date(transaction.getDateTime().getTime()));
+            statement.setTimestamp(4, Timestamp.valueOf(transaction.getDateTime()));
             statement.setString(5, transaction.getOperationType().toString());
             statement.setString(6, transaction.getState().toString());
 
@@ -76,7 +76,7 @@ public final class JDBCTransactionRepository implements TransactionRepository {
             resultSet.getLong("source_account_id"),
             resultSet.getLong("destination_account_id"),
             resultSet.getLong("amount"),
-            new java.util.Date(resultSet.getDate("date_time").getTime()),
+            resultSet.getTimestamp("date_time").toLocalDateTime(),
             Transaction.OperationType.valueOf(resultSet.getString("operation_type")),
             Transaction.State.valueOf(resultSet.getString("operation_type"))
         );

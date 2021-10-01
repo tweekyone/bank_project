@@ -5,28 +5,30 @@ import com.epam.bank.atm.domain.statement.AtLeastOneAccountTakePartInTransaction
 import com.epam.bank.atm.domain.statement.TransactionDateTimeIsNotNull;
 import com.epam.bank.atm.domain.statement.TransactionOperationTypeIsNotNull;
 import com.epam.bank.atm.domain.statement.TransactionStateIsNotNull;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public final class Transaction {
     private Long id;
     private final Long sourceAccountId;
     private final Long destinationAccountId;
     private final long amount;
-    private final Date dateTime;
+    private final LocalDateTime dateTime;
     private final OperationType operationType;
     private final State state;
 
     public enum OperationType {
+        VALUE
     }
 
     public enum State {
+        VALUE
     }
 
     public Transaction(
         Long sourceAccountId,
         Long destinationAccountId,
         long amount,
-        Date dateTime,
+        LocalDateTime dateTime,
         OperationType operationType,
         State state
     ) {
@@ -49,7 +51,7 @@ public final class Transaction {
         long sourceAccountId,
         long destinationAccountId,
         long amount,
-        Date dateTime,
+        LocalDateTime dateTime,
         OperationType operationType,
         State state
     ) {
@@ -73,7 +75,7 @@ public final class Transaction {
         return amount;
     }
 
-    public Date getDateTime() {
+    public LocalDateTime getDateTime() {
         return dateTime;
     }
 
