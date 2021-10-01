@@ -7,8 +7,8 @@ import com.epam.bank.atm.domain.statement.TransactionOperationTypeIsNotNull;
 import com.epam.bank.atm.domain.statement.TransactionStateIsNotNull;
 import java.util.Date;
 
-public class Transaction {
-    private long id;
+public final class Transaction {
+    private Long id;
     private final Long sourceAccountId;
     private final Long destinationAccountId;
     private final long amount;
@@ -57,7 +57,7 @@ public class Transaction {
         this.id = id;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
