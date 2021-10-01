@@ -1,53 +1,48 @@
 package com.epam.bank.atm.service;
 
-import java.math.BigInteger;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class AccountServiceTest {
 
-    private double currentAmount = 5678.58;
-    private double positiveAmount = 578.58;
-    private double negativeAmount = -578.58;
-    private double zeroAmount = 0.00;
-    private BigInteger correctId = new BigInteger("40817810099910004312");
-    private BigInteger notCorrectId = new BigInteger("40817910004312");
+    private final double currentAmount = 5678.58;
+    private final double positiveAmount = 578.58;
+    private final double negativeAmount = -578.58;
+    private final double zeroAmount = 0.00;
+    private final long accountId = 40817810;
 
-    private AccountService service = new AccountService(new AccountRepository());
+    private final AccountService service = new AccountService(new AccountRepository());
 
     public AccountServiceTest() {
     }
 
     @Test
     void putMoney() {
-        Assertions.assertEquals(currentAmount + positiveAmount, service.putMoney(correctId, positiveAmount));
+        Assertions.assertEquals(currentAmount + positiveAmount, service.putMoney(accountId, positiveAmount));
     }
 
     @Test
     void putMoneyZero() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> service.putMoney(correctId, zeroAmount));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> service.putMoney(accountId, zeroAmount));
     }
 
     @Test
-    void putMoneyIncorrectIdAndAmount() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> service.putMoney(correctId, negativeAmount));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> service.putMoney(notCorrectId, positiveAmount));
+    void putMoneyIncorrectAmount() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> service.putMoney(accountId, negativeAmount));
     }
 
     @Test
     void withdrawMoney() {
-        Assertions.assertEquals(currentAmount - positiveAmount, service.withdrawMoney(correctId, positiveAmount));
+        Assertions.assertEquals(currentAmount - positiveAmount, service.withdrawMoney(accountId, positiveAmount));
     }
 
     @Test
-    void withdrawMoneyIncorrectIdAndAmount() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> service.withdrawMoney(correctId, negativeAmount));
-        Assertions.assertThrows(IllegalArgumentException.class,
-            () -> service.withdrawMoney(notCorrectId, positiveAmount));
+    void withdrawMoneyIncorrectAmount() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> service.withdrawMoney(accountId, negativeAmount));
     }
 
     @Test
     void withdrawMoneyMoneyZero() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> service.withdrawMoney(correctId, zeroAmount));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> service.withdrawMoney(accountId, zeroAmount));
     }
 }
