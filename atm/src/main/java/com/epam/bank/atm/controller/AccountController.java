@@ -1,63 +1,64 @@
 package com.epam.bank.atm.controller;
 
+import com.epam.bank.atm.service.AccountService;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import com.epam.bank.atm.services.AccountServiceImpl;
 import jakarta.servlet.annotation.WebServlet;
 
 @WebServlet("/withdraw")
 public class AccountController extends HttpServlet {
 
+    private final AccountService accountService;
+
+    public AccountController(AccountService accountService) {
+        this.accountService = accountService;
+    }
+
     @Override
     public void doPut(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+        throws  IOException {
 
-        Long accountId = 10L;
+        Long accountId;
         Double amount = null;
 
-        response.setContentType("application/json");
+        response.setContentType("text/json");
         response.setCharacterEncoding("utf-8");
 
         try {
-            JsonElement bodyJson = JsonParser.parseReader(new JsonReader(request.getReader()));
-            if (bodyJson.isJsonObject()) {
-                 //accountId = bodyJson.getAsJsonObject().get("accountId").getAsLong();
-                amount = bodyJson.getAsJsonObject().get("amount").getAsDouble();
+            JsonElement jsonBody = JsonParser.parseReader(new JsonReader(request.getReader()));
+            if (jsonBody.isJsonObject()) {
+                accountId = jsonBody.getAsJsonObject().get("accountId").getAsLong();
+                amount = jsonBody.getAsJsonObject().get("amount").getAsDouble();
             } else {
-                response.sendError(400, "Wrong JsonObject");
+                response.sendError(400, "InValid JsonObject");
                 return;
             }
 
-            if (amount < 0) {
-                response.sendError(400, "Wrong amount");
-                return;
-            }
-            AccountServiceImpl accountService = new AccountServiceImpl();
             accountService.withdraw(accountId, amount);
 
-            response.setStatus(204);
+            response.setStatus(200);
             PrintWriter writeResp = response.getWriter();
-            JsonObject json = new JsonObject();
-            json.addProperty("amount", amount);
-            writeResp.print(json);
-        } catch (UnsupportedEncodingException | IllegalStateException e) {
-            response.sendError(400,  e.getMessage());
-        } catch (JsonParseException e) {
-            response.sendError(400,  e.getMessage());
+            JsonObject jsonResp = new JsonObject();
+            jsonResp.addProperty("amount", amount);
+            writeResp.print(jsonResp);
+            writeResp.flush();
+        } catch (UnsupportedEncodingException |
+                 JsonParseException |
+                 IllegalStateException |
+                 NumberFormatException |
+                 NullPointerException e) {
+            response.sendError(400,  "Bad request");
         } catch (Exception e) {
-            response.sendError(500, e.getMessage());
+            response.sendError(500, "Error service");
         }
     }
 }
