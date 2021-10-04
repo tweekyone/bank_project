@@ -14,3 +14,13 @@ services :
     ports :
       - 8080:8080
       - 8100:8100
+
+  database :
+    image : postgres
+    container_name: postgres
+    restart : always
+    volumes :
+      - ../atm/src/main/resources/db/initDB.sql:/docker-entrypoint-initdb.d/initDB.sql:ro
+      - ../db-data:/var/lib/postgresql/data
+    environment :
+      POSTGRES_PASSWORD : 123qwe
