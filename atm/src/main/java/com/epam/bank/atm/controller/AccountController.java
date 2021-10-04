@@ -1,11 +1,13 @@
 package com.epam.bank.atm.controller;
 
 import com.epam.bank.atm.service.AccountService;
+import com.epam.bank.atm.service.AccountServiceImpl;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,6 +21,9 @@ public class AccountController extends HttpServlet {
 
     private final AccountService accountService;
 
+    public AccountController() {
+        accountService = new AccountServiceImpl();
+    }
     public AccountController(AccountService accountService) {
         this.accountService = accountService;
     }
@@ -28,7 +33,7 @@ public class AccountController extends HttpServlet {
         throws  IOException {
 
         Long accountId;
-        Double amount = null;
+        Double amount;
 
         response.setContentType("text/json");
         response.setCharacterEncoding("utf-8");
