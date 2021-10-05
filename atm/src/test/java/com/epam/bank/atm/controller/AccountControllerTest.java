@@ -33,8 +33,8 @@ public class AccountControllerTest {
     @Test
     public void shouldWithdrawMoneyIfAmountIsCorrect() throws Exception
     {
-        Double amount = 500.0;
-        Long accountId = 10L;
+        double amount = 500.0;
+        long accountId = 10L;
         var jsonBody = String.format("{\"amount\":%s}", amount);
 
         when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
@@ -56,8 +56,8 @@ public class AccountControllerTest {
     @Test
     public void shouldThrowExceptionIfAmountGreaterThanAccount() throws Exception
     {
-        Double amount = 5000.0;
-        Long accountId = 10L;
+        double amount = 5000.0;
+        long accountId = 10L;
         var jsonBody = String.format("{\"amount\":%s}", amount);
 
         when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
@@ -73,12 +73,11 @@ public class AccountControllerTest {
     @ParameterizedTest
     @ValueSource(doubles = {-1, Double.NaN, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY})
     public void shouldThrowExceptionIfAmountIsWrong(double arg) throws Exception {
-        Double amount = arg;
-        Long accountId = 10L;
-        var jsonBody = String.format("{\"amount\":%s}", amount);
+        long accountId = 10L;
+        var jsonBody = String.format("{\"amount\":%s}", arg);
 
         when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
-        doThrow(new Exception("Wrong amount")).when(accountService).withdraw(accountId, amount);
+        doThrow(new Exception("Wrong amount")).when(accountService).withdraw(accountId, arg);
 
         accountController.doPut(request, response);
         verify(response).setContentType("text/json");

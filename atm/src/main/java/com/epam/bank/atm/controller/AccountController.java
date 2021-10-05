@@ -32,8 +32,8 @@ public class AccountController extends HttpServlet {
     public void doPut(HttpServletRequest request, HttpServletResponse response)
         throws  IOException {
 
-        Long accountId = 10L;
-        Double amount;
+        long accountId = 10;
+        double amount;
 
         response.setContentType("text/json");
         response.setCharacterEncoding("utf-8");
