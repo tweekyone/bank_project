@@ -15,9 +15,13 @@ dependencies {
   // Importing BOM
   implementation(platform(project(":bom")))
   compileOnly "jakarta.servlet:jakarta.servlet-api"
+  implementation 'com.auth0:java-jwt'
+  implementation 'com.google.code.gson:gson'
 
   testImplementation "org.junit.jupiter:junit-jupiter-api"
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+  testImplementation "jakarta.servlet:jakarta.servlet-api"
+  testImplementation 'org.mockito:mockito-core'
 }
 
 mainClassName = 'com.epam.bank.atm.App'
