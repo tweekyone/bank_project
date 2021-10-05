@@ -16,6 +16,10 @@ dependencies {
   implementation(platform(project(":bom")))
   compileOnly "jakarta.servlet:jakarta.servlet-api"
 
+  compileOnly 'org.projectlombok:lombok:1.18.20'
+  annotationProcessor 'org.projectlombok:lombok:1.18.20'
+  implementation 'javax.persistence:persistence-api:1.0.2'
+
   testImplementation "org.junit.jupiter:junit-jupiter-api"
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 }
