@@ -34,6 +34,7 @@
   <filter-mapping>
     <filter-name>AuthMiddleware</filter-name>
     <url-pattern>/test</url-pattern>
+    <url-pattern>/putmoney</url-pattern>
   </filter-mapping>
 
 </web-app>
