@@ -35,7 +35,7 @@ public class AccountControllerTest {
     {
         Double amount = 500.0;
         Long accountId = 10L;
-        var jsonBody = String.format("{\"accountId\":%s, \"amount\":%s}", accountId, amount);
+        var jsonBody = String.format("{\"amount\":%s}", amount);
 
         when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
         when(response.getWriter()).thenReturn(new PrintWriter(new StringWriter()));
@@ -58,7 +58,7 @@ public class AccountControllerTest {
     {
         Double amount = 5000.0;
         Long accountId = 10L;
-        var jsonBody = String.format("{\"accountId\":%s, \"amount\":%s}", accountId, amount);
+        var jsonBody = String.format("{\"amount\":%s}", amount);
 
         when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
         when(response.getWriter()).thenReturn(new PrintWriter(new StringWriter()));
@@ -75,7 +75,7 @@ public class AccountControllerTest {
     public void shouldThrowExceptionIfAmountIsWrong(double arg) throws Exception {
         Double amount = arg;
         Long accountId = 10L;
-        var jsonBody = String.format("{\"accountId\":%s, \"amount\":%s}", accountId, amount);
+        var jsonBody = String.format("{\"amount\":%s}", amount);
 
         when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
         doThrow(new Exception("Wrong amount")).when(accountService).withdraw(accountId, amount);
@@ -103,13 +103,9 @@ public class AccountControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {
         "{test",
-        "{''accountId'' : account, ''amount'' : 0}",
-        "{''accountId'' : 1, ''amount'' : amount}",
-        "{''accountId'' : account, ''amount'' : amount}",
-        "{''accountIdId'' : account, ''amount'' : 0}",
-        "{''accountIdId'' : account, ''amountId'' : 0}",
         "{''amount'' : 0}",
-        "{''accountId'' : 0}",
+        "{''amount'' : amount}",
+        "{''amount'' : 0",
     })
     public void shouldThrowExceptionIfRequestBodyIsInValid(String jsonBody) throws Exception {
         when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody.replace("''", "\""))));

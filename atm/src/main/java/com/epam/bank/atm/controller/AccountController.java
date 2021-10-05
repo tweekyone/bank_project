@@ -32,7 +32,7 @@ public class AccountController extends HttpServlet {
     public void doPut(HttpServletRequest request, HttpServletResponse response)
         throws  IOException {
 
-        Long accountId;
+        Long accountId = 10L;
         Double amount;
 
         response.setContentType("text/json");
@@ -41,7 +41,6 @@ public class AccountController extends HttpServlet {
         try {
             JsonElement jsonBody = JsonParser.parseReader(new JsonReader(request.getReader()));
             if (jsonBody.isJsonObject()) {
-                accountId = jsonBody.getAsJsonObject().get("accountId").getAsLong();
                 amount = jsonBody.getAsJsonObject().get("amount").getAsDouble();
             } else {
                 response.sendError(400, "InValid JsonObject");
