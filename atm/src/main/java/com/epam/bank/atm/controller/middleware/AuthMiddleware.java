@@ -27,7 +27,7 @@ public class AuthMiddleware implements Filter {
         var token = req.getHeader("Authorization");
 
         if (token == null || !token.startsWith("Bearer") || token.replace("Bearer ", "").isBlank()) {
-            var error = new ErrorResponse("token_is_empty", (short) 401, "Unauthorized", "Token is empty");
+            var error = new ErrorResponse("tokenIsEmpty", (short) 401, "Unauthorized", "Token is empty");
             resp.setStatus(401);
             resp.setContentType("text/json");
             resp.setCharacterEncoding("UTF-8");
@@ -38,7 +38,7 @@ public class AuthMiddleware implements Filter {
         token = token.replace("Bearer ", "");
 
         if (this.tokenService.isExpired(token)) {
-            var error = new ErrorResponse("token_is_expired", (short) 401, "Unauthorized", "Token is expired");
+            var error = new ErrorResponse("tokenIsExpired", (short) 401, "Unauthorized", "Token is expired");
             resp.setStatus(401);
             resp.setContentType("text/json");
             resp.setCharacterEncoding("UTF-8");
