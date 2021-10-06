@@ -26,7 +26,7 @@ public final class JDBCTransactionRepository implements TransactionRepository {
         try (var statement = this.connection.prepareStatement(query)) {
             statement.setLong(1, transaction.getSourceAccountId());
             statement.setLong(2, transaction.getDestinationAccountId());
-            statement.setLong(3, transaction.getAmount());
+            statement.setDouble(3, transaction.getAmount());
             statement.setTimestamp(4, Timestamp.valueOf(transaction.getDateTime()));
             statement.setString(5, transaction.getOperationType().toString());
             statement.setString(6, transaction.getState().toString());
@@ -75,7 +75,7 @@ public final class JDBCTransactionRepository implements TransactionRepository {
             resultSet.getLong("id"),
             resultSet.getLong("source_account_id"),
             resultSet.getLong("destination_account_id"),
-            resultSet.getLong("amount"),
+            resultSet.getDouble("amount"),
             resultSet.getTimestamp("date_time").toLocalDateTime(),
             Transaction.OperationType.valueOf(resultSet.getString("operation_type")),
             Transaction.State.valueOf(resultSet.getString("operation_type"))

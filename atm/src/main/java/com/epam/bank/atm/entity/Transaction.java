@@ -11,23 +11,21 @@ public final class Transaction {
     private Long id;
     private final Long sourceAccountId;
     private final Long destinationAccountId;
-    private final long amount;
+    private final double amount;
     private final LocalDateTime dateTime;
     private final OperationType operationType;
     private final State state;
 
     public enum OperationType {
-        VALUE
     }
 
     public enum State {
-        VALUE
     }
 
     public Transaction(
         Long sourceAccountId,
         Long destinationAccountId,
-        long amount,
+        double amount,
         LocalDateTime dateTime,
         OperationType operationType,
         State state
@@ -50,7 +48,7 @@ public final class Transaction {
         long id,
         long sourceAccountId,
         long destinationAccountId,
-        long amount,
+        double amount,
         LocalDateTime dateTime,
         OperationType operationType,
         State state
@@ -71,7 +69,7 @@ public final class Transaction {
         return destinationAccountId;
     }
 
-    public long getAmount() {
+    public double getAmount() {
         return amount;
     }
 
