@@ -2,11 +2,11 @@ package com.epam.bank.atm.entity;
 
 import com.epam.bank.atm.domain.statement.Assertion;
 import com.epam.bank.atm.domain.statement.AtLeastOneAccountTakePartInTransaction;
-import com.epam.bank.atm.domain.statement.TransactionDateTimeIsNotNull;
-import com.epam.bank.atm.domain.statement.TransactionOperationTypeIsNotNull;
-import com.epam.bank.atm.domain.statement.TransactionStateIsNotNull;
+import lombok.Getter;
+import lombok.NonNull;
 import java.time.LocalDateTime;
 
+@Getter
 public final class Transaction {
     private Long id;
     private final Long sourceAccountId;
@@ -26,14 +26,11 @@ public final class Transaction {
         Long sourceAccountId,
         Long destinationAccountId,
         double amount,
-        LocalDateTime dateTime,
-        OperationType operationType,
-        State state
+        @NonNull LocalDateTime dateTime,
+        @NonNull OperationType operationType,
+        @NonNull State state
     ) {
         Assertion.assertA(new AtLeastOneAccountTakePartInTransaction(sourceAccountId, destinationAccountId));
-        Assertion.assertA(new TransactionDateTimeIsNotNull(dateTime));
-        Assertion.assertA(new TransactionOperationTypeIsNotNull(operationType));
-        Assertion.assertA(new TransactionStateIsNotNull(state));
 
         this.sourceAccountId = sourceAccountId;
         this.destinationAccountId = destinationAccountId;
@@ -53,35 +50,12 @@ public final class Transaction {
         OperationType operationType,
         State state
     ) {
-        this(sourceAccountId, destinationAccountId, amount, dateTime, operationType, state);
         this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Long getSourceAccountId() {
-        return sourceAccountId;
-    }
-
-    public Long getDestinationAccountId() {
-        return destinationAccountId;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public LocalDateTime getDateTime() {
-        return dateTime;
-    }
-
-    public OperationType getOperationType() {
-        return operationType;
-    }
-
-    public State getState() {
-        return state;
+        this.sourceAccountId = sourceAccountId;
+        this.destinationAccountId = destinationAccountId;
+        this.amount = amount;
+        this.dateTime = dateTime;
+        this.operationType = operationType;
+        this.state = state;
     }
 }

@@ -2,6 +2,7 @@ plugins {
   id "java"
   id "application"
   id "war"
+  id "io.freefair.lombok" version "6.2.0"
 }
 
 group 'com.epam.bank'
