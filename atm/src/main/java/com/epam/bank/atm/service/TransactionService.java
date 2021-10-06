@@ -1,19 +1,14 @@
 package com.epam.bank.atm.service;
 
-import com.epam.bank.atm.entity.Activity;
 import com.epam.bank.atm.entity.Transaction;
-import com.epam.bank.atm.repo.ActivityRepo;
 import com.epam.bank.atm.repo.TransactionRepo;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 
 public class TransactionService {
 
     private final TransactionRepo transactionRepo;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
-    public TransactionService(TransactionRepo transactionRepo, ActivityRepo activityRepo) {
+    public TransactionService(TransactionRepo transactionRepo) {
         this.transactionRepo = transactionRepo;
     }
 
