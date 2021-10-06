@@ -12,20 +12,35 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Transaction {
 
+    public Transaction(long sourceAccountId, long destinationAccountId,
+                       double amount, Calendar dateTime,
+                       Transaction.OperationType operationType,
+                       Transaction.State state) {
+        this.sourceAccountId = sourceAccountId;
+        this.destinationAccountId = destinationAccountId;
+        this.amount = amount;
+        this.dateTime = dateTime;
+        this.operationType = operationType;
+        this.state = state;
+
+    }
+
     private long id;
-    private long sourceAccount;
-    private long destinationAccount;
+    private long sourceAccountId;
+    private long destinationAccountId;
     private double amount;
     private Calendar dateTime;
+    private OperationType operationType;
+    private State state;
 
-    private enum OperationType {
+    public enum OperationType {
         CASH,
         WITHDRAWAL,
         TRANSFER,
         PAYMENTS
     }
 
-    private enum State {
+    public enum State {
         IN_PROCESS,
         DONE,
         CANCELLED,

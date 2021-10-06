@@ -7,7 +7,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class JDBCAccountRepository {
+public class JDBCAccountRepository implements AccountRepository {
 
     private final String HOST;
 
@@ -38,7 +38,7 @@ public class JDBCAccountRepository {
     public long withdrawMoney(long accountId, long withdrawAmount) {
         String sql = "UPDATE account set amount = amount - ? where id = ?;";
         try (Connection connection = DriverManager.getConnection(HOST);
-             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)
         ) {
             preparedStatement.setLong(1, withdrawAmount);
             preparedStatement.setLong(2, accountId);

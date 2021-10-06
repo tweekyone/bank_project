@@ -1,15 +1,16 @@
 package com.epam.bank.atm.service;
 
 import com.epam.bank.atm.entity.Transaction;
-import com.epam.bank.atm.repository.JDBCTransactionRepository;
+import com.epam.bank.atm.repository.TransactionRepository;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
 public class TransactionService {
 
-    private final JDBCTransactionRepository transactionRepo;
+    private final TransactionRepository transactionRepo;
 
-    public TransactionService(JDBCTransactionRepository transactionRepo) {
+    public TransactionService(TransactionRepository transactionRepo) {
         this.transactionRepo = transactionRepo;
     }
 
@@ -17,21 +18,34 @@ public class TransactionService {
         return transactionRepo.getById(transactionId);
     }
 
-    public List<Transaction> getAllTransactions() {
-        return transactionRepo.getAllTransactions();
+    public List<Transaction> getTransactionsByAccountId(long accountId) {
+        return transactionRepo.getByAccountId(accountId);
     }
 
-    public void createTransaction(Transaction transaction) {
+
+    // -> MIRO: вызывает void save(Transaction transaction) у TransactionRepository
+
+    public Transaction create(long sourceAccountId, long destinationAccountId,
+                              double amount, Calendar createdTime, Transaction.OperationType operationType,
+                              Transaction.State state) {
+
+        Transaction transaction = new Transaction(
+            sourceAccountId, destinationAccountId, amount,
+            createdTime, operationType, state);
+
         transactionRepo.save(transaction);
+        return transaction;
     }
 
     public Transaction updateTransaction(Transaction transaction) {
-        return transactionRepo.updateTransaction(transaction);
+        transactionRepo.save(transaction);
+        return transaction;
     }
 
-    public long deleteTransaction(long transactionId) {
-        transactionRepo.deleteTransaction(transactionId);
-        return transactionId;
-    }
+    // TODO is it needed ?
+    // public long deleteTransaction(long transactionId) {
+    //     transactionRepo.deleteTransaction(transactionId);
+    //     return transactionId;
+    // }
 
 }
