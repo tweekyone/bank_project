@@ -84,11 +84,11 @@ public class JWTTokenSessionService implements TokenSessionService, TokenService
         var cardId = Integer.parseInt(subject);
         var card = this.cardRepository.getById(cardId);
 
-        if (card == null) {
+        if (card.isEmpty()) {
             return null;
         }
 
-        var account = this.accountRepository.getById(card.getAccountId());
+        var account = this.accountRepository.getById(card.get().getAccountId());
 
         if (account == null) {
             return null;
@@ -100,7 +100,7 @@ public class JWTTokenSessionService implements TokenSessionService, TokenService
             return null;
         }
 
-        return new AuthDescriptor(user, account, card);
+        return new AuthDescriptor(user, account, card.get());
     }
 
     @Override
