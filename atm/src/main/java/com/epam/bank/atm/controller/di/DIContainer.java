@@ -9,13 +9,20 @@ import com.epam.bank.atm.entity.Card;
 import com.epam.bank.atm.entity.User;
 import com.epam.bank.atm.infrastructure.session.JWTTokenPolicy;
 import com.epam.bank.atm.infrastructure.session.JWTTokenSessionService;
+import com.epam.bank.atm.infrastructure.session.persistence.JDBCCardRepository;
 import com.epam.bank.atm.repository.AccountRepository;
 import com.epam.bank.atm.repository.CardRepository;
 import com.epam.bank.atm.repository.UserRepository;
 import com.epam.bank.atm.service.AuthService;
+import org.postgresql.ds.PGSimpleDataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
+// ToDo: replace it from controller package to some di package
 public class DIContainer {
     private static volatile DIContainer instance = instance();
     private final ConcurrentHashMap<Class<?>, Object> singletons = new ConcurrentHashMap<>();
@@ -47,6 +54,8 @@ public class DIContainer {
         this.prototypes.putIfAbsent(CardRepository.class, this::createCardRepository);
         this.singletons.putIfAbsent(TokenService.class, this.createTokenSessionService());
         this.prototypes.putIfAbsent(TokenService.class, this::createTokenSessionService);
+        this.singletons.putIfAbsent(CardRepository.class, this.createCardRepository());
+        this.prototypes.putIfAbsent(CardRepository.class, this::createCardRepository);
     }
 
     public <U extends T, T> U getSingleton(Class<T> aClass) {
@@ -73,7 +82,10 @@ public class DIContainer {
         return new AuthService() {
             @Override
             public AuthDescriptor login(String cardNumber, String pin) {
-                return new AuthDescriptor(new User(1L), new Account(1L, 1L), new Card(1L, "123456", 1L, "1234"));
+                return new AuthDescriptor(
+                    new User(1L),
+                    new Account(1L, 1L),
+                    new Card(1L, "123456", 1L, "1234", Card.Plan.TESTPLAN, LocalDateTime.now()));
             }
         };
     }
@@ -99,13 +111,13 @@ public class DIContainer {
     private CardRepository createCardRepository() {
         return new CardRepository() {
             @Override
-            public Card getById(long id) {
-                return new Card(1L, "123456", 1L, "1234");
+            public Optional<Card> getById(long id) {
+                return Optional.of(new Card(1L, "123456", 1L, "1234", Card.Plan.TESTPLAN, LocalDateTime.now()));
             }
 
             @Override
-            public Card getByNumber(String number) {
-                return new Card(1L, "123456", 1L, "1234");
+            public Optional<Card> getByNumber(String number) {
+                return Optional.of(new Card(1L, "123456", 1L, "1234", Card.Plan.TESTPLAN, LocalDateTime.now()));
             }
         };
     }
@@ -127,5 +139,22 @@ public class DIContainer {
             this.getSingleton(AccountRepository.class, this::createAccountRepository),
             this.getSingleton(CardRepository.class, this::createCardRepository)
         );
+    }
+
+    private Connection createConnection() {
+        var dataSource = new PGSimpleDataSource();
+        dataSource.setUser("postgres");
+        dataSource.setPassword("123qwe");
+        dataSource.setUrl("jdbc:postgresql://postgres:5432/postgres");
+
+        try {
+            return dataSource.getConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private CardRepository createTransactionRepository() {
+        return new JDBCCardRepository(this.getSingleton(Connection.class, this::createConnection));
     }
 }
