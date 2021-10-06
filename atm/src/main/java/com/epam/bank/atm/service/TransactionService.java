@@ -8,6 +8,8 @@ import java.util.Optional;
 
 public class TransactionService {
 
+    //TODO Record user activity
+
     private final TransactionRepository transactionRepo;
 
     public TransactionService(TransactionRepository transactionRepo) {
