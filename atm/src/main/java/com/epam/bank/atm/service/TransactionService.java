@@ -1,27 +1,28 @@
 package com.epam.bank.atm.service;
 
 import com.epam.bank.atm.entity.Transaction;
-import com.epam.bank.atm.repo.TransactionRepo;
+import com.epam.bank.atm.repository.JDBCTransactionRepository;
 import java.util.List;
+import java.util.Optional;
 
 public class TransactionService {
 
-    private final TransactionRepo transactionRepo;
+    private final JDBCTransactionRepository transactionRepo;
 
-    public TransactionService(TransactionRepo transactionRepo) {
+    public TransactionService(JDBCTransactionRepository transactionRepo) {
         this.transactionRepo = transactionRepo;
     }
 
-    public Transaction getTransactionById(long transactionId) {
-        return transactionRepo.findTransaction(transactionId);
+    public Optional<Transaction> getTransactionById(long transactionId) {
+        return transactionRepo.getById(transactionId);
     }
 
     public List<Transaction> getAllTransactions() {
-        return transactionRepo.findAllTransactions();
+        return transactionRepo.getAllTransactions();
     }
 
-    public Transaction createTransaction(Transaction transaction) {
-        return transactionRepo.createTransaction(transaction);
+    public void createTransaction(Transaction transaction) {
+        transactionRepo.save(transaction);
     }
 
     public Transaction updateTransaction(Transaction transaction) {
