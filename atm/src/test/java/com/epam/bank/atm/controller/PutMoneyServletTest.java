@@ -48,19 +48,12 @@ public class PutMoneyServletTest {
 
     @Test
     public void ifAmountIsNull() throws IOException {
-        TokenSessionService tokenSessionService = mock(TokenSessionService.class);
-
         String json = "{\"amount\":0}";
         StringWriter stringWriter = new StringWriter();
         PrintWriter writer = new PrintWriter(stringWriter);
-        AuthDescriptor authDescriptor = new AuthDescriptor(
-                                                            new User(123),
-                                                            new Account(5555,123, 1000000),
-                                                            new Card(4321, "5550505",5555, "6666"));
 
         when(req.getReader()).thenReturn(new BufferedReader(new StringReader(json)));
         when(resp.getWriter()).thenReturn(writer);
-        when(tokenSessionService.curSession()).thenReturn(authDescriptor);
 
         new PutMoneyServlet().doPost(req, resp);
 
@@ -73,6 +66,7 @@ public class PutMoneyServletTest {
     public void ifAmountIsCorrect() throws IOException{
         TokenSessionService tokenSessionService = mock(TokenSessionService.class);
         AccountService accountService = mock(AccountService.class);
+
 
         String json = "{\"amount\":1000000}";
         long amount = 1000000;
@@ -87,7 +81,7 @@ public class PutMoneyServletTest {
         when(req.getReader()).thenReturn(new BufferedReader(new StringReader(json)));
         when(resp.getWriter()).thenReturn(writer);
         when(tokenSessionService.curSession()).thenReturn(authDescriptor);
-        when(accountService.putMoney(authDescriptor.getAccount().getId(), amount)).thenReturn(balance);
+        when(accountService.putMoney(tokenSessionService.curSession().getAccount().getId(), amount)).thenReturn(balance);
 
         new PutMoneyServlet().doPost(req, resp);
 
