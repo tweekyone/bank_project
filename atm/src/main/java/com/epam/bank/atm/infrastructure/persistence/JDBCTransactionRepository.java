@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,8 +25,18 @@ public final class JDBCTransactionRepository implements TransactionRepository {
             + "values (?, ?, ?, ?, ?, ?)";
 
         try (var statement = this.connection.prepareStatement(query)) {
-            statement.setLong(1, transaction.getSourceAccountId());
-            statement.setLong(2, transaction.getDestinationAccountId());
+            if (transaction.getSourceAccountId() == null) {
+                statement.setNull(1, Types.BIGINT);
+            } else {
+                statement.setLong(1, transaction.getSourceAccountId());
+            }
+
+            if (transaction.getDestinationAccountId() == null) {
+                statement.setNull(2, Types.BIGINT);
+            } else {
+                statement.setLong(2, transaction.getDestinationAccountId());
+            }
+
             statement.setDouble(3, transaction.getAmount());
             statement.setTimestamp(4, Timestamp.valueOf(transaction.getDateTime()));
             statement.setString(5, transaction.getOperationType().toString());
@@ -73,8 +84,8 @@ public final class JDBCTransactionRepository implements TransactionRepository {
     private Transaction mapRecordToTransaction(ResultSet resultSet) throws SQLException {
         return new Transaction(
             resultSet.getLong("id"),
-            resultSet.getLong("source_account_id"),
-            resultSet.getLong("destination_account_id"),
+            resultSet.getObject("source_account_id", Long.class),
+            resultSet.getObject("destination_account_id", Long.class),
             resultSet.getDouble("amount"),
             resultSet.getTimestamp("date_time").toLocalDateTime(),
             Transaction.OperationType.valueOf(resultSet.getString("operation_type")),

@@ -17,9 +17,11 @@ public final class Transaction {
     private final State state;
 
     public enum OperationType {
+        VALUE
     }
 
     public enum State {
+        VALUE
     }
 
     public Transaction(
@@ -43,8 +45,8 @@ public final class Transaction {
     // Constructor for hydration
     public Transaction(
         long id,
-        long sourceAccountId,
-        long destinationAccountId,
+        Long sourceAccountId,
+        Long destinationAccountId,
         double amount,
         LocalDateTime dateTime,
         OperationType operationType,
