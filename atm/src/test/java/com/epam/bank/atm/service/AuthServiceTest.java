@@ -37,12 +37,14 @@ public class AuthServiceTest {
 
     @Test
     public void ifCardIsEmpty(){
+        String cardNumber = "132436";
+        String pin = "1234";
         CardRepository cardRepository = mock(CardRepository.class);
-        Card card = getTestingCard();
-        when(cardRepository.getById(card.getAccountId())).thenReturn(null);
+        when(cardRepository.getById(anyLong())).thenReturn(null);
+        //Card emptyCard = cardRepository.getById(Long.getLong(cardNumber));
 
         try {
-            new AuthServiceImpl().login("123456", "1234");
+            new AuthServiceImpl().login(cardNumber, pin);
             Assertions.fail("Expected IllegalArgumentException");
         } catch (IllegalArgumentException thrown){
             Assertions.assertEquals("Error! Card number is incorrect", thrown.getMessage());
