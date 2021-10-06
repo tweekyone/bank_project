@@ -31,10 +31,13 @@ public class AuthServletTest extends BaseServletTest {
         var pin = "2345";
         var jsonBody = String.format("{\"cardNumber\": \"%s\", \"pin\": \"%s\"}", cardNumber, pin);
 
+        User user = new User(1L, "name", "surname","phone number", "username",
+                        "email@mail.com", "password");
+
         when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
         when(response.getWriter()).thenReturn(new PrintWriter(new StringWriter()));
         when(authService.login(cardNumber, pin))
-            .thenReturn(new AuthDescriptor(new User(1L), new Account(1L, 1L), new Card(1L, cardNumber, 1L, pin)));
+            .thenReturn(new AuthDescriptor(user, new Account(1L, 1L), new Card(1L, 234567, 1L, 2345)));
 
         var servlet = new AuthServlet(authService, DIContainer.instance().getSingleton(TokenSessionService.class));
         servlet.doPost(request, response);

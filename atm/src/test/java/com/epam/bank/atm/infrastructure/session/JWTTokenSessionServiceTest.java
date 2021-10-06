@@ -122,7 +122,9 @@ public class JWTTokenSessionServiceTest {
     }
 
     private User getTestUser() {
-        return new User(1L);
+        return new User(1L, "name", "surname",
+            "phone number", "username",
+            "email@mail.com", "password");
     }
 
     private Account getTestAccount() {
@@ -130,6 +132,6 @@ public class JWTTokenSessionServiceTest {
     }
 
     private Card getTestCard() {
-        return new Card(1L, "123456", 1L, "1234");
+        return new Card(1L, 123456, 1L, 1234);
     }
 }
