@@ -16,7 +16,8 @@ public class Card {
     private final long accountId;
     private final String pinCode;
     private final Plan plan;
-    private final LocalDateTime expirationDate;
+    // ToDo: is the field exactly supposed to be named "explication_date"
+    private final LocalDateTime explicationDate;
 
     public enum Plan {
         TESTPLAN
@@ -27,7 +28,7 @@ public class Card {
         long accountId,
         @NonNull String pinCode,
         @NonNull Plan plan,
-        @NonNull LocalDateTime expirationDate
+        @NonNull LocalDateTime explicationDate
     ) {
         Assertion.assertA(new CardNumberFormatIsValid(number));
         Assertion.assertA(new CardWithSuchNumberDoesNotExist(number));
@@ -37,7 +38,7 @@ public class Card {
         this.number = number;
         this.pinCode = pinCode;
         this.plan = plan;
-        this.expirationDate = expirationDate;
+        this.explicationDate = explicationDate;
         this.accountId = accountId;
     }
 
@@ -48,13 +49,13 @@ public class Card {
         long accountId,
         @NonNull String pinCode,
         @NonNull Plan plan,
-        @NonNull LocalDateTime expirationDate
+        @NonNull LocalDateTime explicationDate
     ) {
         this.id = id;
         this.number = number;
         this.pinCode = pinCode;
         this.plan = plan;
-        this.expirationDate = expirationDate;
+        this.explicationDate = explicationDate;
         this.accountId = accountId;
     }
 }

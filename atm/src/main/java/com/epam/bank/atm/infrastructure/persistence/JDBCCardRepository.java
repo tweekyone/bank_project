@@ -1,4 +1,4 @@
-package com.epam.bank.atm.infrastructure.session.persistence;
+package com.epam.bank.atm.infrastructure.persistence;
 
 import com.epam.bank.atm.entity.Card;
 import com.epam.bank.atm.repository.CardRepository;
@@ -47,7 +47,7 @@ public class JDBCCardRepository implements CardRepository {
             resultSet.getLong("account_id"),
             resultSet.getString("pin_code"),
             Card.Plan.valueOf(resultSet.getString("plan")),
-            resultSet.getTimestamp("expiration_date").toLocalDateTime()
+            resultSet.getTimestamp("explication_date").toLocalDateTime()
         );
     }
 }

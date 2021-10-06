@@ -9,7 +9,7 @@ import com.epam.bank.atm.entity.Card;
 import com.epam.bank.atm.entity.User;
 import com.epam.bank.atm.infrastructure.session.JWTTokenPolicy;
 import com.epam.bank.atm.infrastructure.session.JWTTokenSessionService;
-import com.epam.bank.atm.infrastructure.session.persistence.JDBCCardRepository;
+import com.epam.bank.atm.infrastructure.persistence.JDBCCardRepository;
 import com.epam.bank.atm.repository.AccountRepository;
 import com.epam.bank.atm.repository.CardRepository;
 import com.epam.bank.atm.repository.UserRepository;
@@ -147,10 +147,16 @@ public class DIContainer {
         dataSource.setPassword("123qwe");
         dataSource.setUrl("jdbc:postgresql://postgres:5432/postgres");
 
+        // ToDo: make container for building app in order to work with one url
         try {
             return dataSource.getConnection();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            try {
+                dataSource.setUrl("jdbc:postgresql://localhost:5432/postgres");
+                return dataSource.getConnection();
+            } catch (SQLException exception) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
