@@ -58,7 +58,7 @@ public class AuthServletTest extends BaseServletTest {
 
         new AuthServlet().doPost(request, response);
 
-        this.assertErrorResponse(stringWriter, "invalid_request", (short) 400, "Invalid request", "Invalid request");
+        this.assertErrorResponse(stringWriter, "invalidRequest", (short) 400, "Invalid request", "Invalid request");
 
         verify(response).setContentType("text/json");
         verify(response).setStatus(400);
@@ -81,7 +81,7 @@ public class AuthServletTest extends BaseServletTest {
 
         this.assertErrorResponse(
             stringWriter,
-            "card_number_is_empty",
+            "cardNumberIsEmpty",
             (short) 400,
             "Number is empty",
             "Number is empty"
@@ -106,7 +106,7 @@ public class AuthServletTest extends BaseServletTest {
 
         new AuthServlet().doPost(request, response);
 
-        this.assertErrorResponse(stringWriter, "card_pin_is_empty", (short) 400, "Pin is empty", "Pin is empty");
+        this.assertErrorResponse(stringWriter, "cardPinIsEmpty", (short) 400, "Pin is empty", "Pin is empty");
 
         verify(response).setContentType("text/json");
         verify(response).setStatus(400);
