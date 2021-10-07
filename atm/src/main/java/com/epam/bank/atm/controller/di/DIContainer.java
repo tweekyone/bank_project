@@ -18,6 +18,7 @@ import com.epam.bank.atm.service.AuthService;
 import org.postgresql.ds.PGSimpleDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.math.BigInteger;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
@@ -101,6 +102,26 @@ public class DIContainer {
             @Override
             public Account getById(long id) {
                 return new Account(1L, 1L);
+            }
+
+            @Override
+            public double putMoney(long id, double amount) {
+                return 0;
+            }
+
+            @Override
+            public double withdrawMoney(long id, double amount) {
+                return 0;
+            }
+
+            @Override
+            public double getCurrentAmount(long id) {
+                return 0;
+            }
+
+            @Override
+            public BigInteger getAccountNumberById(long id) {
+                return null;
             }
         };
     }
