@@ -3,7 +3,7 @@ package com.epam.bank.atm.domain.statement;
 import com.epam.bank.atm.domain.DomainRegistry;
 import lombok.NonNull;
 
-public class CardWithSuchNumberDoesNotExist extends Statement {
+public class CardWithSuchNumberDoesNotExist implements Statement {
     private final String number;
 
     public CardWithSuchNumberDoesNotExist(@NonNull String number) {
@@ -16,13 +16,7 @@ public class CardWithSuchNumberDoesNotExist extends Statement {
     }
 
     @Override
-    protected DomainException exception() {
-        return new CardWithSuchNumberAlreadyExistsException(this.number);
-    }
-
-    public class CardWithSuchNumberAlreadyExistsException extends DomainException {
-        public CardWithSuchNumberAlreadyExistsException(String number) {
-            super(String.format("Card with number %s already exists", number));
-        }
+    public String errorMessage() {
+        return String.format("Card with number %s already exists", this.number);
     }
 }

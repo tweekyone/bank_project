@@ -2,7 +2,7 @@ package com.epam.bank.atm.domain.statement;
 
 import com.epam.bank.atm.domain.DomainRegistry;
 
-public class CardAccountExists extends Statement {
+public class CardAccountExists implements Statement {
     private final long accountId;
 
     public CardAccountExists(long accountId) {
@@ -15,13 +15,7 @@ public class CardAccountExists extends Statement {
     }
 
     @Override
-    protected DomainException exception() {
-        return new CardAccountDoesNotExistException(this.accountId);
-    }
-
-    public class CardAccountDoesNotExistException extends DomainException {
-        public CardAccountDoesNotExistException(long accountId) {
-            super(String.format("Card account %d does not exist", accountId));
-        }
+    public String errorMessage() {
+        return String.format("Card account %d does not exist", this.accountId);
     }
 }

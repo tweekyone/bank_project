@@ -3,7 +3,7 @@ package com.epam.bank.atm.domain.statement;
 import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
 
-public class CardNumberFormatIsValid extends Statement {
+public class CardNumberFormatIsValid implements Statement {
     private final String number;
 
     public CardNumberFormatIsValid(@NonNull String number) {
@@ -16,13 +16,7 @@ public class CardNumberFormatIsValid extends Statement {
     }
 
     @Override
-    protected DomainException exception() {
-        return new CardNumberFormatIsInvalidException(this.number);
-    }
-
-    public class CardNumberFormatIsInvalidException extends DomainException {
-        public CardNumberFormatIsInvalidException(String number) {
-            super(String.format("Card number %s is invalid", number));
-        }
+    public String errorMessage() {
+        return String.format("Card number %s is invalid", this.number);
     }
 }

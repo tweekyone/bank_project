@@ -3,7 +3,7 @@ package com.epam.bank.atm.domain.statement;
 import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
 
-public class CardPinCodeFormatIsValid extends Statement {
+public class CardPinCodeFormatIsValid implements Statement {
     private final String pinCode;
 
     public CardPinCodeFormatIsValid(@NonNull String pinCode) {
@@ -16,13 +16,7 @@ public class CardPinCodeFormatIsValid extends Statement {
     }
 
     @Override
-    protected DomainException exception() {
-        return new CardPinCodeFormatIsInvalidException();
-    }
-
-    public class CardPinCodeFormatIsInvalidException extends DomainException {
-        public CardPinCodeFormatIsInvalidException() {
-            super("Card pin code format is invalid");
-        }
+    public String errorMessage() {
+        return "Card pin code format is invalid";
     }
 }
