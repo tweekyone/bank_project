@@ -69,20 +69,20 @@ public class AccountControllerTest {
     //     verify(response).sendError(500,"Error service");
     // }
 
-    // @ParameterizedTest
-    // @ValueSource(doubles = {-1, Double.NaN, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY})
-    // public void shouldThrowExceptionIfAmountIsWrong(double arg) throws Exception {
-    //     long accountId = 10L;
-    //     var jsonBody = String.format("{\"amount\":%s}", arg);
-    //
-    //     when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
-    //     doThrow(new Exception("Wrong amount")).when(accountService).withdrawMoney(accountId, arg);
-    //
-    //     accountController.doPut(request, response);
-    //     verify(response).setContentType("text/json");
-    //     verify(response).setCharacterEncoding("utf-8");
-    //     verify(response).sendError(500,"Error service");
-    // }
+    @ParameterizedTest
+    @ValueSource(doubles = {-1, Double.NaN, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY})
+    public void shouldThrowExceptionIfAmountIsWrong(double arg) throws Exception {
+        long accountId = 10L;
+        var jsonBody = String.format("{\"amount\":%s}", arg);
+
+        when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
+        doThrow(new IllegalArgumentException("Less than the minimum amount")).when(accountService).withdrawMoney(accountId, arg);
+
+        accountController.doPut(request, response);
+        verify(response).setContentType("text/json");
+        verify(response).setCharacterEncoding("utf-8");
+        verify(response).sendError(400,"Bad amount");
+    }
 
     @ParameterizedTest
     @ValueSource(strings = {

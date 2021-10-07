@@ -63,7 +63,10 @@ public class AccountController extends HttpServlet {
                  NumberFormatException |
                  NullPointerException e) {
             response.sendError(400,  "Bad request");
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
+            response.sendError(400, "Bad amount");
+        }
+        catch (Exception e) {
             response.sendError(500, "Error service");
         }
     }
