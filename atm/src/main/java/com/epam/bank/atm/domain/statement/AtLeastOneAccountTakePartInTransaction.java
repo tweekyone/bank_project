@@ -1,6 +1,6 @@
 package com.epam.bank.atm.domain.statement;
 
-public class AtLeastOneAccountTakePartInTransaction extends Statement {
+public class AtLeastOneAccountTakePartInTransaction implements Statement {
     private final Long sourceAccountId;
     private final Long destinationAccountId;
 
@@ -15,13 +15,7 @@ public class AtLeastOneAccountTakePartInTransaction extends Statement {
     }
 
     @Override
-    protected DomainException exception() {
-        return new NoOneAccountTakePartInTrasactionException();
-    }
-
-    public class NoOneAccountTakePartInTrasactionException extends DomainException {
-        public NoOneAccountTakePartInTrasactionException() {
-            super("No one account take part in transaction");
-        }
+    public String errorMessage() {
+        return "No one account takes part in transaction";
     }
 }
