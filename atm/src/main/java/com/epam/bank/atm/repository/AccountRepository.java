@@ -5,4 +5,3 @@ import com.epam.bank.atm.entity.Account;
 public interface AccountRepository {
     Account getById(long id);
 }
-
