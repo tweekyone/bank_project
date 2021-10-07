@@ -3,7 +3,7 @@ package com.epam.bank.atm.service;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class AccountServiceTest {
+public class AccountServiceTest {
 
     private final double currentAmount = 5678.58;
     private final double positiveAmount = 578.58;
@@ -11,7 +11,7 @@ class AccountServiceTest {
     private final double zeroAmount = 0.00;
     private final long accountId = 40817810;
 
-    private final AccountService service = new AccountService(new AccountRepository());
+    private final AccountService service = new AccountService();
 
     public AccountServiceTest() {
     }

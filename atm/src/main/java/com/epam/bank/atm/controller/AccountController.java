@@ -1,13 +1,14 @@
 package com.epam.bank.atm.controller;
 
+import com.epam.bank.atm.controller.di.DIContainer;
+import com.epam.bank.atm.controller.session.TokenSessionService;
+import com.epam.bank.atm.domain.model.AuthDescriptor;
 import com.epam.bank.atm.service.AccountService;
-import com.epam.bank.atm.service.AccountServiceImpl;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,7 +23,7 @@ public class AccountController extends HttpServlet {
     private final AccountService accountService;
 
     public AccountController() {
-        accountService = new AccountServiceImpl();
+        accountService = new AccountService();
     }
     public AccountController(AccountService accountService) {
         this.accountService = accountService;
@@ -47,12 +48,13 @@ public class AccountController extends HttpServlet {
                 return;
             }
 
-            accountService.withdraw(accountId, amount);
+            //TODO: authDescriptor.getAccount().getId()
+            double balance = accountService.withdrawMoney(accountId, amount);
 
             response.setStatus(200);
             PrintWriter writeResp = response.getWriter();
             JsonObject jsonResp = new JsonObject();
-            jsonResp.addProperty("amount", amount);
+            jsonResp.addProperty("balance", balance);
             writeResp.print(jsonResp);
             writeResp.flush();
         } catch (UnsupportedEncodingException |

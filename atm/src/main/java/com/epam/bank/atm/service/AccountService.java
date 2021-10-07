@@ -2,11 +2,7 @@ package com.epam.bank.atm.service;
 
 public class AccountService {
 
-    private AccountRepository repository;
-
-    public AccountService(AccountRepository repository) {
-        this.repository = repository;
-    }
+    private final AccountRepository repository = new AccountRepository();
 
     public double putMoney(long id, double amount) {
         checkAmount(amount);
