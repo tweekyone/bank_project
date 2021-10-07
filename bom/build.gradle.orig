@@ -1,0 +1,42 @@
+// https://docs.gradle.org/current/userguide/java_platform_plugin.html
+plugins {
+  id 'java-platform'
+  id 'maven-publish'
+}
+
+group 'com.epam.bank'
+version '0.0.1'
+
+repositories {
+  mavenCentral()
+}
+
+javaPlatform {
+  allowDependencies()
+}
+
+dependencies {
+  constraints {
+    api "org.projectlombok:lombok:1.18.20"
+    api 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+<<<<<<< HEAD
+    api 'javax.persistence:persistence-api:1.0.2'
+=======
+    api 'com.auth0:java-jwt:3.18.2'
+    api 'com.google.code.gson:gson:2.8.8'
+>>>>>>> origin/master
+
+    api "org.junit.jupiter:junit-jupiter-api:5.7.2"
+    api "org.junit.jupiter:junit-jupiter-engine:5.7.2"
+    api "org.assertj:assertj-core:3.20.2"
+    api 'org.mockito:mockito-core:3.12.4'
+  }
+}
+
+publishing {
+  publications {
+    maven(MavenPublication) {
+      from components.javaPlatform
+    }
+  }
+}

@@ -15,7 +15,7 @@ public class UserRepositoryImpl implements UserRepository{
     }
 
     @Override
-    public User getById(Long id) {
+    public User getById(long id) {
         String query = "select * from user where id = ?";
 
         try {

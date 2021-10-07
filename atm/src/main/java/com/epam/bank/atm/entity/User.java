@@ -6,7 +6,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 public class User {
-    private long id;
+    private Long id;
     private String name;
     private String surname;
     private String email;
@@ -14,6 +14,9 @@ public class User {
     private String phone_number;
     private Role role;
 
+    public User(Long id) {
+        this.id = id;
+    }
     public enum Role {
         admin,
         client
