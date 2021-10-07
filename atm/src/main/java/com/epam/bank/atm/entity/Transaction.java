@@ -1,19 +1,17 @@
 package com.epam.bank.atm.entity;
 
-import java.util.Calendar;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class Transaction {
 
-    public Transaction(long sourceAccountId, long destinationAccountId,
-                       double amount, Calendar dateTime,
+    public Transaction(Long sourceAccountId, Long destinationAccountId,
+                       double amount, LocalDateTime dateTime,
                        Transaction.OperationType operationType,
                        Transaction.State state) {
         this.sourceAccountId = sourceAccountId;
@@ -26,10 +24,10 @@ public class Transaction {
     }
 
     private long id;
-    private long sourceAccountId;
-    private long destinationAccountId;
+    private Long sourceAccountId;
+    private Long destinationAccountId;
     private double amount;
-    private Calendar dateTime;
+    private LocalDateTime dateTime;
     private OperationType operationType;
     private State state;
 

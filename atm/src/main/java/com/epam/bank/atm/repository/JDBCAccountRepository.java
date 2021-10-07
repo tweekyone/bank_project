@@ -5,7 +5,10 @@ import com.epam.bank.atm.exception.SqlMappingException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 
 public class JDBCAccountRepository implements AccountRepository {
 
@@ -19,35 +22,51 @@ public class JDBCAccountRepository implements AccountRepository {
         this.password = password;
     }
 
-    // TODO
-    public Account getById(long id) {
-        return null;
-    }
+    public Account getById(long accountId) {
+        String sql = "SELECT number, is_default, plan, amount, user_id FROM account WHERE id = ?;";
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)
+        ) {
+            preparedStatement.setLong(1, accountId);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
+            List<Account> results = new LinkedList<>();
+            while (resultSet.next()) {
+                results.add(new Account(
+                    accountId,
+                    resultSet.getDouble("number"),
+                    resultSet.getBoolean("is_default"),
+                    resultSet.getString("plan"),
+                    resultSet.getDouble("amount"),
+                    resultSet.getLong("user_id")
+                ));
+            }
+            return results.get(0);
+        } catch (SQLException e) {
+            throw new SqlMappingException(e);
+        }
+    }
 
     public long putMoney(long accountId, double putAmount) {
         String sql = "UPDATE account set amount = amount + ? where id = ?;";
-        return executeAccountOperation(accountId, putAmount, sql);
+        return executeMoneyOperation(accountId, putAmount, sql);
+    }
+
+    public long withdrawMoney(long accountId, double withdrawAmount) {
+        String sql = "UPDATE account set amount = amount - ? where id = ?;";
+        return executeMoneyOperation(accountId, withdrawAmount, sql);
     }
 
     // returns account id if successful
-    private long executeAccountOperation(long accountId, double amount, String sql) {
+    private long executeMoneyOperation(long accountId, double amount, String sql) {
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement preparedStatement = connection.prepareStatement(sql)
         ) {
             preparedStatement.setDouble(1, amount);
             preparedStatement.setLong(2, accountId);
             return preparedStatement.executeLargeUpdate();
-
         } catch (SQLException e) {
             throw new SqlMappingException(e);
         }
     }
-
-
-    public long withdrawMoney(long accountId, double withdrawAmount) {
-        String sql = "UPDATE account set amount = amount - ? where id = ?;";
-        return executeAccountOperation(accountId, withdrawAmount, sql);
-    }
-
 }
