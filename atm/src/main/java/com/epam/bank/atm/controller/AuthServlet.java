@@ -1,6 +1,6 @@
 package com.epam.bank.atm.controller;
 
-import com.epam.bank.atm.controller.di.DIContainer;
+import com.epam.bank.atm.di.DIContainer;
 import com.epam.bank.atm.controller.dto.request.LoginRequest;
 import com.epam.bank.atm.controller.session.TokenSessionService;
 import com.epam.bank.atm.service.AuthService;

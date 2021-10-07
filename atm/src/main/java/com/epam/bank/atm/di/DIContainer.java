@@ -1,4 +1,4 @@
-package com.epam.bank.atm.controller.di;
+package com.epam.bank.atm.di;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import com.epam.bank.atm.controller.session.TokenService;
