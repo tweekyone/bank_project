@@ -1,13 +1,20 @@
 package com.epam.bank.atm.service;
 
 import com.epam.bank.atm.entity.Card;
+import com.epam.bank.atm.repository.AccountRepository;
 import com.epam.bank.atm.repository.CardRepository;
+import com.epam.bank.atm.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.*;
 
 public class AuthServiceTest {
+    private AccountRepository mockAccountRepository;
+    private CardRepository mockCardRepository;
+    private UserRepository mockUserRepository;
+
+    private AuthService authService;
 
     @Test
     public void ifCardNumberIsEmpty(){
@@ -52,6 +59,6 @@ public class AuthServiceTest {
     }
 
     public Card getTestingCard(){
-        return new Card(1l, 123456, 54321, 1234);
+        return new Card(1L, 123456, 54321, 1234);
     }
 }
