@@ -6,11 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UserRepositoryImpl implements UserRepository{
+public class JDBCTUserRepository implements UserRepository{
 
     private final Connection connection;
 
-    public UserRepositoryImpl(Connection connection) {
+    public JDBCTUserRepository(Connection connection) {
         this.connection = connection;
     }
 
