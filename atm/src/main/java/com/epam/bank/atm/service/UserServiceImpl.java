@@ -2,6 +2,7 @@ package com.epam.bank.atm.service;
 
 import com.epam.bank.atm.entity.User;
 import com.epam.bank.atm.repository.UserRepository;
+import java.util.Arrays;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
@@ -23,24 +24,30 @@ public class UserServiceImpl implements UserService {
     public void update(User user) {
         if (user == null) {
             throw new IllegalArgumentException("User is null!");
-        } else if (user.getID() == 0) {
+        } else if (user.getId() == 0) {
             throw new IllegalArgumentException("Id is empty!");
         } else if (user.getName().isEmpty()){
             throw new IllegalArgumentException("Name is empty!");
-        } else if (user.getSurname().isEmpty()){
+        } else if (user.getSurname().isEmpty()) {
             throw new IllegalArgumentException("Surname is empty!");
+        } else if (user.getUsername().isEmpty()) {
+            throw new IllegalArgumentException("Username is empty!");
         } else if (user.getPassword().isEmpty()){
             throw new IllegalArgumentException("Password is empty!");
-        } else if (user.getPhoneNumber().isEmpty()){
+        } else if (user.getPhone_number().isEmpty()){
             throw new IllegalArgumentException("Phone number is empty!");
         } else if (user.getEmail().isEmpty()){
             throw new IllegalArgumentException("Email is empty!");
         }
-        userRepository.save(user);
+
+        //TODO
+        //userRepository.save(user);
     }
 
     @Override
     public List<User> getAll() {
-        return userRepository.getAll();
+        //TODO
+        //return userRepository.getAll();
+        return null;
     }
 }

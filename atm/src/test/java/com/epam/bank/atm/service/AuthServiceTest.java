@@ -130,9 +130,9 @@ public class AuthServiceTest {
     }
 
     public User getTestingUser() {
-        return new User(1324, "Name",
-            "Surname", "8(911)123-12-32",
-            "Username", "email@mail.com", "password");
+        return new User(13245L, "Name",
+            "Surname", "username", "email@mail.com",
+            "password", "phone number", User.Role.client);
     }
 
 }

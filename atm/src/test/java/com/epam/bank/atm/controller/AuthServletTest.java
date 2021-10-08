@@ -31,8 +31,8 @@ public class AuthServletTest extends BaseServletTest {
         var pin = "2345";
         var jsonBody = String.format("{\"cardNumber\": \"%s\", \"pin\": \"%s\"}", cardNumber, pin);
 
-        User user = new User(1L, "name", "surname","phone number", "username",
-                        "email@mail.com", "password");
+        User user = new User(1L, "name", "surname", "surname", "mail@mail.com", "password",
+                        "phone number", User.Role.client);
 
         when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
         when(response.getWriter()).thenReturn(new PrintWriter(new StringWriter()));

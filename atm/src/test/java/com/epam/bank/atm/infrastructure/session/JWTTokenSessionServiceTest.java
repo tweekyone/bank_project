@@ -123,8 +123,8 @@ public class JWTTokenSessionServiceTest {
 
     private User getTestUser() {
         return new User(1L, "name", "surname",
-            "phone number", "username",
-            "email@mail.com", "password");
+            "username", "email@mail.com", "username",
+            "phone number", User.Role.client);
     }
 
     private Account getTestAccount() {
