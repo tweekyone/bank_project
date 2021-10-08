@@ -2,9 +2,9 @@ package com.epam.bank.atm.entity;
 
 import com.epam.bank.atm.domain.statement.Assertion;
 import com.epam.bank.atm.domain.statement.AtLeastOneAccountTakePartInTransaction;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NonNull;
-import java.time.LocalDateTime;
 
 @Getter
 public final class Transaction {

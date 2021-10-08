@@ -28,6 +28,7 @@ public class JDBCTUserRepository implements UserRepository{
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getString("surname"),
+                    resultSet.getString("username"),
                     resultSet.getString("email"),
                     resultSet.getString("password"),
                     resultSet.getString("phone_number"),

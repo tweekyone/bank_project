@@ -36,7 +36,7 @@ public class AccountControllerTest {
         accountService = mock(AccountService.class);
         tokenSessionService = mock(TokenSessionService.class);
         accountController = new AccountController(accountService, tokenSessionService);
-        authDescriptor = new AuthDescriptor(new User(1L), new Account(1L, 1L), new Card(1L, "123456", 1L, "666"));
+        authDescriptor = new AuthDescriptor(new User(1L), new Account(1L, 1L), new Card(1L, 123456, 1L, 5555));
     }
 
     @Test
