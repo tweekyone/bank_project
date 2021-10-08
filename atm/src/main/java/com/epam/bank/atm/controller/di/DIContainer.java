@@ -18,6 +18,8 @@ import com.epam.bank.atm.service.AuthService;
 import org.postgresql.ds.PGSimpleDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
@@ -82,16 +84,34 @@ public class DIContainer {
         return new AuthService() {
             @Override
             public AuthDescriptor login(String cardNumber, String pin) {
-                return new AuthDescriptor(new User(1L), new Account(1L, 1L), new Card(1L, "123456", 1L, "1234"));
+                return new AuthDescriptor(new User(1L, "name", "surname",
+                    "phone number", "username",
+                    "email@mail.com", "password"),
+                    new Account(1L, 1L),
+                    new Card(1L, 123456, 1L, 1234));
             }
         };
     }
 
     private UserRepository createUserRepository() {
         return new UserRepository() {
+            private User user = new User(1L, "name", "surname",
+                "phone number", "username",
+                "email@mail.com", "password");
+
             @Override
             public User getById(long id) {
-                return new User(1L);
+                return user;
+            }
+
+            @Override
+            public void save(User user) {
+                this.user = user;
+            }
+
+            @Override
+            public List<User> getAll() {
+                return Arrays.asList(user);
             }
         };
     }
@@ -109,12 +129,12 @@ public class DIContainer {
         return new CardRepository() {
             @Override
             public Card getById(long id) {
-                return new Card(1L, "123456", 1L, "1234");
+                return new Card(1L, 123456, 1L, 1234);
             }
 
             @Override
             public Card getByNumber(String number) {
-                return new Card(1L, "123456", 1L, "1234");
+                return new Card(1L, 123456, 1L, 1234);
             }
         };
     }
