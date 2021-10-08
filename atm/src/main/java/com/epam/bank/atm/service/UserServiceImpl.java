@@ -2,7 +2,6 @@ package com.epam.bank.atm.service;
 
 import com.epam.bank.atm.entity.User;
 import com.epam.bank.atm.repository.UserRepository;
-import java.util.Arrays;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
@@ -26,17 +25,17 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("User is null!");
         } else if (user.getId() == 0) {
             throw new IllegalArgumentException("Id is empty!");
-        } else if (user.getName().isEmpty()){
+        } else if (user.getName().isEmpty()) {
             throw new IllegalArgumentException("Name is empty!");
         } else if (user.getSurname().isEmpty()) {
             throw new IllegalArgumentException("Surname is empty!");
         } else if (user.getUsername().isEmpty()) {
             throw new IllegalArgumentException("Username is empty!");
-        } else if (user.getPassword().isEmpty()){
+        } else if (user.getPassword().isEmpty()) {
             throw new IllegalArgumentException("Password is empty!");
-        } else if (user.getPhone_number().isEmpty()){
+        } else if (user.getPhone_number().isEmpty()) {
             throw new IllegalArgumentException("Phone number is empty!");
-        } else if (user.getEmail().isEmpty()){
+        } else if (user.getEmail().isEmpty()) {
             throw new IllegalArgumentException("Email is empty!");
         }
 

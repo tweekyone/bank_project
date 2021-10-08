@@ -9,7 +9,7 @@ import com.epam.bank.atm.repository.AccountRepository;
 import com.epam.bank.atm.repository.CardRepository;
 import com.epam.bank.atm.repository.UserRepository;
 
-public class AuthServiceImpl implements AuthService{
+public class AuthServiceImpl implements AuthService {
     private AccountRepository accountRepository;
     private CardRepository cardRepository;
     private UserRepository userRepository;

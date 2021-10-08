@@ -100,7 +100,7 @@ public class AuthServiceTest {
         try {
             authService.login(cardNumber, pin);
             Assertions.fail("Expected IllegalArgumentException");
-        } catch (IllegalArgumentException thrown){
+        } catch (IllegalArgumentException thrown) {
             Assertions.assertEquals("Error! Pin code is incorrect", thrown.getMessage());
         }
     }

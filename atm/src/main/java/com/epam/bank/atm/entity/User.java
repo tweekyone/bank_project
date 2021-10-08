@@ -1,6 +1,8 @@
 package com.epam.bank.atm.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -18,6 +20,7 @@ public class User {
     public User(Long id) {
         this.id = id;
     }
+
     public enum Role {
         admin,
         client
