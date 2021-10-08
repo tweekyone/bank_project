@@ -7,16 +7,19 @@ import com.epam.bank.atm.domain.model.AuthDescriptor;
 import com.epam.bank.atm.entity.Account;
 import com.epam.bank.atm.entity.Card;
 import com.epam.bank.atm.entity.User;
+import com.epam.bank.atm.infrastructure.persistence.JDBCTransactionRepository;
 import com.epam.bank.atm.infrastructure.session.JWTTokenPolicy;
 import com.epam.bank.atm.infrastructure.session.JWTTokenSessionService;
 import com.epam.bank.atm.repository.AccountRepository;
 import com.epam.bank.atm.repository.CardRepository;
+import com.epam.bank.atm.repository.TransactionRepository;
 import com.epam.bank.atm.repository.UserRepository;
 import com.epam.bank.atm.service.AuthService;
-import java.util.Arrays;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
+import org.postgresql.ds.PGSimpleDataSource;
 
 public class DIContainer {
     private static volatile DIContainer instance = instance();
@@ -49,6 +52,10 @@ public class DIContainer {
         this.prototypes.putIfAbsent(CardRepository.class, this::createCardRepository);
         this.singletons.putIfAbsent(TokenService.class, this.createTokenSessionService());
         this.prototypes.putIfAbsent(TokenService.class, this::createTokenSessionService);
+        this.singletons.putIfAbsent(Connection.class, this.createConnection());
+        this.prototypes.putIfAbsent(Connection.class, this::createConnection);
+        this.singletons.putIfAbsent(TransactionRepository.class, this.createTransactionRepository());
+        this.prototypes.putIfAbsent(TransactionRepository.class, this::createTransactionRepository);
     }
 
     public <U extends T, T> U getSingleton(Class<T> aClass) {
@@ -75,34 +82,24 @@ public class DIContainer {
         return new AuthService() {
             @Override
             public AuthDescriptor login(String cardNumber, String pin) {
-                return new AuthDescriptor(
-                                        new User(1L, "name", "surname",
-                                        "phone number", "username",
-                                                "email@mail.com", "password"),
-                                        new Account(1L, 1L),
-                                        new Card(1L, 123456, 1L, 1234));
+                return new AuthDescriptor(new User(1L, "name", "surname",
+                    "username", "email@mail.com", "password",
+                    "phone number", User.Role.client),
+                    new Account(1L, 1L),
+                    new Card(1L, 123456, 1L, 1234));
             }
         };
     }
 
     private UserRepository createUserRepository() {
         return new UserRepository() {
-            User user = new User(1L, "name", "surname",
-                "phone number", "username",
-                "email@mail.com", "password");
+            private User user = new User(1L, "name", "surname",
+                "username", "email@mail.com", "password",
+                "phone number", User.Role.client);
+
             @Override
             public User getById(long id) {
                 return user;
-            }
-
-            @Override
-            public void save(User user) {
-
-            }
-
-            @Override
-            public List<User> getAll() {
-                return Arrays.asList(user);
             }
         };
     }
@@ -147,5 +144,28 @@ public class DIContainer {
             this.getSingleton(AccountRepository.class, this::createAccountRepository),
             this.getSingleton(CardRepository.class, this::createCardRepository)
         );
+    }
+
+    private Connection createConnection() {
+        var dataSource = new PGSimpleDataSource();
+        dataSource.setUser("postgres");
+        dataSource.setPassword("123qwe");
+        dataSource.setUrl("jdbc:postgresql://postgres:5432/postgres");
+
+        // ToDo: make container for building app in order to work with one url
+        try {
+            return dataSource.getConnection();
+        } catch (SQLException e) {
+            try {
+                dataSource.setUrl("jdbc:postgresql://localhost:5432/postgres");
+                return dataSource.getConnection();
+            } catch (SQLException exception) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private TransactionRepository createTransactionRepository() {
+        return new JDBCTransactionRepository(this.getSingleton(Connection.class, this::createConnection));
     }
 }
