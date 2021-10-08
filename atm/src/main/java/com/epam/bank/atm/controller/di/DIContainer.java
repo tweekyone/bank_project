@@ -7,11 +7,13 @@ import com.epam.bank.atm.domain.model.AuthDescriptor;
 import com.epam.bank.atm.entity.Account;
 import com.epam.bank.atm.entity.Card;
 import com.epam.bank.atm.entity.User;
+import com.epam.bank.atm.infrastructure.persistence.JDBCTransactionRepository;
 import com.epam.bank.atm.infrastructure.session.JWTTokenPolicy;
 import com.epam.bank.atm.infrastructure.session.JWTTokenSessionService;
 import com.epam.bank.atm.infrastructure.persistence.JDBCCardRepository;
 import com.epam.bank.atm.repository.AccountRepository;
 import com.epam.bank.atm.repository.CardRepository;
+import com.epam.bank.atm.repository.TransactionRepository;
 import com.epam.bank.atm.repository.UserRepository;
 import com.epam.bank.atm.service.AuthService;
 import org.postgresql.ds.PGSimpleDataSource;
@@ -54,6 +56,10 @@ public class DIContainer {
         this.prototypes.putIfAbsent(CardRepository.class, this::createCardRepository);
         this.singletons.putIfAbsent(TokenService.class, this.createTokenSessionService());
         this.prototypes.putIfAbsent(TokenService.class, this::createTokenSessionService);
+        this.singletons.putIfAbsent(Connection.class, this.createConnection());
+        this.prototypes.putIfAbsent(Connection.class, this::createConnection);
+        this.singletons.putIfAbsent(TransactionRepository.class, this.createTransactionRepository());
+        this.prototypes.putIfAbsent(TransactionRepository.class, this::createTransactionRepository);
         this.singletons.putIfAbsent(CardRepository.class, this.createCardRepository());
         this.prototypes.putIfAbsent(CardRepository.class, this::createCardRepository);
     }
@@ -108,20 +114,6 @@ public class DIContainer {
         };
     }
 
-    private CardRepository createCardRepository() {
-        return new CardRepository() {
-            @Override
-            public Optional<Card> getById(long id) {
-                return Optional.of(new Card(1L, "123456", 1L, "1234", Card.Plan.TESTPLAN, LocalDateTime.now()));
-            }
-
-            @Override
-            public Optional<Card> getByNumber(String number) {
-                return Optional.of(new Card(1L, "123456", 1L, "1234", Card.Plan.TESTPLAN, LocalDateTime.now()));
-            }
-        };
-    }
-
     private TokenSessionService createTokenSessionService() {
         return new JWTTokenSessionService(
             new JWTTokenPolicy() {
@@ -160,7 +152,11 @@ public class DIContainer {
         }
     }
 
-    private CardRepository createTransactionRepository() {
+    private TransactionRepository createTransactionRepository() {
+        return new JDBCTransactionRepository(this.getSingleton(Connection.class, this::createConnection));
+    }
+
+    private CardRepository createCardRepository() {
         return new JDBCCardRepository(this.getSingleton(Connection.class, this::createConnection));
     }
 }
