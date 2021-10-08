@@ -1,6 +1,6 @@
 package com.epam.bank.atm.controller.middleware;
 
-import com.epam.bank.atm.controller.di.DIContainer;
+import com.epam.bank.atm.di.DIContainer;
 import com.epam.bank.atm.controller.dto.response.ErrorResponse;
 import com.epam.bank.atm.controller.session.TokenService;
 import com.epam.bank.atm.controller.session.TokenSessionService;
