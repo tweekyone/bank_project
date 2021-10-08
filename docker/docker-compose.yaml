@@ -24,3 +24,5 @@ services :
       - ../db-data:/var/lib/postgresql/data
     environment :
       POSTGRES_PASSWORD : 123qwe
+    ports :
+      - 5432:5432

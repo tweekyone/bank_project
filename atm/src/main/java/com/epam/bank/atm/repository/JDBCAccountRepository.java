@@ -30,18 +30,18 @@ public class JDBCAccountRepository implements AccountRepository {
             preparedStatement.setLong(1, accountId);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            List<Account> results = new LinkedList<>();
-            while (resultSet.next()) {
-                results.add(new Account(
+            if (resultSet.next()) {
+                return new Account(
                     accountId,
                     resultSet.getDouble("number"),
                     resultSet.getBoolean("is_default"),
                     resultSet.getString("plan"),
                     resultSet.getDouble("amount"),
                     resultSet.getLong("user_id")
-                ));
+                );
+            } else {
+                return null;
             }
-            return results.get(0);
         } catch (SQLException e) {
             throw new SqlMappingException(e);
         }

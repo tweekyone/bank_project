@@ -11,8 +11,8 @@ target/
 *.iml
 *.ipr
 
-### additional info ###
-TODO.txt
-/*.png
-backup
-Main.java
+# Docker data
+db-data/
+
+# Coverage report
+coverege-report/
