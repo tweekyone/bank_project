@@ -7,6 +7,7 @@ import com.epam.bank.atm.entity.Card;
 import com.epam.bank.atm.entity.User;
 import com.epam.bank.atm.service.AccountService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -62,27 +63,29 @@ public class AccountControllerTest {
         assertEquals(String.format("{\"balance\":%s}", 5178.58), stringWriter.toString());
     }
 
-    // @Test
-    // public void shouldThrowExceptionIfAmountGreaterThanAccount() throws Exception
-    // {
-    //     double amount = 5000.0;
-    //     long accountId = 10L;
-    //     var jsonBody = String.format("{\"amount\":%s}", amount);
-    //
-    //     when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
-    //     when(response.getWriter()).thenReturn(new PrintWriter(new StringWriter()));
-    //     doThrow(new Exception("AmountGreaterThanAccount")).when(accountService).withdrawMoney(accountId, amount);
-    //
-    //     accountController.doPut(request, response);
-    //     verify(response).setContentType("text/json");
-    //     verify(response).setCharacterEncoding("utf-8");
-    //     verify(response).sendError(500,"Error service");
-    // }
+    //TODO: checking amount>account
+    @Disabled
+    @Test
+    public void shouldThrowExceptionIfAmountGreaterThanAccount() throws Exception
+    {
+        double amount = 5000.0;
+        long accountId = authDescriptor.getAccount().getId();
+        var jsonBody = String.format("{\"amount\":%s}", amount);
+
+        when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
+        when(tokenSessionService.curSession()).thenReturn(authDescriptor);
+        doThrow(new Exception("AmountGreaterThanAccount")).when(accountService).withdrawMoney(accountId, amount);
+
+        accountController.doPut(request, response);
+        verify(response).setContentType("text/json");
+        verify(response).setCharacterEncoding("utf-8");
+        verify(response).sendError(500,"Error service");
+    }
 
     @ParameterizedTest
     @ValueSource(doubles = {-1, Double.NaN, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY})
     public void shouldThrowExceptionIfAmountIsWrong(double arg) throws Exception {
-        long accountId = authDescriptor.getAccount().getId();;
+        long accountId = authDescriptor.getAccount().getId();
         var jsonBody = String.format("{\"amount\":%s}", arg);
 
         when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
