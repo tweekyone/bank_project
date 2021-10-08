@@ -2,6 +2,7 @@ plugins {
   id "java"
   id "application"
   id "war"
+  id "io.freefair.lombok" version "6.2.0"
 }
 
 group 'com.epam.bank'
@@ -17,6 +18,7 @@ dependencies {
   annotationProcessor(platform(project(":bom")))
   implementation 'com.auth0:java-jwt:3.18.2'
   implementation 'com.google.code.gson:gson'
+  implementation 'org.postgresql:postgresql'
 
   compileOnly 'jakarta.servlet:jakarta.servlet-api:5.0.0'
   compileOnly 'org.projectlombok:lombok:1.18.20'
