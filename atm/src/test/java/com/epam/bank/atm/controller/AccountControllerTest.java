@@ -1,5 +1,10 @@
 package com.epam.bank.atm.controller;
 
+import com.epam.bank.atm.controller.session.TokenSessionService;
+import com.epam.bank.atm.domain.model.AuthDescriptor;
+import com.epam.bank.atm.entity.Account;
+import com.epam.bank.atm.entity.Card;
+import com.epam.bank.atm.entity.User;
 import com.epam.bank.atm.service.AccountService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,25 +25,30 @@ public class AccountControllerTest {
     HttpServletResponse response;
     AccountService accountService;
     AccountController accountController;
+    AuthDescriptor authDescriptor;
+    TokenSessionService tokenSessionService;
 
     @BeforeEach
     public void setUp() {
         request = mock(HttpServletRequest.class);
         response = mock(HttpServletResponse.class);
         accountService = mock(AccountService.class);
-        accountController = new AccountController(accountService);
+        tokenSessionService = mock(TokenSessionService.class);
+        accountController = new AccountController(accountService, tokenSessionService);
+        authDescriptor = new AuthDescriptor(new User(1L), new Account(1L, 1L), new Card(1L, "123456", 1L, "666"));
     }
 
     @Test
     public void shouldWithdrawMoneyIfAmountIsCorrect() throws Exception
     {
         double amount = 500.0;
-        long accountId = 10L;
+        long accountId = authDescriptor.getAccount().getId();
         var jsonBody = String.format("{\"amount\":%s}", amount);
 
         when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
         when(response.getWriter()).thenReturn(new PrintWriter(new StringWriter()));
         when(accountService.withdrawMoney(accountId, amount)).thenReturn(5178.58);
+        when(tokenSessionService.curSession()).thenReturn(authDescriptor);
 
         StringWriter stringWriter = new StringWriter();
         PrintWriter writer = new PrintWriter(stringWriter);
@@ -72,10 +82,11 @@ public class AccountControllerTest {
     @ParameterizedTest
     @ValueSource(doubles = {-1, Double.NaN, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY})
     public void shouldThrowExceptionIfAmountIsWrong(double arg) throws Exception {
-        long accountId = 10L;
+        long accountId = authDescriptor.getAccount().getId();;
         var jsonBody = String.format("{\"amount\":%s}", arg);
 
         when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
+        when(tokenSessionService.curSession()).thenReturn(authDescriptor);
         doThrow(new IllegalArgumentException("Less than the minimum amount")).when(accountService).withdrawMoney(accountId, arg);
 
         accountController.doPut(request, response);

@@ -21,23 +21,26 @@ import jakarta.servlet.annotation.WebServlet;
 public class AccountController extends HttpServlet {
 
     private final AccountService accountService;
+    private final TokenSessionService tokenSessionService;
 
     public AccountController() {
         accountService = new AccountService();
+        tokenSessionService = DIContainer.instance().getSingleton(TokenSessionService.class);
     }
-    public AccountController(AccountService accountService) {
+
+    public AccountController(AccountService accountService, TokenSessionService tokenSessionService) {
         this.accountService = accountService;
+        this.tokenSessionService = tokenSessionService;
     }
 
     @Override
     public void doPut(HttpServletRequest request, HttpServletResponse response)
         throws  IOException {
-
-        long accountId = 10;
-        double amount;
+        AuthDescriptor authDescriptor = tokenSessionService.curSession();
 
         response.setContentType("text/json");
         response.setCharacterEncoding("utf-8");
+        double amount;
 
         try {
             JsonElement jsonBody = JsonParser.parseReader(new JsonReader(request.getReader()));
@@ -48,8 +51,7 @@ public class AccountController extends HttpServlet {
                 return;
             }
 
-            //TODO: authDescriptor.getAccount().getId()
-            double balance = accountService.withdrawMoney(accountId, amount);
+            double balance = accountService.withdrawMoney(authDescriptor.getAccount().getId(), amount);
 
             response.setStatus(200);
             PrintWriter writeResp = response.getWriter();
