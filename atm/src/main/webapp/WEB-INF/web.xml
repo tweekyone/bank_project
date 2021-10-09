@@ -15,4 +15,25 @@
     <url-pattern>/test</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>AuthServlet</servlet-name>
+    <servlet-class>com.epam.bank.atm.controller.AuthServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>AuthServlet</servlet-name>
+    <url-pattern>/login</url-pattern>
+  </servlet-mapping>
+
+  <filter>
+    <filter-name>AuthMiddleware</filter-name>
+    <filter-class>com.epam.bank.atm.controller.middleware.AuthMiddleware</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>AuthMiddleware</filter-name>
+    <url-pattern>/test</url-pattern>
+  </filter-mapping>
+
 </web-app>

@@ -1,6 +1,8 @@
 package com.epam.bank.atm.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -9,6 +11,7 @@ public class User {
     private Long id;
     private String name;
     private String surname;
+    private String username;
     private String email;
     private String password;
     private String phone_number;
@@ -17,6 +20,7 @@ public class User {
     public User(Long id) {
         this.id = id;
     }
+
     public enum Role {
         admin,
         client

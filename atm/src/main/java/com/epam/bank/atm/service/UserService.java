@@ -5,6 +5,8 @@ import java.util.List;
 
 public interface UserService {
     User getUserById(long userId);
+
     void update(User user);
+
     List<User> getAll();
 }
