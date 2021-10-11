@@ -18,6 +18,7 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,10 +59,17 @@ public class PutMoneyServletTest {
         StringWriter stringWriter = new StringWriter();
         PrintWriter writer = new PrintWriter(stringWriter);
 
+        AuthDescriptor authDescriptor = new AuthDescriptor(
+            new User(123L),
+            new Account(1L, 1L, true, "plan", 10000, 1L),
+            new Card(1L, "1234567890123456", 1L, "1234", Card.Plan.TESTPLAN, LocalDateTime.now())
+        );
+
         when(req.getReader()).thenReturn(new BufferedReader(new StringReader(json)));
         when(resp.getWriter()).thenReturn(writer);
+        when(tokenSessionServiceMock.curSession()).thenReturn(authDescriptor);
 
-        new PutMoneyServlet().doPost(req, resp);
+        servlet.doPost(req, resp);
 
         verify(resp).setStatus(500);
         writer.flush();
@@ -74,10 +82,17 @@ public class PutMoneyServletTest {
         StringWriter stringWriter = new StringWriter();
         PrintWriter writer = new PrintWriter(stringWriter);
 
+        AuthDescriptor authDescriptor = new AuthDescriptor(
+            new User(123L),
+            new Account(1L, 1L, true, "plan", 10000, 1L),
+            new Card(1L, "1234567890123456", 1L, "1234", Card.Plan.TESTPLAN, LocalDateTime.now())
+        );
+
         when(req.getReader()).thenReturn(new BufferedReader(new StringReader(json)));
         when(resp.getWriter()).thenReturn(writer);
+        when(tokenSessionServiceMock.curSession()).thenReturn(authDescriptor);
 
-        new PutMoneyServlet().doPost(req, resp);
+        servlet.doPost(req, resp);
 
         verify(resp).setStatus(400);
         writer.flush();
@@ -93,8 +108,9 @@ public class PutMoneyServletTest {
         double balance = 2000000;
         AuthDescriptor authDescriptor = new AuthDescriptor(
             new User(123L),
-            new Account(5555L, 123L, 1000000),
-            new Card(4321, 5550505, 5555, 6666));
+            new Account(1L, 1L, true, "plan", 10000, 1L),
+            new Card(1L, "1234567890123456", 1L, "1234", Card.Plan.TESTPLAN, LocalDateTime.now())
+        );
 
         when(req.getReader()).thenReturn(new BufferedReader(new StringReader(json)));
         when(resp.getWriter()).thenReturn(writer);

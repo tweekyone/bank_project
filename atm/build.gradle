@@ -18,6 +18,7 @@ dependencies {
   annotationProcessor(platform(project(":bom")))
   implementation 'com.auth0:java-jwt:3.18.2'
   implementation 'com.google.code.gson:gson'
+  implementation 'org.apache.commons:commons-lang3'
   implementation 'org.postgresql:postgresql'
 
   compileOnly 'jakarta.servlet:jakarta.servlet-api:5.0.0'

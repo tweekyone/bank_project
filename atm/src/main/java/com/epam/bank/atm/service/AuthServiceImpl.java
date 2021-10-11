@@ -3,7 +3,6 @@ package com.epam.bank.atm.service;
 import com.epam.bank.atm.di.DIContainer;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
 import com.epam.bank.atm.entity.Account;
-import com.epam.bank.atm.entity.Card;
 import com.epam.bank.atm.entity.User;
 import com.epam.bank.atm.repository.AccountRepository;
 import com.epam.bank.atm.repository.CardRepository;
@@ -28,14 +27,14 @@ public class AuthServiceImpl implements AuthService {
             throw new IllegalArgumentException("Error! Pin is empty");
         }
 
-        Card card = cardRepository.getById(Long.parseLong(cardNumber));
-        if (card == null) {
+        var card = cardRepository.getById(Long.parseLong(cardNumber));
+        if (card.isEmpty()) {
             throw new IllegalArgumentException("Error! Card number is incorrect");
-        } else if (card.getPinCode() == Integer.parseInt(pin)) {
-            Account account = accountRepository.getById(card.getAccountId());
+        } else if (card.get().getPinCode().equals(pin)) {
+            Account account = accountRepository.getById(card.get().getAccountId());
             User user = userRepository.getById(account.getUserId());
 
-            return new AuthDescriptor(user, account, card);
+            return new AuthDescriptor(user, account, card.get());
         } else {
             throw new IllegalArgumentException("Error! Pin code is incorrect");
         }

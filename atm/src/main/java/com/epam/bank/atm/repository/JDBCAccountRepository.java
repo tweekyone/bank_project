@@ -2,31 +2,23 @@ package com.epam.bank.atm.repository;
 
 import com.epam.bank.atm.entity.Account;
 import com.epam.bank.atm.exception.SqlMappingException;
+import java.math.BigInteger;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.List;
 
 public class JDBCAccountRepository implements AccountRepository {
 
-    private final String url;
-    private final String username;
-    private final String password;
+    private final Connection connection;
 
-    public JDBCAccountRepository(String url, String username, String password) {
-        this.url = url;
-        this.username = username;
-        this.password = password;
+    public JDBCAccountRepository(Connection connection) {
+        this.connection = connection;
     }
 
     public Account getById(long accountId) {
         String sql = "SELECT number, is_default, plan, amount, user_id FROM account WHERE id = ?;";
-        try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)
-        ) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setLong(1, accountId);
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -47,21 +39,38 @@ public class JDBCAccountRepository implements AccountRepository {
         }
     }
 
-    public long putMoney(long accountId, double putAmount) {
+    public double putMoney(long accountId, double putAmount) {
         String sql = "UPDATE account set amount = amount + ? where id = ?;";
-        return executeMoneyOperation(accountId, putAmount, sql);
+        return this.getById(executeMoneyOperation(accountId, putAmount, sql)).getAmount();
     }
 
-    public long withdrawMoney(long accountId, double withdrawAmount) {
+    public double withdrawMoney(long accountId, double withdrawAmount) {
         String sql = "UPDATE account set amount = amount - ? where id = ?;";
-        return executeMoneyOperation(accountId, withdrawAmount, sql);
+        return this.getById(executeMoneyOperation(accountId, withdrawAmount, sql)).getAmount();
+    }
+
+    @Override
+    public double getCurrentAmount(long id) {
+        String sql = "select amount from account where id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, id);
+
+            var resultSet = statement.executeQuery();
+            resultSet.next();
+            return resultSet.getDouble("amount");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public BigInteger getAccountNumberById(long id) {
+        return null;
     }
 
     // returns account id if successful
     private long executeMoneyOperation(long accountId, double amount, String sql) {
-        try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)
-        ) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setDouble(1, amount);
             preparedStatement.setLong(2, accountId);
             return preparedStatement.executeLargeUpdate();

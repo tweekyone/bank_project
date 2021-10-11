@@ -14,7 +14,9 @@ import com.epam.bank.atm.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
@@ -112,7 +114,7 @@ public class JWTTokenSessionServiceTest {
 
     private CardRepository getCommonMockForCardRepository() {
         var cardRepository = mock(CardRepository.class);
-        when(cardRepository.getById(anyLong())).thenReturn(this.getTestCard());
+        when(cardRepository.getById(anyLong())).thenReturn(Optional.of(this.getTestCard()));
 
         return cardRepository;
     }
@@ -128,10 +130,10 @@ public class JWTTokenSessionServiceTest {
     }
 
     private Account getTestAccount() {
-        return new Account(1L, 1L, 0);
+        return new Account(1L, 1L, true, "plan", 10000, 1L);
     }
 
     private Card getTestCard() {
-        return new Card(1L, 123456, 1L, 1234);
+        return new Card(1L, "123456", 1L, "1234", Card.Plan.TESTPLAN, LocalDateTime.now());
     }
 }

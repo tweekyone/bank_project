@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.time.LocalDateTime;
 
 import static org.mockito.Mockito.*;
 
@@ -31,13 +32,16 @@ public class AuthServletTest extends BaseServletTest {
         var pin = "2345";
         var jsonBody = String.format("{\"cardNumber\": \"%s\", \"pin\": \"%s\"}", cardNumber, pin);
 
-        User user = new User(1L, "name", "surname", "surname", "mail@mail.com", "password",
-                        "phone number", User.Role.client);
-
         when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
         when(response.getWriter()).thenReturn(new PrintWriter(new StringWriter()));
         when(authService.login(cardNumber, pin))
-            .thenReturn(new AuthDescriptor(user, new Account(1L, 1L,0), new Card(1L, 234567, 1L, 2345)));
+            .thenReturn(
+                new AuthDescriptor(
+                    new User(1L),
+                    new Account(1L, 1L, true, "plan", 10000, 1L),
+                    new Card(1L, cardNumber, 1L, pin, Card.Plan.TESTPLAN, LocalDateTime.now())
+                )
+            );
 
         var servlet = new AuthServlet(authService, DIContainer.instance().getSingleton(TokenSessionService.class));
         servlet.doPost(request, response);

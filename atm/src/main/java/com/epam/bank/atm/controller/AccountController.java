@@ -1,7 +1,7 @@
 package com.epam.bank.atm.controller;
 
-import com.epam.bank.atm.controller.session.TokenSessionService;
 import com.epam.bank.atm.di.DIContainer;
+import com.epam.bank.atm.controller.session.TokenSessionService;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
 import com.epam.bank.atm.service.AccountService;
 import com.google.gson.JsonElement;
@@ -24,7 +24,7 @@ public class AccountController extends HttpServlet {
     private final TokenSessionService tokenSessionService;
 
     public AccountController() {
-        accountService = new AccountService();
+        accountService = DIContainer.instance().getSingleton(AccountService.class);
         tokenSessionService = DIContainer.instance().getSingleton(TokenSessionService.class);
     }
 

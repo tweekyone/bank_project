@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public class TransactionService {
+public class TransactionService implements TransactionalService {
 
     private final TransactionRepository transactionRepo;
 
@@ -22,13 +22,16 @@ public class TransactionService {
         return transactionRepo.getByAccountId(accountId);
     }
 
-    public Transaction create(Long sourceAccountId, Long destinationAccountId,
-                              double amount, LocalDateTime createdTime,
-                              Transaction.OperationType operationType,
-                              Transaction.State state) {
+    public Transaction createTransaction(
+        Long sourceAccountId,
+        Long destinationAccountId,
+        double amount,
+        Transaction.OperationType operationType,
+        Transaction.State state
+    ) {
 
         Transaction transaction = new Transaction(sourceAccountId, destinationAccountId,
-            amount, createdTime, operationType, state);
+            amount, LocalDateTime.now(), operationType, state);
         transactionRepo.save(transaction);
         return transaction;
     }

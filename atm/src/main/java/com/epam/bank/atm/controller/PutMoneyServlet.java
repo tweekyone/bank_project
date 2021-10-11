@@ -23,7 +23,7 @@ public class PutMoneyServlet extends HttpServlet {
     private final TokenSessionService tokenSessionService;
 
     public PutMoneyServlet() {
-        this.accountService = new AccountService();
+        this.accountService = DIContainer.instance().getSingleton(AccountService.class);
         this.tokenSessionService = DIContainer.instance().getSingleton(TokenSessionService.class);
     }
 
