@@ -18,43 +18,43 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
 @WebServlet("/withdraw")
-public class AccountController extends HttpServlet {
+public class WithdrawMoneyServlet extends BaseServlet {
 
     private final AccountService accountService;
     private final TokenSessionService tokenSessionService;
 
-    public AccountController() {
+    public WithdrawMoneyServlet() {
         accountService = new AccountService();
         tokenSessionService = DIContainer.instance().getSingleton(TokenSessionService.class);
     }
 
-    public AccountController(AccountService accountService, TokenSessionService tokenSessionService) {
+    public WithdrawMoneyServlet(AccountService accountService, TokenSessionService tokenSessionService) {
         this.accountService = accountService;
         this.tokenSessionService = tokenSessionService;
     }
 
     @Override
-    public void doPut(HttpServletRequest request, HttpServletResponse response)
+    public void doPut(HttpServletRequest req, HttpServletResponse resp)
         throws IOException {
         AuthDescriptor authDescriptor = tokenSessionService.curSession();
 
-        response.setContentType("text/json");
-        response.setCharacterEncoding("utf-8");
         double amount;
 
         try {
-            JsonElement jsonBody = JsonParser.parseReader(new JsonReader(request.getReader()));
+            JsonElement jsonBody = JsonParser.parseReader(new JsonReader(req.getReader()));
             if (jsonBody.isJsonObject()) {
                 amount = jsonBody.getAsJsonObject().get("amount").getAsDouble();
             } else {
-                response.sendError(400, "InValid JsonObject");
+                this.sendError(resp, "InValid JsonObject", (short) 400, "Format body is not Json" , "Format body is not Json");
                 return;
             }
 
             double balance = accountService.withdrawMoney(authDescriptor.getAccount().getId(), amount);
 
-            response.setStatus(200);
-            PrintWriter writeResp = response.getWriter();
+            resp.setContentType("text/json");
+            resp.setCharacterEncoding("UTF-8");
+            resp.setStatus(200);
+            PrintWriter writeResp = resp.getWriter();
             JsonObject jsonResp = new JsonObject();
             jsonResp.addProperty("balance", balance);
             writeResp.print(jsonResp);
@@ -64,11 +64,11 @@ public class AccountController extends HttpServlet {
             IllegalStateException |
             NumberFormatException |
             NullPointerException e) {
-            response.sendError(400, "Bad request");
+            this.sendError(resp, "Bad request", (short) 400, "Body is wrong" , "Body does not contain the necessary data");
         } catch (IllegalArgumentException e) {
-            response.sendError(400, "Bad amount");
+            this.sendError(resp, "Bad amount", (short) 400, "Bad amount" , "Amount is 0, Nan, -Inf/Inf, > account");
         } catch (Exception e) {
-            response.sendError(500, "Error service");
+            this.sendError(resp, "Error service", (short) 500, "Error service" , "Error service");
         }
     }
 }
