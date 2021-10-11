@@ -81,7 +81,7 @@ public class AuthServiceTest extends BaseTest {
 
     @Test
     public void ifCardInLoginIsEmpty() {
-        String cardNumber = "123456";
+        String cardNumber = "";
         String pin = "1234";
 
         when(mockCardRepository.getById(Mockito.anyLong())).thenReturn(Optional.empty());
@@ -96,7 +96,7 @@ public class AuthServiceTest extends BaseTest {
 
     @Test
     public void ifPinParameterInLoginIsIncorrect() {
-        String cardNumber = "123456";
+        String cardNumber = "1234567890123456";
         String pin = "4321";
 
         when(mockCardRepository.getById(Mockito.anyLong())).thenReturn(Optional.of(getTestingCard()));
@@ -111,7 +111,7 @@ public class AuthServiceTest extends BaseTest {
 
     @Test
     public void ifParametersInLoginIsCorrect() {
-        String cardNumber = "123456";
+        String cardNumber = "1234567890123456";
         String pin = "1234";
 
         when(mockCardRepository.getById(Mockito.anyLong())).thenReturn(Optional.of(getTestingCard()));
