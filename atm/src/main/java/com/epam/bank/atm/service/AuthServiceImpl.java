@@ -1,6 +1,5 @@
 package com.epam.bank.atm.service;
 
-import com.epam.bank.atm.di.DIContainer;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
 import com.epam.bank.atm.entity.Account;
 import com.epam.bank.atm.entity.User;
@@ -9,14 +8,15 @@ import com.epam.bank.atm.repository.CardRepository;
 import com.epam.bank.atm.repository.UserRepository;
 
 public class AuthServiceImpl implements AuthService {
+    private UserRepository userRepository;
     private AccountRepository accountRepository;
     private CardRepository cardRepository;
-    private UserRepository userRepository;
 
-    public AuthServiceImpl() {
-        this.accountRepository = DIContainer.instance().getSingleton(AccountRepository.class);
-        this.cardRepository = DIContainer.instance().getSingleton(CardRepository.class);
-        this.userRepository = DIContainer.instance().getSingleton(UserRepository.class);
+    public AuthServiceImpl(UserRepository userRepository, AccountRepository accountRepository,
+                           CardRepository cardRepository) {
+        this.userRepository = userRepository;
+        this.accountRepository = accountRepository;
+        this.cardRepository = cardRepository;
     }
 
     @Override

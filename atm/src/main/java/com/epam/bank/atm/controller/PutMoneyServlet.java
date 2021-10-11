@@ -1,13 +1,16 @@
 package com.epam.bank.atm.controller;
 
+import com.epam.bank.atm.controller.dto.response.ErrorResponse;
 import com.epam.bank.atm.controller.session.TokenSessionService;
 import com.epam.bank.atm.di.DIContainer;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
 import com.epam.bank.atm.service.AccountService;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.stream.JsonWriter;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -54,18 +57,24 @@ public class PutMoneyServlet extends HttpServlet {
             resp.setCharacterEncoding("UTF-8");
 
             if (amount == null || amount == 0) {
-                writer.write("Error! Amount is not filled");
+                writer.write(new Gson().toJson(new ErrorResponse("Amount is not filled", (short) 400,
+                    "Amount is not filled", "Amount is not filled")));
                 resp.setStatus(400);
             } else {
                 double balance = accountService.putMoney(authDescriptor.getAccount().getId(), amount);
                 writer.write("Your balance is: " + balance);
+                JsonObject jsonResponse = new JsonObject();
+                jsonResponse.addProperty("balance", balance);
+                writer.write(new Gson().toJson(jsonResponse));
                 resp.setStatus(200);
             }
         } catch (JsonSyntaxException e) {
-            writer.write("Wrong JSON format!");
+            writer.write(new Gson().toJson(new ErrorResponse("Wrong JSON format", (short) 500,
+                "Wrong JSON format", "Wrong JSON format in \"Amount\"")));
             resp.setStatus(500);
         } catch (IllegalArgumentException e) {
-            writer.write(e.getMessage());
+            writer.write(new Gson().toJson(new ErrorResponse("IllegalArgumentException", (short) 500,
+                "IllegalArgumentException", e.getMessage())));
             resp.setStatus(500);
         } finally {
             writer.flush();

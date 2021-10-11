@@ -28,11 +28,11 @@ public class AuthServiceTest {
 
     @BeforeEach
     public void init() {
-        authService = new AuthServiceImpl();
-
         mockAccountRepository = mock(AccountRepository.class);
         mockCardRepository = mock(CardRepository.class);
         mockUserRepository = mock(UserRepository.class);
+
+        authService = new AuthServiceImpl(mockUserRepository, mockAccountRepository, mockCardRepository);
 
         Class authServiceClass = authService.getClass();
         try {
@@ -109,7 +109,6 @@ public class AuthServiceTest {
     }
 
     @Test
-    @Disabled("It's not allowed to equal objects using assertEquals(). In this way only references are compared.")
     public void ifParametersInLoginIsCorrect() {
         String cardNumber = "123456";
         String pin = "1234";
