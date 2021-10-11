@@ -130,7 +130,7 @@ public class AuthServiceTest {
     }
 
     public Account getTestingAccount() {
-        return new Account(54321, 1324, 0);
+        return new Account(1L, 1L, true, "plan", 10000, 1L);
     }
 
     public User getTestingUser() {

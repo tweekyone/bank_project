@@ -38,7 +38,7 @@ public class AuthServletTest extends BaseServletTest {
             .thenReturn(
                 new AuthDescriptor(
                     new User(1L),
-                    new Account(1L, 1L),
+                    new Account(1L, 1L, true, "plan", 10000, 1L),
                     new Card(1L, cardNumber, 1L, pin, Card.Plan.TESTPLAN, LocalDateTime.now())
                 )
             );

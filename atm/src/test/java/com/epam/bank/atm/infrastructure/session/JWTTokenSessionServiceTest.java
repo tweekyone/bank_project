@@ -130,7 +130,7 @@ public class JWTTokenSessionServiceTest {
     }
 
     private Account getTestAccount() {
-        return new Account(1L, 1L, 0);
+        return new Account(1L, 1L, true, "plan", 10000, 1L);
     }
 
     private Card getTestCard() {

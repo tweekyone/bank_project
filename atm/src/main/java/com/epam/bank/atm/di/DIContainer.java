@@ -13,14 +13,18 @@ import com.epam.bank.atm.infrastructure.session.JWTTokenSessionService;
 import com.epam.bank.atm.infrastructure.persistence.JDBCCardRepository;
 import com.epam.bank.atm.repository.AccountRepository;
 import com.epam.bank.atm.repository.CardRepository;
+import com.epam.bank.atm.repository.JDBCAccountRepository;
 import com.epam.bank.atm.repository.TransactionRepository;
 import com.epam.bank.atm.repository.UserRepository;
 import com.epam.bank.atm.service.AuthService;
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
+import com.epam.bank.atm.service.TransactionService;
+import com.epam.bank.atm.service.TransactionalService;
 import org.postgresql.ds.PGSimpleDataSource;
 
 public class DIContainer {
@@ -60,6 +64,8 @@ public class DIContainer {
         this.prototypes.putIfAbsent(TransactionRepository.class, this::createTransactionRepository);
         this.singletons.putIfAbsent(CardRepository.class, this.createCardRepository());
         this.prototypes.putIfAbsent(CardRepository.class, this::createCardRepository);
+        this.singletons.putIfAbsent(TransactionalService.class, this.createTransactionalService());
+        this.prototypes.putIfAbsent(TransactionalService.class, this::createTransactionalService);
     }
 
     public <U extends T, T> U getSingleton(Class<T> aClass) {
@@ -89,7 +95,7 @@ public class DIContainer {
                 return new AuthDescriptor(new User(1L, "name", "surname",
                     "username", "email@mail.com", "password",
                     "phone number", User.Role.client),
-                    new Account(1L, 1L),
+                    new Account(1L, 1L, true, "plan", 10000, 1L),
                     new Card(1L, "1234567890123456", 1L, "1234", Card.Plan.TESTPLAN, LocalDateTime.now()));
             }
         };
@@ -114,32 +120,7 @@ public class DIContainer {
     }
 
     private AccountRepository createAccountRepository() {
-        return new AccountRepository() {
-            @Override
-            public Account getById(long id) {
-                return new Account(1L, 1L, 0);
-            }
-
-            @Override
-            public double putMoney(long id, double amount) {
-                return 0;
-            }
-
-            @Override
-            public double withdrawMoney(long id, double amount) {
-                return 0;
-            }
-
-            @Override
-            public double getCurrentAmount(long id) {
-                return 0;
-            }
-
-            @Override
-            public BigInteger getAccountNumberById(long id) {
-                return null;
-            }
-        };
+        return new JDBCAccountRepository(this.getSingleton(Connection.class, this::createConnection));
     }
 
     private TokenSessionService createTokenSessionService() {
@@ -186,5 +167,9 @@ public class DIContainer {
 
     private CardRepository createCardRepository() {
         return new JDBCCardRepository(this.getSingleton(Connection.class, this::createConnection));
+    }
+
+    private TransactionalService createTransactionalService() {
+        return new TransactionService(this.getSingleton(TransactionRepository.class));
     }
 }

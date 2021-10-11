@@ -41,7 +41,7 @@ public class AccountControllerTest {
         accountController = new AccountController(accountService, tokenSessionService);
         authDescriptor = new AuthDescriptor(
             new User(1L),
-            new Account(1L, 1L),
+            new Account(1L, 1L, true, "plan", 10000, 1L),
             new Card(1L, "1234567890123456", 1L, "5555", Card.Plan.TESTPLAN, LocalDateTime.now())
         );
     }
