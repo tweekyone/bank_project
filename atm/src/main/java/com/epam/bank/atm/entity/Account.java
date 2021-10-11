@@ -1,9 +1,22 @@
 package com.epam.bank.atm.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import java.util.Objects;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@ToString
 public class Account {
+
     private final long id;
+    private double number;
+    private boolean isDefault;
+    private String plan;
+    private double amount;
     private final long userId;
     private double amount;
 
@@ -41,4 +54,5 @@ public class Account {
     public int hashCode() {
         return Objects.hash(id, userId, amount);
     }
+
 }
