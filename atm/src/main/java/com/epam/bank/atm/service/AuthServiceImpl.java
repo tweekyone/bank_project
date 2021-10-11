@@ -27,7 +27,7 @@ public class AuthServiceImpl implements AuthService {
             throw new IllegalArgumentException("Error! Pin is empty");
         }
 
-        var card = cardRepository.getById(Long.parseLong(cardNumber));
+        var card = cardRepository.getByNumber(cardNumber);
         if (card.isEmpty()) {
             throw new IllegalArgumentException("Error! Card number is incorrect");
         } else if (card.get().getPinCode().equals(pin)) {
