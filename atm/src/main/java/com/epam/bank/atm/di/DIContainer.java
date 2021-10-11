@@ -3,7 +3,6 @@ package com.epam.bank.atm.di;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.epam.bank.atm.controller.session.TokenService;
 import com.epam.bank.atm.controller.session.TokenSessionService;
-import com.epam.bank.atm.entity.User;
 import com.epam.bank.atm.infrastructure.persistence.JDBCTransactionRepository;
 import com.epam.bank.atm.infrastructure.session.JWTTokenPolicy;
 import com.epam.bank.atm.infrastructure.session.JWTTokenSessionService;
