@@ -128,7 +128,7 @@ public class JWTTokenSessionServiceTest {
     }
 
     private Account getTestAccount() {
-        return new Account(1L, 1L);
+        return new Account(1L, 1L, 0);
     }
 
     private Card getTestCard() {

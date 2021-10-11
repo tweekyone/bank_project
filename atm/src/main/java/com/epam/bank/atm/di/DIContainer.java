@@ -85,7 +85,7 @@ public class DIContainer {
                 return new AuthDescriptor(new User(1L, "name", "surname",
                     "username", "email@mail.com", "password",
                     "phone number", User.Role.client),
-                    new Account(1L, 1L),
+                    new Account(1L, 1L, 0),
                     new Card(1L, 123456, 1L, 1234));
             }
         };
@@ -108,7 +108,7 @@ public class DIContainer {
         return new AccountRepository() {
             @Override
             public Account getById(long id) {
-                return new Account(1L, 1L);
+                return new Account(1L, 1L, 0);
             }
         };
     }
