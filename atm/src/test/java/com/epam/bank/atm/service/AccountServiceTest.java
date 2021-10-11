@@ -9,7 +9,7 @@ public class AccountServiceTest {
     private final double positiveAmount = 578.58;
     private final double negativeAmount = -578.58;
     private final double zeroAmount = 0.00;
-    private final long accountId = 40817810;
+    private final long accountId = 1;
 
     private final AccountService service = new AccountService();
 

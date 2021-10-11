@@ -11,8 +11,10 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -45,8 +47,7 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void shouldWithdrawMoneyIfAmountIsCorrect() throws Exception
-    {
+    public void shouldWithdrawMoneyIfAmountIsCorrect() throws Exception {
         double amount = 500.0;
         long accountId = authDescriptor.getAccount().getId();
         var jsonBody = String.format("{\"amount\":%s}", amount);
@@ -71,8 +72,7 @@ public class AccountControllerTest {
     //TODO: checking amount>account
     @Disabled
     @Test
-    public void shouldThrowExceptionIfAmountGreaterThanAccount() throws Exception
-    {
+    public void shouldThrowExceptionIfAmountGreaterThanAccount() throws Exception {
         double amount = 5000.0;
         long accountId = authDescriptor.getAccount().getId();
         var jsonBody = String.format("{\"amount\":%s}", amount);
@@ -84,7 +84,7 @@ public class AccountControllerTest {
         accountController.doPut(request, response);
         verify(response).setContentType("text/json");
         verify(response).setCharacterEncoding("utf-8");
-        verify(response).sendError(500,"Error service");
+        verify(response).sendError(500, "Error service");
     }
 
     @ParameterizedTest
@@ -95,12 +95,13 @@ public class AccountControllerTest {
 
         when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
         when(tokenSessionService.curSession()).thenReturn(authDescriptor);
-        doThrow(new IllegalArgumentException("Less than the minimum amount")).when(accountService).withdrawMoney(accountId, arg);
+        doThrow(new IllegalArgumentException("Less than the minimum amount")).when(accountService)
+            .withdrawMoney(accountId, arg);
 
         accountController.doPut(request, response);
         verify(response).setContentType("text/json");
         verify(response).setCharacterEncoding("utf-8");
-        verify(response).sendError(400,"Bad amount");
+        verify(response).sendError(400, "Bad amount");
     }
 
     @ParameterizedTest
@@ -114,7 +115,7 @@ public class AccountControllerTest {
         accountController.doPut(request, response);
         verify(response).setContentType("text/json");
         verify(response).setCharacterEncoding("utf-8");
-        verify(response).sendError(400,"InValid JsonObject");
+        verify(response).sendError(400, "InValid JsonObject");
     }
 
     @ParameterizedTest
@@ -130,7 +131,7 @@ public class AccountControllerTest {
         accountController.doPut(request, response);
         verify(response).setContentType("text/json");
         verify(response).setCharacterEncoding("utf-8");
-        verify(response).sendError(400,"Bad request");
+        verify(response).sendError(400, "Bad request");
     }
 
 }

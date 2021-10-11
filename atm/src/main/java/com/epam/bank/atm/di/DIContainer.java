@@ -117,7 +117,27 @@ public class DIContainer {
         return new AccountRepository() {
             @Override
             public Account getById(long id) {
-                return new Account(1L, 1L);
+                return new Account(1L, 1L, 0);
+            }
+
+            @Override
+            public double putMoney(long id, double amount) {
+                return 0;
+            }
+
+            @Override
+            public double withdrawMoney(long id, double amount) {
+                return 0;
+            }
+
+            @Override
+            public double getCurrentAmount(long id) {
+                return 0;
+            }
+
+            @Override
+            public BigInteger getAccountNumberById(long id) {
+                return null;
             }
         };
     }

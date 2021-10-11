@@ -9,13 +9,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import jakarta.servlet.annotation.WebServlet;
 
 @WebServlet("/withdraw")
 public class AccountController extends HttpServlet {
@@ -35,7 +35,7 @@ public class AccountController extends HttpServlet {
 
     @Override
     public void doPut(HttpServletRequest request, HttpServletResponse response)
-        throws  IOException {
+        throws IOException {
         AuthDescriptor authDescriptor = tokenSessionService.curSession();
 
         response.setContentType("text/json");
@@ -60,15 +60,14 @@ public class AccountController extends HttpServlet {
             writeResp.print(jsonResp);
             writeResp.flush();
         } catch (UnsupportedEncodingException |
-                 JsonParseException |
-                 IllegalStateException |
-                 NumberFormatException |
-                 NullPointerException e) {
-            response.sendError(400,  "Bad request");
+            JsonParseException |
+            IllegalStateException |
+            NumberFormatException |
+            NullPointerException e) {
+            response.sendError(400, "Bad request");
         } catch (IllegalArgumentException e) {
             response.sendError(400, "Bad amount");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             response.sendError(500, "Error service");
         }
     }

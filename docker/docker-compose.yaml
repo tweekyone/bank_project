@@ -21,6 +21,7 @@ services :
     restart : always
     volumes :
       - ../atm/src/main/resources/db/initDB.sql:/docker-entrypoint-initdb.d/initDB.sql:ro
+      - ../atm/src/main/resources/db/populateDB.sql:/docker-entrypoint-initdb.d/populateDB.sql:ro
       - ../db-data:/var/lib/postgresql/data
     environment :
       POSTGRES_PASSWORD : 123qwe

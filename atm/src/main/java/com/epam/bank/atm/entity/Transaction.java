@@ -17,11 +17,17 @@ public final class Transaction {
     private final State state;
 
     public enum OperationType {
-        VALUE
+        CASH,
+        WITHDRAWAL,
+        TRANSFER,
+        PAYMENTS
     }
 
     public enum State {
-        VALUE
+        IN_PROCESS,
+        DONE,
+        CANCELLED,
+        CLOSED
     }
 
     public Transaction(
