@@ -58,4 +58,21 @@ public class Card {
         this.explicationDate = explicationDate;
         this.accountId = accountId;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Card card = (Card) o;
+        return id == card.id && number == card.number && accountId == card.accountId && pinCode == card.pinCode;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, number, accountId, pinCode);
+    }
 }

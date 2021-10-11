@@ -1,4 +1,4 @@
-package com.epam.bank.atm.controller.di;
+package com.epam.bank.atm.di;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import com.epam.bank.atm.controller.session.TokenService;
@@ -16,14 +16,13 @@ import com.epam.bank.atm.repository.CardRepository;
 import com.epam.bank.atm.repository.TransactionRepository;
 import com.epam.bank.atm.repository.UserRepository;
 import com.epam.bank.atm.service.AuthService;
-import org.postgresql.ds.PGSimpleDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
+import org.postgresql.ds.PGSimpleDataSource;
 
-// ToDo: replace it from controller package to some di package
 public class DIContainer {
     private static volatile DIContainer instance = instance();
     private final ConcurrentHashMap<Class<?>, Object> singletons = new ConcurrentHashMap<>();
@@ -87,19 +86,24 @@ public class DIContainer {
         return new AuthService() {
             @Override
             public AuthDescriptor login(String cardNumber, String pin) {
-                return new AuthDescriptor(
-                    new User(1L),
+                return new AuthDescriptor(new User(1L, "name", "surname",
+                    "username", "email@mail.com", "password",
+                    "phone number", User.Role.client),
                     new Account(1L, 1L),
-                    new Card(1L, "123456", 1L, "1234", Card.Plan.TESTPLAN, LocalDateTime.now()));
+                    new Card(1L, 123456, 1L, 1234));
             }
         };
     }
 
     private UserRepository createUserRepository() {
         return new UserRepository() {
+            private User user = new User(1L, "name", "surname",
+                "username", "email@mail.com", "password",
+                "phone number", User.Role.client);
+
             @Override
             public User getById(long id) {
-                return new User(1L);
+                return user;
             }
         };
     }

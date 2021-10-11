@@ -1,13 +1,28 @@
 package com.epam.bank.atm.entity;
 
-public class User {
-    private final long id;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-    public User(long id) {
+@Getter
+@Setter
+@AllArgsConstructor
+public class User {
+    private Long id;
+    private String name;
+    private String surname;
+    private String username;
+    private String email;
+    private String password;
+    private String phone_number;
+    private Role role;
+
+    public User(Long id) {
         this.id = id;
     }
 
-    public long getId() {
-        return this.id;
+    public enum Role {
+        admin,
+        client
     }
 }

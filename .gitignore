@@ -13,3 +13,6 @@ target/
 
 # Docker data
 db-data/
+
+# Coverage report
+coverege-report/

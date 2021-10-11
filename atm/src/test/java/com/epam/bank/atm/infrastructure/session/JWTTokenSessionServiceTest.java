@@ -124,7 +124,9 @@ public class JWTTokenSessionServiceTest {
     }
 
     private User getTestUser() {
-        return new User(1L);
+        return new User(1L, "name", "surname",
+            "username", "email@mail.com", "username",
+            "phone number", User.Role.client);
     }
 
     private Account getTestAccount() {
