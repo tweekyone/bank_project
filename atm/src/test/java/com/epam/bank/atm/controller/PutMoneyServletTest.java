@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class PutMoneyServletTest {
+public class PutMoneyServletTest extends BaseServletTest {
 
     private HttpServletRequest req;
     private HttpServletResponse resp;

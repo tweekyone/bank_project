@@ -23,7 +23,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.time.LocalDateTime;
 
-public class AccountControllerTest {
+public class AccountControllerTest extends BaseServletTest {
 
     HttpServletRequest request;
     HttpServletResponse response;
