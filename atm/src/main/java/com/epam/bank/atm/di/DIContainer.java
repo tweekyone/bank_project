@@ -3,9 +3,6 @@ package com.epam.bank.atm.di;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.epam.bank.atm.controller.session.TokenService;
 import com.epam.bank.atm.controller.session.TokenSessionService;
-import com.epam.bank.atm.domain.model.AuthDescriptor;
-import com.epam.bank.atm.entity.Account;
-import com.epam.bank.atm.entity.Card;
 import com.epam.bank.atm.entity.User;
 import com.epam.bank.atm.infrastructure.persistence.JDBCTransactionRepository;
 import com.epam.bank.atm.infrastructure.session.JWTTokenPolicy;
@@ -14,15 +11,15 @@ import com.epam.bank.atm.infrastructure.persistence.JDBCCardRepository;
 import com.epam.bank.atm.repository.AccountRepository;
 import com.epam.bank.atm.repository.CardRepository;
 import com.epam.bank.atm.repository.JDBCAccountRepository;
+import com.epam.bank.atm.repository.JDBCTUserRepository;
 import com.epam.bank.atm.repository.TransactionRepository;
 import com.epam.bank.atm.repository.UserRepository;
 import com.epam.bank.atm.service.AuthService;
-import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
+import com.epam.bank.atm.service.AuthServiceImpl;
 import com.epam.bank.atm.service.TransactionService;
 import com.epam.bank.atm.service.TransactionalService;
 import org.postgresql.ds.PGSimpleDataSource;
@@ -46,8 +43,6 @@ public class DIContainer {
     }
 
     private void init() {
-        this.singletons.putIfAbsent(AuthService.class, this.createAuthService());
-        this.prototypes.putIfAbsent(AuthService.class, this::createAuthService);
         this.singletons.putIfAbsent(TokenSessionService.class, this.createTokenSessionService());
         this.prototypes.putIfAbsent(TokenSessionService.class, this::createTokenSessionService);
         this.singletons.putIfAbsent(UserRepository.class, this.createUserRepository());
@@ -66,6 +61,8 @@ public class DIContainer {
         this.prototypes.putIfAbsent(CardRepository.class, this::createCardRepository);
         this.singletons.putIfAbsent(TransactionalService.class, this.createTransactionalService());
         this.prototypes.putIfAbsent(TransactionalService.class, this::createTransactionalService);
+        this.singletons.putIfAbsent(AuthService.class, this.createAuthService());
+        this.prototypes.putIfAbsent(AuthService.class, this::createAuthService);
     }
 
     public <U extends T, T> U getSingleton(Class<T> aClass) {
@@ -89,34 +86,11 @@ public class DIContainer {
     }
 
     private AuthService createAuthService() {
-        return new AuthService() {
-            @Override
-            public AuthDescriptor login(String cardNumber, String pin) {
-                return new AuthDescriptor(new User(1L, "name", "surname",
-                    "username", "email@mail.com", "password",
-                    "phone number", User.Role.client),
-                    new Account(1L, 1L, true, "plan", 10000, 1L),
-                    new Card(1L, "1234567890123456", 1L, "1234", Card.Plan.TESTPLAN, LocalDateTime.now()));
-            }
-        };
+        return new AuthServiceImpl();
     }
 
     private UserRepository createUserRepository() {
-        return new UserRepository() {
-            @Override
-            public User getById(long id) {
-                return new User(
-                    1L,
-                    "name",
-                    "surname",
-                    "username",
-                    "email@mail.com",
-                    "password",
-                    "phone number",
-                    User.Role.client
-                );
-            }
-        };
+        return new JDBCTUserRepository(this.getSingleton(Connection.class, this::createConnection));
     }
 
     private AccountRepository createAccountRepository() {
