@@ -145,10 +145,15 @@ public class DIContainer {
     }
 
     private TransactionalService createTransactionalService() {
-        return new TransactionService(this.getSingleton(TransactionRepository.class));
+        return new TransactionService(
+            this.getSingleton(TransactionRepository.class, this::createTransactionRepository)
+        );
     }
 
-    private AccountService createAccountService(){
-        return new AccountService(createTransactionalService(), this.getSingleton(AccountRepository.class));
+    private AccountService createAccountService() {
+        return new AccountService(
+            this.getSingleton(TransactionalService.class, this::createTransactionalService),
+            this.getSingleton(AccountRepository.class, this::createAccountRepository)
+        );
     }
 }
