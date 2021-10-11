@@ -3,10 +3,10 @@ package com.epam.bank.atm.di;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.epam.bank.atm.controller.session.TokenService;
 import com.epam.bank.atm.controller.session.TokenSessionService;
-import com.epam.bank.atm.repository.JDBCTransactionRepository;
+import com.epam.bank.atm.infrastructure.persistence.JDBCTransactionRepository;
 import com.epam.bank.atm.infrastructure.session.JWTTokenPolicy;
 import com.epam.bank.atm.infrastructure.session.JWTTokenSessionService;
-import com.epam.bank.atm.repository.JDBCCardRepository;
+import com.epam.bank.atm.infrastructure.persistence.JDBCCardRepository;
 import com.epam.bank.atm.repository.AccountRepository;
 import com.epam.bank.atm.repository.CardRepository;
 import com.epam.bank.atm.repository.JDBCAccountRepository;
@@ -87,7 +87,11 @@ public class DIContainer {
     }
 
     private AuthService createAuthService() {
-        return new AuthServiceImpl();
+        return new AuthServiceImpl(
+            this.getSingleton(UserRepository.class, this::createUserRepository),
+            this.getSingleton(AccountRepository.class, this::createAccountRepository),
+            this.getSingleton(CardRepository.class, this::createCardRepository)
+        );
     }
 
     private UserRepository createUserRepository() {
