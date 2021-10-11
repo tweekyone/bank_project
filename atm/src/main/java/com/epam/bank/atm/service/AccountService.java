@@ -1,6 +1,5 @@
 package com.epam.bank.atm.service;
 
-import com.epam.bank.atm.di.DIContainer;
 import com.epam.bank.atm.entity.Transaction;
 import com.epam.bank.atm.repository.AccountRepository;
 
@@ -9,35 +8,43 @@ public class AccountService {
     private final TransactionalService service;
     private final AccountRepository repository;
 
-    public AccountService() {
-        service = DIContainer.instance().getSingleton(TransactionalService.class);
-        repository = DIContainer.instance().getSingleton(AccountRepository.class);
+    public AccountService(TransactionalService service, AccountRepository repository) {
+        this.service = service;
+        this.repository = repository;
     }
 
     public double putMoney(long id, double amount) {
         checkMinimumAmountForOperation(amount);
+        double currentAmount = repository.getCurrentAmount(id);
         double result = repository.putMoney(id, amount);
-        if (result != -1) {
-            service.createTransaction(
-                null,
-                id,
-                amount,
+        if (result <= currentAmount) {
+            service.createTransaction(null, id, amount,
                 Transaction.OperationType.CASH,
-                Transaction.State.DONE
-            );
+                Transaction.State.CANCELLED);
+            throw new IllegalStateException("Funds have not been credited to the account");
         }
+        service.createTransaction(null, id, amount,
+            Transaction.OperationType.CASH,
+            Transaction.State.DONE);
         return result;
     }
 
     public double withdrawMoney(long id, double amount) {
-        if(repository.getCurrentAmount(id) < amount){
-            throw new IllegalArgumentException("Less than the current balance");
+        double currentAmount = repository.getCurrentAmount(id);
+        if (currentAmount < amount) {
+            throw new IllegalArgumentException("More than the current balance");
         }
         checkMinimumAmountForOperation(amount);
         double result = repository.withdrawMoney(id, amount);
-        if (result != -1) {
-            service.createTransaction(id, null, amount, Transaction.OperationType.CASH, Transaction.State.DONE);
+        if (result >= currentAmount) {
+            service.createTransaction(id, null, amount,
+                Transaction.OperationType.WITHDRAWAL,
+                Transaction.State.CANCELLED);
+            throw new IllegalStateException("Funds have not been withdrawn from the account");
         }
+        service.createTransaction(id, null, amount,
+            Transaction.OperationType.CASH, Transaction.State.DONE);
+
         return result;
     }
 
