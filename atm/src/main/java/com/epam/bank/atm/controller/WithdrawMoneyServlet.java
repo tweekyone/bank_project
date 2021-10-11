@@ -1,6 +1,5 @@
 package com.epam.bank.atm.controller;
 
-import com.epam.bank.atm.di.DIContainer;
 import com.epam.bank.atm.controller.session.TokenSessionService;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
 import com.epam.bank.atm.service.AccountService;
@@ -10,7 +9,6 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -22,11 +20,6 @@ public class WithdrawMoneyServlet extends BaseServlet {
 
     private final AccountService accountService;
     private final TokenSessionService tokenSessionService;
-
-    public WithdrawMoneyServlet() {
-        accountService = new AccountService();
-        tokenSessionService = DIContainer.instance().getSingleton(TokenSessionService.class);
-    }
 
     public WithdrawMoneyServlet(AccountService accountService, TokenSessionService tokenSessionService) {
         this.accountService = accountService;
