@@ -90,20 +90,25 @@ public class DIContainer {
                     "username", "email@mail.com", "password",
                     "phone number", User.Role.client),
                     new Account(1L, 1L),
-                    new Card(1L, 123456, 1L, 1234));
+                    new Card(1L, "1234567890123456", 1L, "1234", Card.Plan.TESTPLAN, LocalDateTime.now()));
             }
         };
     }
 
     private UserRepository createUserRepository() {
         return new UserRepository() {
-            private User user = new User(1L, "name", "surname",
-                "username", "email@mail.com", "password",
-                "phone number", User.Role.client);
-
             @Override
             public User getById(long id) {
-                return user;
+                return new User(
+                    1L,
+                    "name",
+                    "surname",
+                    "username",
+                    "email@mail.com",
+                    "password",
+                    "phone number",
+                    User.Role.client
+                );
             }
         };
     }

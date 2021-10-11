@@ -1,6 +1,6 @@
 package com.epam.bank.atm.domain;
 
-import com.epam.bank.atm.controller.di.DIContainer;
+import com.epam.bank.atm.di.DIContainer;
 import com.epam.bank.atm.repository.AccountRepository;
 import com.epam.bank.atm.repository.CardRepository;
 

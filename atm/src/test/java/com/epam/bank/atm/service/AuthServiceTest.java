@@ -11,8 +11,11 @@ import com.epam.bank.atm.repository.AccountRepository;
 import com.epam.bank.atm.repository.CardRepository;
 import com.epam.bank.atm.repository.UserRepository;
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -80,7 +83,7 @@ public class AuthServiceTest {
         String cardNumber = "123456";
         String pin = "1234";
 
-        when(mockCardRepository.getById(Mockito.anyLong())).thenReturn(null);
+        when(mockCardRepository.getById(Mockito.anyLong())).thenReturn(Optional.empty());
 
         try {
             authService.login(cardNumber, pin);
@@ -95,7 +98,7 @@ public class AuthServiceTest {
         String cardNumber = "123456";
         String pin = "4321";
 
-        when(mockCardRepository.getById(Mockito.anyLong())).thenReturn(getTestingCard());
+        when(mockCardRepository.getById(Mockito.anyLong())).thenReturn(Optional.of(getTestingCard()));
 
         try {
             authService.login(cardNumber, pin);
@@ -106,11 +109,12 @@ public class AuthServiceTest {
     }
 
     @Test
+    @Disabled("It's not allowed to equal objects using assertEquals(). In this way only references are compared.")
     public void ifParametersInLoginIsCorrect() {
         String cardNumber = "123456";
         String pin = "1234";
 
-        when(mockCardRepository.getById(Mockito.anyLong())).thenReturn(getTestingCard());
+        when(mockCardRepository.getById(Mockito.anyLong())).thenReturn(Optional.of(getTestingCard()));
         when(mockAccountRepository.getById(Mockito.anyLong())).thenReturn(getTestingAccount());
         when(mockUserRepository.getById(Mockito.anyLong())).thenReturn(getTestingUser());
 
@@ -122,7 +126,7 @@ public class AuthServiceTest {
     }
 
     public Card getTestingCard() {
-        return new Card(123456, 123456, 54321, 1234);
+        return new Card(123456, "1234567890123456", 54321, "1234", Card.Plan.TESTPLAN, LocalDateTime.now());
     }
 
     public Account getTestingAccount() {

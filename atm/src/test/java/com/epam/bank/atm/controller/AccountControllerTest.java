@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.time.LocalDateTime;
 
 public class AccountControllerTest {
 
@@ -36,7 +37,11 @@ public class AccountControllerTest {
         accountService = mock(AccountService.class);
         tokenSessionService = mock(TokenSessionService.class);
         accountController = new AccountController(accountService, tokenSessionService);
-        authDescriptor = new AuthDescriptor(new User(1L), new Account(1L, 1L), new Card(1L, 123456, 1L, 5555));
+        authDescriptor = new AuthDescriptor(
+            new User(1L),
+            new Account(1L, 1L),
+            new Card(1L, "1234567890123456", 1L, "5555", Card.Plan.TESTPLAN, LocalDateTime.now())
+        );
     }
 
     @Test

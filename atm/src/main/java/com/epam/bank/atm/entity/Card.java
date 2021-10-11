@@ -8,6 +8,7 @@ import com.epam.bank.atm.domain.statement.CardWithSuchNumberDoesNotExist;
 import lombok.Getter;
 import lombok.NonNull;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Getter
 public class Card {
@@ -68,7 +69,10 @@ public class Card {
             return false;
         }
         Card card = (Card) o;
-        return id == card.id && number == card.number && accountId == card.accountId && pinCode == card.pinCode;
+        return Objects.equals(id, card.id)
+            && Objects.equals(number, card.number)
+            && accountId == card.accountId
+            && Objects.equals(pinCode, card.pinCode);
     }
 
     @Override
