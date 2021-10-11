@@ -92,9 +92,9 @@ public class PutMoneyServletTest {
         PrintWriter writer = new PrintWriter(stringWriter);
         double balance = 2000000;
         AuthDescriptor authDescriptor = new AuthDescriptor(
-            new User(123),
-            new Account(5555, 123, 1000000),
-            new Card(4321, "5550505", 5555, "6666"));
+            new User(123L),
+            new Account(5555L, 123L, 1000000),
+            new Card(4321, 5550505, 5555, 6666));
 
         when(req.getReader()).thenReturn(new BufferedReader(new StringReader(json)));
         when(resp.getWriter()).thenReturn(writer);

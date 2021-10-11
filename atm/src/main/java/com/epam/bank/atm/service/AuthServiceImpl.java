@@ -1,6 +1,6 @@
 package com.epam.bank.atm.service;
 
-import com.epam.bank.atm.controller.di.DIContainer;
+import com.epam.bank.atm.di.DIContainer;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
 import com.epam.bank.atm.entity.Account;
 import com.epam.bank.atm.entity.Card;

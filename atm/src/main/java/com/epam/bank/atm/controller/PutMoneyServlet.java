@@ -1,10 +1,9 @@
 package com.epam.bank.atm.controller;
 
-import com.epam.bank.atm.controller.di.DIContainer;
 import com.epam.bank.atm.controller.session.TokenSessionService;
+import com.epam.bank.atm.di.DIContainer;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
 import com.epam.bank.atm.service.AccountService;
-import com.epam.bank.atm.service.AccountServiceImpl;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -24,7 +23,7 @@ public class PutMoneyServlet extends HttpServlet {
     private final TokenSessionService tokenSessionService;
 
     public PutMoneyServlet() {
-        this.accountService = new AccountServiceImpl();
+        this.accountService = new AccountService();
         this.tokenSessionService = DIContainer.instance().getSingleton(TokenSessionService.class);
     }
 
