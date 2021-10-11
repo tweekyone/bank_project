@@ -24,7 +24,7 @@ public class AccountController extends HttpServlet {
     private final TokenSessionService tokenSessionService;
 
     public AccountController() {
-        accountService = new AccountService();
+        accountService = DIContainer.instance().getSingleton(AccountService.class);
         tokenSessionService = DIContainer.instance().getSingleton(TokenSessionService.class);
     }
 
