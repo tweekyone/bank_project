@@ -16,16 +16,18 @@
 1. choose "Edit configurations..." in configuration toolbar
 2. choose "Add new configuration" (plus icon)
 3. choose "Remote JVM Debug"
-4. set up configuration according to the picture
-
-![img.png](readme/img.png)
+4. provide the next parameters:
+    * host=localhost
+    * port=8100
+    * module classpath=bank-project
 5. choose the debug configuration in select and press "debug" (on the right side from select)
 6. since now, you can set a breakpoint and debug the app (for example, set a breakpoint in AuthServlet and check the link with welcome message).
 
-**To use db through IDEA follow the next steps:**
+**To use db follow the next steps:**
 1. open database toolbar
-2. add new postgresql datasource (plus icon)
-3. set up configuration according to the picture (don't forget to enter the password, the default one is shown in docker-compose.yaml file)
-
-![img_1.png](readme/img_1.png)
-4. since now, you can check db condition.
+2. add new postgresql datasource with the next parameters:
+    * host=localhost 
+    * port=5432 
+    * user=postgres 
+    * password=123qwe (it's default credentials, you can change them by providing advance user policy)
+3. since now, you can check db condition.
