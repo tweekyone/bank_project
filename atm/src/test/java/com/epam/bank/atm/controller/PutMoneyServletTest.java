@@ -4,12 +4,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.epam.bank.atm.controller.dto.response.ErrorResponse;
 import com.epam.bank.atm.controller.session.TokenSessionService;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
 import com.epam.bank.atm.entity.Account;
 import com.epam.bank.atm.entity.Card;
 import com.epam.bank.atm.entity.User;
 import com.epam.bank.atm.service.AccountService;
+import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -73,7 +75,10 @@ public class PutMoneyServletTest extends BaseServletTest {
 
         verify(resp).setStatus(500);
         writer.flush();
-        Assertions.assertTrue(stringWriter.toString().contains("Wrong JSON format!"));
+        Assertions.assertTrue(stringWriter.toString().contains(
+            new Gson().toJson(
+                new ErrorResponse("Wrong JSON format", (short) 500,
+                    "Wrong JSON format", "Wrong JSON format in \"Amount\""))));
     }
 
     @Test
@@ -96,7 +101,10 @@ public class PutMoneyServletTest extends BaseServletTest {
 
         verify(resp).setStatus(400);
         writer.flush();
-        Assertions.assertTrue(stringWriter.toString().contains("Error! Amount is not filled"));
+        Assertions.assertTrue(stringWriter.toString().contains(
+            new Gson().toJson(
+                new ErrorResponse("Amount is not filled", (short) 400,
+                    "Amount is not filled", "Amount is not filled"))));
     }
 
     @Test

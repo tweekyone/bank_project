@@ -87,7 +87,11 @@ public class DIContainer {
     }
 
     private AuthService createAuthService() {
-        return new AuthServiceImpl();
+        return new AuthServiceImpl(
+            this.getSingleton(UserRepository.class, this::createUserRepository),
+            this.getSingleton(AccountRepository.class, this::createAccountRepository),
+            this.getSingleton(CardRepository.class, this::createCardRepository)
+        );
     }
 
     private UserRepository createUserRepository() {

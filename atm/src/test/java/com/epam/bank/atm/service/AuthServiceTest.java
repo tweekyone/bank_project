@@ -29,11 +29,11 @@ public class AuthServiceTest extends BaseTest {
 
     @BeforeEach
     public void init() {
-        authService = new AuthServiceImpl();
-
         mockAccountRepository = mock(AccountRepository.class);
         mockCardRepository = mock(CardRepository.class);
         mockUserRepository = mock(UserRepository.class);
+
+        authService = new AuthServiceImpl(mockUserRepository, mockAccountRepository, mockCardRepository);
 
         Class authServiceClass = authService.getClass();
         try {
@@ -80,11 +80,11 @@ public class AuthServiceTest extends BaseTest {
     }
 
     @Test
-    public void ifCardInLoginIsEmpty() {
+    public void ifCardInLoginIsIncorrect() {
         String cardNumber = "123456";
         String pin = "1234";
 
-        when(mockCardRepository.getById(Mockito.anyLong())).thenReturn(Optional.empty());
+        when(mockCardRepository.getByNumber(Mockito.anyString())).thenReturn(Optional.empty());
 
         try {
             authService.login(cardNumber, pin);
@@ -96,10 +96,10 @@ public class AuthServiceTest extends BaseTest {
 
     @Test
     public void ifPinParameterInLoginIsIncorrect() {
-        String cardNumber = "123456";
+        String cardNumber = "1234567890123456";
         String pin = "4321";
 
-        when(mockCardRepository.getById(Mockito.anyLong())).thenReturn(Optional.of(getTestingCard()));
+        when(mockCardRepository.getByNumber(Mockito.anyString())).thenReturn(Optional.of(getTestingCard()));
 
         try {
             authService.login(cardNumber, pin);
@@ -110,12 +110,11 @@ public class AuthServiceTest extends BaseTest {
     }
 
     @Test
-    @Disabled("It's not allowed to equal objects using assertEquals(). In this way only references are compared.")
     public void ifParametersInLoginIsCorrect() {
-        String cardNumber = "123456";
+        String cardNumber = "1234567890123456";
         String pin = "1234";
 
-        when(mockCardRepository.getById(Mockito.anyLong())).thenReturn(Optional.of(getTestingCard()));
+        when(mockCardRepository.getByNumber(Mockito.anyString())).thenReturn(Optional.of(getTestingCard()));
         when(mockAccountRepository.getById(Mockito.anyLong())).thenReturn(getTestingAccount());
         when(mockUserRepository.getById(Mockito.anyLong())).thenReturn(getTestingUser());
 
