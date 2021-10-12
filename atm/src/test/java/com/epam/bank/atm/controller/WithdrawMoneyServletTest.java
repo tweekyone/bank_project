@@ -7,7 +7,6 @@ import com.epam.bank.atm.entity.Card;
 import com.epam.bank.atm.entity.User;
 import com.epam.bank.atm.service.AccountService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -23,22 +22,26 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.time.LocalDateTime;
 
-public class AccountControllerTest extends BaseServletTest {
+public class WithdrawMoneyServletTest extends BaseServletTest{
 
     HttpServletRequest request;
     HttpServletResponse response;
     AccountService accountService;
-    AccountController accountController;
+    WithdrawMoneyServlet withdrawMoneyServlet;
     AuthDescriptor authDescriptor;
     TokenSessionService tokenSessionService;
+    StringWriter stringWriter;
+    PrintWriter writer;
 
     @BeforeEach
     public void setUp() {
+        stringWriter = new StringWriter();
+        writer = new PrintWriter(stringWriter);
         request = mock(HttpServletRequest.class);
         response = mock(HttpServletResponse.class);
         accountService = mock(AccountService.class);
         tokenSessionService = mock(TokenSessionService.class);
-        accountController = new AccountController(accountService, tokenSessionService);
+        withdrawMoneyServlet = new WithdrawMoneyServlet(accountService, tokenSessionService);
         authDescriptor = new AuthDescriptor(
             new User(1L),
             new Account(1L, 1L, true, "plan", 10000, 1L),
@@ -53,24 +56,19 @@ public class AccountControllerTest extends BaseServletTest {
         var jsonBody = String.format("{\"amount\":%s}", amount);
 
         when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
-        when(response.getWriter()).thenReturn(new PrintWriter(new StringWriter()));
+        when(response.getWriter()).thenReturn(writer);
         when(accountService.withdrawMoney(accountId, amount)).thenReturn(5178.58);
         when(tokenSessionService.curSession()).thenReturn(authDescriptor);
 
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        when(response.getWriter()).thenReturn(writer);
-
-        accountController.doPut(request, response);
+        withdrawMoneyServlet.doPut(request, response);
 
         verify(response).setContentType("text/json");
+        verify(response).setCharacterEncoding("UTF-8");
         verify(response).setStatus(200);
         verify(accountService).withdrawMoney(accountId, amount);
         assertEquals(String.format("{\"balance\":%s}", 5178.58), stringWriter.toString());
     }
 
-    //TODO: checking amount>account
-    @Disabled
     @Test
     public void shouldThrowExceptionIfAmountGreaterThanAccount() throws Exception {
         double amount = 5000.0;
@@ -78,13 +76,15 @@ public class AccountControllerTest extends BaseServletTest {
         var jsonBody = String.format("{\"amount\":%s}", amount);
 
         when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
+        when(response.getWriter()).thenReturn(writer);
         when(tokenSessionService.curSession()).thenReturn(authDescriptor);
-        doThrow(new Exception("AmountGreaterThanAccount")).when(accountService).withdrawMoney(accountId, amount);
+        doThrow(new IllegalArgumentException("Less than the current balance")).when(accountService).withdrawMoney(accountId, amount);
 
-        accountController.doPut(request, response);
+        withdrawMoneyServlet.doPut(request, response);
+        this.assertErrorResponse(stringWriter,"Bad amount", (short) 400, "Bad amount" , "Amount is 0, Nan, -Inf/Inf, > account");
         verify(response).setContentType("text/json");
-        verify(response).setCharacterEncoding("utf-8");
-        verify(response).sendError(500, "Error service");
+        verify(response).setCharacterEncoding("UTF-8");
+        verify(response).setStatus(400);
     }
 
     @ParameterizedTest
@@ -94,14 +94,16 @@ public class AccountControllerTest extends BaseServletTest {
         var jsonBody = String.format("{\"amount\":%s}", arg);
 
         when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
+        when(response.getWriter()).thenReturn(writer);
         when(tokenSessionService.curSession()).thenReturn(authDescriptor);
         doThrow(new IllegalArgumentException("Less than the minimum amount")).when(accountService)
             .withdrawMoney(accountId, arg);
 
-        accountController.doPut(request, response);
+        withdrawMoneyServlet.doPut(request, response);
+        this.assertErrorResponse(stringWriter,"Bad amount", (short) 400, "Bad amount" , "Amount is 0, Nan, -Inf/Inf, > account");
         verify(response).setContentType("text/json");
-        verify(response).setCharacterEncoding("utf-8");
-        verify(response).sendError(400, "Bad amount");
+        verify(response).setCharacterEncoding("UTF-8");
+        verify(response).setStatus(400);
     }
 
     @ParameterizedTest
@@ -111,27 +113,33 @@ public class AccountControllerTest extends BaseServletTest {
     })
     public void shouldErrorIfJsonBodyIsInValid(String jsonBody) throws Exception {
         when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody.replace("''", "\""))));
+        when(response.getWriter()).thenReturn(writer);
+        when(tokenSessionService.curSession()).thenReturn(authDescriptor);
 
-        accountController.doPut(request, response);
+        withdrawMoneyServlet.doPut(request, response);
+        this.assertErrorResponse(stringWriter,"InValid JsonObject", (short) 400, "Format body is not Json" , "Format body is not Json");
         verify(response).setContentType("text/json");
-        verify(response).setCharacterEncoding("utf-8");
-        verify(response).sendError(400, "InValid JsonObject");
+        verify(response).setCharacterEncoding("UTF-8");
+        verify(response).setStatus(400);
     }
 
     @ParameterizedTest
     @ValueSource(strings = {
         "{test",
-        "{''amount'' : 0}",
+        "{''amount : 0}",
         "{''amount'' : amount}",
         "{''amount'' : 0",
     })
     public void shouldThrowExceptionIfRequestBodyIsInValid(String jsonBody) throws Exception {
         when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody.replace("''", "\""))));
+        when(response.getWriter()).thenReturn(writer);
+        when(tokenSessionService.curSession()).thenReturn(authDescriptor);
 
-        accountController.doPut(request, response);
+        withdrawMoneyServlet.doPut(request, response);
+        this.assertErrorResponse(stringWriter, "Bad request", (short) 400, "Body is wrong", "Body does not contain the necessary data");
         verify(response).setContentType("text/json");
-        verify(response).setCharacterEncoding("utf-8");
-        verify(response).sendError(400, "Bad request");
+        verify(response).setCharacterEncoding("UTF-8");
+        verify(response).setStatus(400);
     }
 
 }
