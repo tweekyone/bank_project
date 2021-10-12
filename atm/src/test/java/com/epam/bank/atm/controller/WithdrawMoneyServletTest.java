@@ -1,19 +1,17 @@
 package com.epam.bank.atm.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.epam.bank.atm.controller.session.TokenSessionService;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
 import com.epam.bank.atm.entity.Account;
 import com.epam.bank.atm.entity.Card;
 import com.epam.bank.atm.entity.User;
 import com.epam.bank.atm.service.AccountService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -21,8 +19,12 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.time.LocalDateTime;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
-public class WithdrawMoneyServletTest extends BaseServletTest{
+public class WithdrawMoneyServletTest extends BaseServletTest {
 
     HttpServletRequest request;
     HttpServletResponse response;
@@ -78,10 +80,12 @@ public class WithdrawMoneyServletTest extends BaseServletTest{
         when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
         when(response.getWriter()).thenReturn(writer);
         when(tokenSessionService.curSession()).thenReturn(authDescriptor);
-        doThrow(new IllegalArgumentException("Less than the current balance")).when(accountService).withdrawMoney(accountId, amount);
+        doThrow(new IllegalArgumentException("Less than the current balance")).when(accountService)
+            .withdrawMoney(accountId, amount);
 
         withdrawMoneyServlet.doPut(request, response);
-        this.assertErrorResponse(stringWriter,"Bad amount", (short) 400, "Bad amount" , "Amount is 0, Nan, -Inf/Inf, > account");
+        this.assertErrorResponse(stringWriter, "Bad amount", (short) 400, "Bad amount",
+            "Amount is 0, Nan, -Inf/Inf, > account");
         verify(response).setContentType("text/json");
         verify(response).setCharacterEncoding("UTF-8");
         verify(response).setStatus(400);
@@ -100,7 +104,8 @@ public class WithdrawMoneyServletTest extends BaseServletTest{
             .withdrawMoney(accountId, arg);
 
         withdrawMoneyServlet.doPut(request, response);
-        this.assertErrorResponse(stringWriter,"Bad amount", (short) 400, "Bad amount" , "Amount is 0, Nan, -Inf/Inf, > account");
+        this.assertErrorResponse(stringWriter, "Bad amount", (short) 400, "Bad amount",
+            "Amount is 0, Nan, -Inf/Inf, > account");
         verify(response).setContentType("text/json");
         verify(response).setCharacterEncoding("UTF-8");
         verify(response).setStatus(400);
@@ -117,7 +122,8 @@ public class WithdrawMoneyServletTest extends BaseServletTest{
         when(tokenSessionService.curSession()).thenReturn(authDescriptor);
 
         withdrawMoneyServlet.doPut(request, response);
-        this.assertErrorResponse(stringWriter,"InValid JsonObject", (short) 400, "Format body is not Json" , "Format body is not Json");
+        this.assertErrorResponse(stringWriter, "InValid JsonObject", (short) 400, "Format body is not Json",
+            "Format body is not Json");
         verify(response).setContentType("text/json");
         verify(response).setCharacterEncoding("UTF-8");
         verify(response).setStatus(400);
@@ -136,7 +142,8 @@ public class WithdrawMoneyServletTest extends BaseServletTest{
         when(tokenSessionService.curSession()).thenReturn(authDescriptor);
 
         withdrawMoneyServlet.doPut(request, response);
-        this.assertErrorResponse(stringWriter, "Bad request", (short) 400, "Body is wrong", "Body does not contain the necessary data");
+        this.assertErrorResponse(stringWriter, "Bad request", (short) 400, "Body is wrong",
+            "Body does not contain the necessary data");
         verify(response).setContentType("text/json");
         verify(response).setCharacterEncoding("UTF-8");
         verify(response).setStatus(400);

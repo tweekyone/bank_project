@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Surname is empty!");
         } else if (user.getPassword().isEmpty()) {
             throw new IllegalArgumentException("Password is empty!");
-        } else if (user.getPhone_number().isEmpty()) {
+        } else if (user.getPhoneNumber().isEmpty()) {
             throw new IllegalArgumentException("Phone number is empty!");
         } else if (user.getEmail().isEmpty()) {
             throw new IllegalArgumentException("Email is empty!");

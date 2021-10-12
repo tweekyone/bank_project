@@ -3,37 +3,37 @@ package com.epam.bank.atm.di;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.epam.bank.atm.controller.session.TokenService;
 import com.epam.bank.atm.controller.session.TokenSessionService;
-import com.epam.bank.atm.repository.JDBCTransactionRepository;
-import com.epam.bank.atm.infrastructure.session.JWTTokenPolicy;
-import com.epam.bank.atm.infrastructure.session.JWTTokenSessionService;
-import com.epam.bank.atm.repository.JDBCCardRepository;
+import com.epam.bank.atm.infrastructure.session.JwtTokenPolicy;
+import com.epam.bank.atm.infrastructure.session.JwtTokenSessionService;
 import com.epam.bank.atm.repository.AccountRepository;
 import com.epam.bank.atm.repository.CardRepository;
-import com.epam.bank.atm.repository.JDBCAccountRepository;
-import com.epam.bank.atm.repository.JDBCTUserRepository;
+import com.epam.bank.atm.repository.JdbcAccountRepository;
+import com.epam.bank.atm.repository.JdbcCardRepository;
+import com.epam.bank.atm.repository.JdbcTransactionRepository;
+import com.epam.bank.atm.repository.JdbcUserRepository;
 import com.epam.bank.atm.repository.TransactionRepository;
 import com.epam.bank.atm.repository.UserRepository;
 import com.epam.bank.atm.service.AccountService;
 import com.epam.bank.atm.service.AuthService;
+import com.epam.bank.atm.service.AuthServiceImpl;
+import com.epam.bank.atm.service.TransactionService;
+import com.epam.bank.atm.service.TransactionalService;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
-import com.epam.bank.atm.service.AuthServiceImpl;
-import com.epam.bank.atm.service.TransactionService;
-import com.epam.bank.atm.service.TransactionalService;
 import org.postgresql.ds.PGSimpleDataSource;
 
-public class DIContainer {
-    private static volatile DIContainer instance = instance();
+public class DiContainer {
+    private static volatile DiContainer instance = instance();
     private final ConcurrentHashMap<Class<?>, Object> singletons = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Class<?>, Supplier<?>> prototypes = new ConcurrentHashMap<>();
 
-    public static DIContainer instance() {
+    public static DiContainer instance() {
         if (instance == null) {
-            synchronized (DIContainer.class) {
+            synchronized (DiContainer.class) {
                 if (instance == null) {
-                    instance = new DIContainer();
+                    instance = new DiContainer();
                     instance.init();
                 }
             }
@@ -66,24 +66,24 @@ public class DIContainer {
         this.prototypes.putIfAbsent(AuthService.class, this::createAuthService);
     }
 
-    public <U extends T, T> U getSingleton(Class<T> aClass) {
-        return (U) this.singletons.computeIfAbsent(aClass, k -> {
+    public <U extends T, T> U getSingleton(Class<T> classType) {
+        return (U) this.singletons.computeIfAbsent(classType, k -> {
             throw new RuntimeException("Service is not configured");
         });
     }
 
-    private <U extends T, T> U getSingleton(Class<T> aClass, Supplier<U> supplier) {
-        return (U) this.singletons.computeIfAbsent(aClass, k -> supplier.get());
+    private <U extends T, T> U getSingleton(Class<T> classType, Supplier<U> supplier) {
+        return (U) this.singletons.computeIfAbsent(classType, k -> supplier.get());
     }
 
-    public <U extends T, T> U getPrototype(Class<T> aClass) {
-        return (U) this.prototypes.computeIfAbsent(aClass, k -> {
+    public <U extends T, T> U getPrototype(Class<T> classType) {
+        return (U) this.prototypes.computeIfAbsent(classType, k -> {
             throw new RuntimeException("Service is not configured");
         }).get();
     }
 
-    private <U extends T, T> U getPrototype(Class<T> aClass, Supplier<U> supplier) {
-        return (U) this.prototypes.computeIfAbsent(aClass, k -> supplier).get();
+    private <U extends T, T> U getPrototype(Class<T> classType, Supplier<U> supplier) {
+        return (U) this.prototypes.computeIfAbsent(classType, k -> supplier).get();
     }
 
     private AuthService createAuthService() {
@@ -95,16 +95,16 @@ public class DIContainer {
     }
 
     private UserRepository createUserRepository() {
-        return new JDBCTUserRepository(this.getSingleton(Connection.class, this::createConnection));
+        return new JdbcUserRepository(this.getSingleton(Connection.class, this::createConnection));
     }
 
     private AccountRepository createAccountRepository() {
-        return new JDBCAccountRepository(this.getSingleton(Connection.class, this::createConnection));
+        return new JdbcAccountRepository(this.getSingleton(Connection.class, this::createConnection));
     }
 
     private TokenSessionService createTokenSessionService() {
-        return new JWTTokenSessionService(
-            new JWTTokenPolicy() {
+        return new JwtTokenSessionService(
+            new JwtTokenPolicy() {
                 @Override
                 public int getExpirationPeriod() {
                     return 86400;
@@ -141,11 +141,11 @@ public class DIContainer {
     }
 
     private TransactionRepository createTransactionRepository() {
-        return new JDBCTransactionRepository(this.getSingleton(Connection.class, this::createConnection));
+        return new JdbcTransactionRepository(this.getSingleton(Connection.class, this::createConnection));
     }
 
     private CardRepository createCardRepository() {
-        return new JDBCCardRepository(this.getSingleton(Connection.class, this::createConnection));
+        return new JdbcCardRepository(this.getSingleton(Connection.class, this::createConnection));
     }
 
     private TransactionalService createTransactionalService() {
