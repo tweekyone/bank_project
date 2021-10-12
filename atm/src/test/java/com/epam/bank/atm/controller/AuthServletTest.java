@@ -1,6 +1,5 @@
 package com.epam.bank.atm.controller;
 
-import com.epam.bank.atm.di.DIContainer;
 import com.epam.bank.atm.controller.session.TokenSessionService;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
 import com.epam.bank.atm.entity.Account;
@@ -22,19 +21,29 @@ import java.time.LocalDateTime;
 import static org.mockito.Mockito.*;
 
 public class AuthServletTest extends BaseServletTest {
+    private final HttpServletRequest requestMock;
+    private final HttpServletResponse responseMock;
+    private final AuthService authServiceMock;
+    private final TokenSessionService tokenSessionServiceMock;
+    private final AuthServlet authServlet;
+
+    public AuthServletTest() {
+        this.requestMock = mock(HttpServletRequest.class);
+        this.responseMock = mock(HttpServletResponse.class);
+        this.authServiceMock = mock(AuthService.class);
+        this.tokenSessionServiceMock = mock(TokenSessionService.class);
+        this.authServlet = new AuthServlet(this.authServiceMock, this.tokenSessionServiceMock);
+    }
+
     @Test
     void shouldLoginIfCardNumberAndPinAreCorrect() throws IOException {
-        var request = mock(HttpServletRequest.class);
-        var response = mock(HttpServletResponse.class);
-        var authService = mock(AuthService.class);
-
         var cardNumber = "234567";
         var pin = "2345";
         var jsonBody = String.format("{\"cardNumber\": \"%s\", \"pin\": \"%s\"}", cardNumber, pin);
 
-        when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
-        when(response.getWriter()).thenReturn(new PrintWriter(new StringWriter()));
-        when(authService.login(cardNumber, pin))
+        when(this.requestMock.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
+        when(this.responseMock.getWriter()).thenReturn(new PrintWriter(new StringWriter()));
+        when(this.authServiceMock.login(cardNumber, pin))
             .thenReturn(
                 new AuthDescriptor(
                     new User(1L),
@@ -42,49 +51,43 @@ public class AuthServletTest extends BaseServletTest {
                     new Card(1L, cardNumber, 1L, pin, Card.Plan.TESTPLAN, LocalDateTime.now())
                 )
             );
+        when(this.tokenSessionServiceMock.start(any(AuthDescriptor.class))).thenReturn("token");
 
-        var servlet = new AuthServlet(authService, DIContainer.instance().getSingleton(TokenSessionService.class));
-        servlet.doPost(request, response);
+        this.authServlet.doPost(this.requestMock, this.responseMock);
 
-        verify(response).setContentType("text/json");
-        verify(response).setStatus(204);
-        verify(response).setHeader(eq("Authorization"), anyString());
+        verify(this.responseMock).setContentType("text/json");
+        verify(this.responseMock).setStatus(204);
+        verify(this.responseMock).setHeader(eq("Authorization"), anyString());
     }
 
     @Test
     void shouldHandleErrorIfJsonBodyIsInvalid() throws IOException {
-        var request = mock(HttpServletRequest.class);
-        var response = mock(HttpServletResponse.class);
-
         var jsonBody = "{asdas";
         var stringWriter = new StringWriter();
         var responseWriter = new PrintWriter(stringWriter);
 
-        when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
-        when(response.getWriter()).thenReturn(responseWriter);
+        when(this.requestMock.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
+        when(this.responseMock.getWriter()).thenReturn(responseWriter);
 
-        new AuthServlet().doPost(request, response);
+        this.authServlet.doPost(this.requestMock, this.responseMock);
 
         this.assertErrorResponse(stringWriter, "invalidRequest", (short) 400, "Invalid request", "Invalid request");
 
-        verify(response).setContentType("text/json");
-        verify(response).setStatus(400);
+        verify(this.responseMock).setContentType("text/json");
+        verify(this.responseMock).setStatus(400);
     }
 
     @Test
     void shouldHandleErrorIfCardNumberIsEmpty() throws IOException {
-        var request = mock(HttpServletRequest.class);
-        var response = mock(HttpServletResponse.class);
-
         var pin = "2345";
         var jsonBody = String.format("{\"pin\": \"%s\"}", pin);
         var stringWriter = new StringWriter();
         var responseWriter = new PrintWriter(stringWriter);
 
-        when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
-        when(response.getWriter()).thenReturn(responseWriter);
+        when(this.requestMock.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
+        when(this.responseMock.getWriter()).thenReturn(responseWriter);
 
-        new AuthServlet().doPost(request, response);
+        this.authServlet.doPost(this.requestMock, this.responseMock);
 
         this.assertErrorResponse(
             stringWriter,
@@ -94,28 +97,25 @@ public class AuthServletTest extends BaseServletTest {
             "Number is empty"
         );
 
-        verify(response).setContentType("text/json");
-        verify(response).setStatus(400);
+        verify(this.responseMock).setContentType("text/json");
+        verify(this.responseMock).setStatus(400);
     }
 
     @Test
     void shouldHandleErrorIfPinNumberIsEmpty() throws IOException {
-        var request = mock(HttpServletRequest.class);
-        var response = mock(HttpServletResponse.class);
-
         var cardNumber = "234567";
         var jsonBody = String.format("{\"cardNumber\": \"%s\"}", cardNumber);
         var stringWriter = new StringWriter();
         var responseWriter = new PrintWriter(stringWriter);
 
-        when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
-        when(response.getWriter()).thenReturn(responseWriter);
+        when(this.requestMock.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody)));
+        when(this.responseMock.getWriter()).thenReturn(responseWriter);
 
-        new AuthServlet().doPost(request, response);
+        this.authServlet.doPost(this.requestMock, this.responseMock);
 
         this.assertErrorResponse(stringWriter, "cardPinIsEmpty", (short) 400, "Pin is empty", "Pin is empty");
 
-        verify(response).setContentType("text/json");
-        verify(response).setStatus(400);
+        verify(this.responseMock).setContentType("text/json");
+        verify(this.responseMock).setStatus(400);
     }
 }
