@@ -35,9 +35,4 @@ public class TransactionService implements TransactionalService {
         transactionRepo.save(transaction);
         return transaction;
     }
-
-    public Transaction updateTransaction(Transaction transaction) {
-        transactionRepo.save(transaction);
-        return transaction;
-    }
 }

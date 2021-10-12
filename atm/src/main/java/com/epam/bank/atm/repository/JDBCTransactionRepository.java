@@ -1,4 +1,4 @@
-package com.epam.bank.atm.infrastructure.persistence;
+package com.epam.bank.atm.repository;
 
 import com.epam.bank.atm.entity.Transaction;
 import com.epam.bank.atm.repository.TransactionRepository;
@@ -89,7 +89,7 @@ public final class JDBCTransactionRepository implements TransactionRepository {
             resultSet.getDouble("amount"),
             resultSet.getTimestamp("date_time").toLocalDateTime(),
             Transaction.OperationType.valueOf(resultSet.getString("operation_type")),
-            Transaction.State.valueOf(resultSet.getString("operation_type"))
+            Transaction.State.valueOf(resultSet.getString("state"))
         );
     }
 }

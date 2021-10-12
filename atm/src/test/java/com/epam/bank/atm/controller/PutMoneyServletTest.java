@@ -4,12 +4,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.epam.bank.atm.controller.dto.response.ErrorResponse;
 import com.epam.bank.atm.controller.session.TokenSessionService;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
 import com.epam.bank.atm.entity.Account;
 import com.epam.bank.atm.entity.Card;
 import com.epam.bank.atm.entity.User;
 import com.epam.bank.atm.service.AccountService;
+import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -23,7 +25,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class PutMoneyServletTest {
+public class PutMoneyServletTest extends BaseServletTest {
 
     private HttpServletRequest req;
     private HttpServletResponse resp;
@@ -71,9 +73,12 @@ public class PutMoneyServletTest {
 
         servlet.doPost(req, resp);
 
-        verify(resp).setStatus(500);
+        verify(resp).setStatus(400);
         writer.flush();
-        Assertions.assertTrue(stringWriter.toString().contains("Wrong JSON format!"));
+        Assertions.assertTrue(stringWriter.toString().contains(
+            new Gson().toJson(
+                new ErrorResponse("Wrong JSON format", (short) 400,
+                    "Wrong JSON format", "Wrong JSON format in \"Amount\""))));
     }
 
     @Test
@@ -96,7 +101,10 @@ public class PutMoneyServletTest {
 
         verify(resp).setStatus(400);
         writer.flush();
-        Assertions.assertTrue(stringWriter.toString().contains("Error! Amount is not filled"));
+        Assertions.assertTrue(stringWriter.toString().contains(
+            new Gson().toJson(
+                new ErrorResponse("Amount is not filled", (short) 400,
+                    "Amount is not filled", "Amount is not filled"))));
     }
 
     @Test
@@ -123,7 +131,6 @@ public class PutMoneyServletTest {
         verify(resp).setCharacterEncoding("UTF-8");
         verify(resp).setStatus(200);
         writer.flush();
-        Assertions.assertTrue(stringWriter.toString().contains("Your balance is: " + balance));
         Assertions.assertEquals(balance, accountServiceMock.putMoney(authDescriptor.getAccount().getId(), amount));
     }
 

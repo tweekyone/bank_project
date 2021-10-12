@@ -1,4 +1,4 @@
-package com.epam.bank.atm.infrastructure.persistence;
+package com.epam.bank.atm.repository;
 
 import com.epam.bank.atm.entity.Card;
 import com.epam.bank.atm.repository.CardRepository;

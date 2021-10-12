@@ -56,8 +56,8 @@ CREATE UNIQUE INDEX accounts_unique_number_idx ON account (user_id, number);
 CREATE TABLE card
 (
     id               BIGINT GENERATED ALWAYS AS IDENTITY,
-    number           BIGINT        NOT NULL,
-    pin_code         NUMERIC(4, 0) NOT NULL,
+    number           VARCHAR       NOT NULL,
+    pin_code         VARCHAR       NOT NULL,
     plan             VARCHAR       NOT NULL,
     explication_date TIMESTAMP     NOT NULL,
     account_id       INTEGER       NOT NULL,
