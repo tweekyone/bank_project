@@ -1,11 +1,16 @@
 plugins.withId('java') {
-  plugins.withId("checkstyle") {
-    project.extensions.configure(CheckstyleExtension) {
+  project.plugins.apply("checkstyle")
+}
 
-      it.configDirectory.set(file("${project.rootDir.absolutePath}/codequality"))
+plugins.withId('java-library') {
+  project.plugins.apply("checkstyle")
+}
 
-      //After we set config directory, no need to setup config file
-      //it.configFile(file("${project.rootDir.absolutePath}/codequality/checkstyle.xml"))
-    }
+project.plugins.withId("checkstyle") {
+  project.extensions.configure(CheckstyleExtension) {
+    it.configDirectory.set(file("${project.rootDir.absolutePath}/codequality"))
+
+    //After we set config directory, no need to setup config file
+    //it.configFile(file("${project.rootDir.absolutePath}/codequality/checkstyle.xml"))
   }
 }
