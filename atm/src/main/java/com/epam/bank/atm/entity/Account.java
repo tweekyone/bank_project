@@ -1,5 +1,6 @@
 package com.epam.bank.atm.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -8,6 +9,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
 public class Account {
 
     private long id;
@@ -25,15 +27,15 @@ public class Account {
         this.userId = userId;
     }
 
-    // hydration constructor
-    public Account(long id, double number, boolean isDefault, String plan, double amount, long userId) {
-        this.id = id;
-        this.number = number;
-        this.isDefault = isDefault;
-        this.plan = plan;
-        this.amount = amount;
-        this.userId = userId;
-    }
+    // // hydration constructor
+    // public Account(long id, double number, boolean isDefault, String plan, double amount, long userId) {
+    //     this.id = id;
+    //     this.number = number;
+    //     this.isDefault = isDefault;
+    //     this.plan = plan;
+    //     this.amount = amount;
+    //     this.userId = userId;
+    // }
 
     @Override
     public boolean equals(Object o) {

@@ -3,6 +3,7 @@ package com.epam.bank.atm.entity;
 import com.epam.bank.atm.domain.statement.Assertion;
 import com.epam.bank.atm.domain.statement.AtLeastOneAccountTakePartInTransaction;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -65,5 +66,24 @@ public final class Transaction {
         this.dateTime = dateTime;
         this.operationType = operationType;
         this.state = state;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transaction that = (Transaction) o;
+        return Double.compare(that.amount, amount) == 0 &&
+            id.equals(that.id) &&
+            sourceAccountId.equals(that.sourceAccountId) &&
+            destinationAccountId.equals(that.destinationAccountId) &&
+            dateTime.equals(that.dateTime) &&
+            operationType == that.operationType &&
+            state == that.state;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, sourceAccountId, destinationAccountId, amount, dateTime, operationType, state);
     }
 }
