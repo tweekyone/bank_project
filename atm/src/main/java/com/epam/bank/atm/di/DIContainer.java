@@ -13,6 +13,7 @@ import com.epam.bank.atm.repository.JDBCAccountRepository;
 import com.epam.bank.atm.repository.JDBCTUserRepository;
 import com.epam.bank.atm.repository.TransactionRepository;
 import com.epam.bank.atm.repository.UserRepository;
+import com.epam.bank.atm.service.AccountService;
 import com.epam.bank.atm.service.AuthService;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -42,6 +43,7 @@ public class DIContainer {
     }
 
     private void init() {
+        this.singletons.putIfAbsent(AccountService.class, this.createAccountService());
         this.singletons.putIfAbsent(TokenSessionService.class, this.createTokenSessionService());
         this.prototypes.putIfAbsent(TokenSessionService.class, this::createTokenSessionService);
         this.singletons.putIfAbsent(UserRepository.class, this.createUserRepository());
@@ -144,5 +146,9 @@ public class DIContainer {
 
     private TransactionalService createTransactionalService() {
         return new TransactionService(this.getSingleton(TransactionRepository.class));
+    }
+
+    private AccountService createAccountService(){
+        return new AccountService(createTransactionalService(), this.getSingleton(AccountRepository.class));
     }
 }
