@@ -6,11 +6,9 @@ import com.epam.bank.atm.di.DIContainer;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
 import com.epam.bank.atm.service.AccountService;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.stream.JsonWriter;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,13 +46,13 @@ public class PutMoneyServlet extends HttpServlet {
         String str = builder.toString().replaceAll("\\s+", "");
         PrintWriter writer = resp.getWriter();
 
+        resp.setContentType("text/json");
+        resp.setCharacterEncoding("UTF-8");
+
         try {
             JsonObject jsonObject = JsonParser.parseString(str).getAsJsonObject();
 
             Double amount = new Gson().fromJson(jsonObject.get("amount"), Double.class);
-
-            resp.setContentType("text/json");
-            resp.setCharacterEncoding("UTF-8");
 
             if (amount == null || amount == 0) {
                 writer.write(new Gson().toJson(new ErrorResponse("Amount is not filled", (short) 400,
@@ -62,20 +60,19 @@ public class PutMoneyServlet extends HttpServlet {
                 resp.setStatus(400);
             } else {
                 double balance = accountService.putMoney(authDescriptor.getAccount().getId(), amount);
-                writer.write("Your balance is: " + balance);
                 JsonObject jsonResponse = new JsonObject();
                 jsonResponse.addProperty("balance", balance);
                 writer.write(new Gson().toJson(jsonResponse));
                 resp.setStatus(200);
             }
         } catch (JsonSyntaxException e) {
-            writer.write(new Gson().toJson(new ErrorResponse("Wrong JSON format", (short) 500,
+            writer.write(new Gson().toJson(new ErrorResponse("Wrong JSON format", (short) 400,
                 "Wrong JSON format", "Wrong JSON format in \"Amount\"")));
-            resp.setStatus(500);
+            resp.setStatus(400);
         } catch (IllegalArgumentException e) {
-            writer.write(new Gson().toJson(new ErrorResponse("IllegalArgumentException", (short) 500,
+            writer.write(new Gson().toJson(new ErrorResponse("IllegalArgumentException", (short) 400,
                 "IllegalArgumentException", e.getMessage())));
-            resp.setStatus(500);
+            resp.setStatus(400);
         } finally {
             writer.flush();
             writer.close();

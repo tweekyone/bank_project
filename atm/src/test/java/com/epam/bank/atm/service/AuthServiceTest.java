@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -134,9 +133,14 @@ public class AuthServiceTest extends BaseTest {
     }
 
     public User getTestingUser() {
-        return new User(13245L, "Name",
-            "Surname", "username", "email@mail.com",
-            "password", "phone number", User.Role.client);
+        return new User(
+            13245L,
+            "Name",
+            "Surname",
+            "email@mail.com",
+            "password",
+            "phone number"
+        );
     }
 
 }

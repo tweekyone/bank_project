@@ -5,7 +5,7 @@ import com.epam.bank.atm.repository.UserRepository;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -29,8 +29,6 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Name is empty!");
         } else if (user.getSurname().isEmpty()) {
             throw new IllegalArgumentException("Surname is empty!");
-        } else if (user.getUsername().isEmpty()) {
-            throw new IllegalArgumentException("Username is empty!");
         } else if (user.getPassword().isEmpty()) {
             throw new IllegalArgumentException("Password is empty!");
         } else if (user.getPhone_number().isEmpty()) {

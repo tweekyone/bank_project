@@ -73,11 +73,11 @@ public class PutMoneyServletTest extends BaseServletTest {
 
         servlet.doPost(req, resp);
 
-        verify(resp).setStatus(500);
+        verify(resp).setStatus(400);
         writer.flush();
         Assertions.assertTrue(stringWriter.toString().contains(
             new Gson().toJson(
-                new ErrorResponse("Wrong JSON format", (short) 500,
+                new ErrorResponse("Wrong JSON format", (short) 400,
                     "Wrong JSON format", "Wrong JSON format in \"Amount\""))));
     }
 
@@ -131,7 +131,6 @@ public class PutMoneyServletTest extends BaseServletTest {
         verify(resp).setCharacterEncoding("UTF-8");
         verify(resp).setStatus(200);
         writer.flush();
-        Assertions.assertTrue(stringWriter.toString().contains("Your balance is: " + balance));
         Assertions.assertEquals(balance, accountServiceMock.putMoney(authDescriptor.getAccount().getId(), amount));
     }
 

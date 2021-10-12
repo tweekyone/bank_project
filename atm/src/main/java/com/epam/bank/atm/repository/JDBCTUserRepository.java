@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class JDBCTUserRepository implements UserRepository{
+public class JDBCTUserRepository implements UserRepository {
 
     private final Connection connection;
 
@@ -16,24 +16,22 @@ public class JDBCTUserRepository implements UserRepository{
 
     @Override
     public User getById(long id) {
-        String query = "select * from user where id = ?";
+        String query = "select * from \"user\" where id = ?";
 
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setLong(1, id);
-            ResultSet resultSet = statement.executeQuery(query);
+            ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
                 return new User(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getString("surname"),
-                    resultSet.getString("username"),
                     resultSet.getString("email"),
                     resultSet.getString("password"),
-                    resultSet.getString("phone_number"),
-                    User.Role.valueOf(resultSet.getString("role"))
-                    );
+                    resultSet.getString("phone_number")
+                );
             } else {
                 return null; // Optional
             }
