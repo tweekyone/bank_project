@@ -12,15 +12,15 @@ import com.epam.bank.atm.repository.UserRepository;
 import java.util.Calendar;
 import java.util.Date;
 
-public class JWTTokenSessionService implements TokenSessionService, TokenService {
-    private final JWTTokenPolicy jwtTokenPolicy;
+public class JwtTokenSessionService implements TokenSessionService, TokenService {
+    private final JwtTokenPolicy jwtTokenPolicy;
     private final ThreadLocal<SessionBag> sessionBag = ThreadLocal.withInitial(SessionBag::new);
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
     private final CardRepository cardRepository;
 
-    public JWTTokenSessionService(
-        JWTTokenPolicy jwtTokenPolicy,
+    public JwtTokenSessionService(
+        JwtTokenPolicy jwtTokenPolicy,
         UserRepository userRepository,
         AccountRepository accountRepository,
         CardRepository cardRepository
@@ -68,14 +68,14 @@ public class JWTTokenSessionService implements TokenSessionService, TokenService
             return null;
         }
 
-        DecodedJWT decodedJWT;
+        DecodedJWT decodedJwt;
         try {
-            decodedJWT = JWT.decode(token);
+            decodedJwt = JWT.decode(token);
         } catch (JWTDecodeException e) {
             return null;
         }
 
-        var subject = decodedJWT.getSubject();
+        var subject = decodedJwt.getSubject();
 
         if (subject == null) {
             return null;

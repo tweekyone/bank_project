@@ -1,16 +1,15 @@
 package com.epam.bank.atm.repository;
 
 import com.epam.bank.atm.entity.Card;
-import com.epam.bank.atm.repository.CardRepository;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
-public class JDBCCardRepository implements CardRepository {
+public class JdbcCardRepository implements CardRepository {
     private final Connection connection;
 
-    public JDBCCardRepository(Connection connection) {
+    public JdbcCardRepository(Connection connection) {
         this.connection = connection;
     }
 

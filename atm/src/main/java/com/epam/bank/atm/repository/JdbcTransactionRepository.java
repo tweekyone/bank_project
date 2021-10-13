@@ -1,7 +1,6 @@
 package com.epam.bank.atm.repository;
 
 import com.epam.bank.atm.entity.Transaction;
-import com.epam.bank.atm.repository.TransactionRepository;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,10 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public final class JDBCTransactionRepository implements TransactionRepository {
+public final class JdbcTransactionRepository implements TransactionRepository {
     private final Connection connection;
 
-    public JDBCTransactionRepository(Connection connection) {
+    public JdbcTransactionRepository(Connection connection) {
         this.connection = connection;
     }
 

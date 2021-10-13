@@ -1,9 +1,9 @@
 package com.epam.bank.atm.controller.middleware;
 
-import com.epam.bank.atm.di.DIContainer;
 import com.epam.bank.atm.controller.dto.response.ErrorResponse;
 import com.epam.bank.atm.controller.session.TokenService;
 import com.epam.bank.atm.controller.session.TokenSessionService;
+import com.epam.bank.atm.di.DiContainer;
 import com.google.gson.Gson;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -15,8 +15,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class AuthMiddleware implements Filter {
-    private final TokenService tokenService = DIContainer.instance().getSingleton(TokenService.class);
-    private final TokenSessionService sessionService = DIContainer.instance().getSingleton(TokenSessionService.class);
+    private final TokenService tokenService = DiContainer.instance().getSingleton(TokenService.class);
+    private final TokenSessionService sessionService = DiContainer.instance().getSingleton(TokenSessionService.class);
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
