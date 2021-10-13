@@ -30,8 +30,12 @@ public class AuthDescriptor {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         AuthDescriptor that = (AuthDescriptor) o;
         return user.equals(that.user) && account.equals(that.account) && card.equals(that.card);
     }

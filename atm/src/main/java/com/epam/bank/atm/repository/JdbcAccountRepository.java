@@ -8,11 +8,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class JDBCAccountRepository implements AccountRepository {
+public class JdbcAccountRepository implements AccountRepository {
 
     private final Connection connection;
 
-    public JDBCAccountRepository(Connection connection) {
+    public JdbcAccountRepository(Connection connection) {
         this.connection = connection;
     }
 

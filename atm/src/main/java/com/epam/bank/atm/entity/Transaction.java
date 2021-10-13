@@ -70,16 +70,20 @@ public final class Transaction {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Transaction that = (Transaction) o;
-        return Double.compare(that.amount, amount) == 0 &&
-            id.equals(that.id) &&
-            sourceAccountId.equals(that.sourceAccountId) &&
-            destinationAccountId.equals(that.destinationAccountId) &&
-            dateTime.equals(that.dateTime) &&
-            operationType == that.operationType &&
-            state == that.state;
+        return Double.compare(that.amount, amount) == 0
+            && id.equals(that.id)
+            && sourceAccountId.equals(that.sourceAccountId)
+            && destinationAccountId.equals(that.destinationAccountId)
+            && dateTime.equals(that.dateTime)
+            && operationType == that.operationType
+            && state == that.state;
     }
 
     @Override

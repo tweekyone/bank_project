@@ -1,14 +1,14 @@
 package com.epam.bank.atm;
 
-import com.epam.bank.atm.di.DIContainer;
-import org.junit.jupiter.api.BeforeEach;
+import com.epam.bank.atm.di.DiContainer;
 import java.sql.Connection;
 import java.sql.SQLException;
+import org.junit.jupiter.api.BeforeEach;
 
 public class BaseTest {
     @BeforeEach
     public void resetDB() throws SQLException {
-        var connection = DIContainer.instance().getSingleton(Connection.class);
+        var connection = DiContainer.instance().getSingleton(Connection.class);
         var query = "truncate table \"user\" restart identity cascade;"
             + "truncate table account restart identity cascade;"
             + "truncate table card restart identity cascade;"
