@@ -9,7 +9,7 @@ import com.epam.bank.atm.infrastructure.session.JWTTokenSessionService;
 import com.epam.bank.atm.repository.JDBCCardRepository;
 import com.epam.bank.atm.repository.AccountRepository;
 import com.epam.bank.atm.repository.CardRepository;
-import com.epam.bank.atm.repository.JDBCAccountRepository;
+import com.epam.bank.atm.repository.JdbcAccountRepository;
 import com.epam.bank.atm.repository.JDBCTUserRepository;
 import com.epam.bank.atm.repository.TransactionRepository;
 import com.epam.bank.atm.repository.UserRepository;
@@ -99,7 +99,7 @@ public class DIContainer {
     }
 
     private AccountRepository createAccountRepository() {
-        return new JDBCAccountRepository(this.getSingleton(Connection.class, this::createConnection));
+        return new JdbcAccountRepository(this.getSingleton(Connection.class, this::createConnection));
     }
 
     private TokenSessionService createTokenSessionService() {

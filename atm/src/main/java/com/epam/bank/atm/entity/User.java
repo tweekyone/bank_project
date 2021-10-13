@@ -1,9 +1,9 @@
 package com.epam.bank.atm.entity;
 
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -14,7 +14,7 @@ public class User {
     private String surname;
     private String email;
     private String password;
-    private String phone_number;
+    private String phoneNumber;
 
     public User(Long id) {
         this.id = id;
@@ -39,11 +39,11 @@ public class User {
             && surname.equals(user.surname)
             && email.equals(user.email)
             && password.equals(user.password)
-            && phone_number.equals(user.phone_number);
+            && phoneNumber.equals(user.phoneNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, surname, email, password, phone_number);
+        return Objects.hash(id, name, surname, email, password, phoneNumber);
     }
 }
