@@ -1,8 +1,8 @@
 package com.epam.bank.atm.controller;
 
-import com.epam.bank.atm.di.DIContainer;
 import com.epam.bank.atm.controller.dto.request.LoginRequest;
 import com.epam.bank.atm.controller.session.TokenSessionService;
+import com.epam.bank.atm.di.DiContainer;
 import com.epam.bank.atm.service.AuthService;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
@@ -16,8 +16,8 @@ public class AuthServlet extends BaseServlet {
     private final TokenSessionService sessionService;
 
     public AuthServlet() {
-        this.authService = DIContainer.instance().getSingleton(AuthService.class);
-        this.sessionService = DIContainer.instance().getSingleton(TokenSessionService.class);
+        this.authService = DiContainer.instance().getSingleton(AuthService.class);
+        this.sessionService = DiContainer.instance().getSingleton(TokenSessionService.class);
     }
 
     public AuthServlet(AuthService authService, TokenSessionService sessionService) {

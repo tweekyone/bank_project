@@ -5,10 +5,10 @@ import com.epam.bank.atm.domain.statement.CardAccountExists;
 import com.epam.bank.atm.domain.statement.CardNumberFormatIsValid;
 import com.epam.bank.atm.domain.statement.CardPinCodeFormatIsValid;
 import com.epam.bank.atm.domain.statement.CardWithSuchNumberDoesNotExist;
-import lombok.Getter;
-import lombok.NonNull;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import lombok.Getter;
+import lombok.NonNull;
 
 @Getter
 public class Card {

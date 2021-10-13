@@ -1,7 +1,7 @@
 package com.epam.bank.atm.controller;
 
 import com.epam.bank.atm.controller.session.TokenSessionService;
-import com.epam.bank.atm.di.DIContainer;
+import com.epam.bank.atm.di.DiContainer;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
 import com.epam.bank.atm.service.AccountService;
 import com.google.gson.JsonElement;
@@ -23,8 +23,8 @@ public class WithdrawMoneyServlet extends BaseServlet {
     private final TokenSessionService tokenSessionService;
 
     public WithdrawMoneyServlet() {
-        this.accountService = DIContainer.instance().getSingleton(AccountService.class);
-        this.tokenSessionService = DIContainer.instance().getSingleton(TokenSessionService.class);
+        this.accountService = DiContainer.instance().getSingleton(AccountService.class);
+        this.tokenSessionService = DiContainer.instance().getSingleton(TokenSessionService.class);
     }
 
     public WithdrawMoneyServlet(AccountService accountService, TokenSessionService tokenSessionService) {
@@ -59,10 +59,10 @@ public class WithdrawMoneyServlet extends BaseServlet {
             jsonResp.addProperty("balance", balance);
             writeResp.print(jsonResp);
             writeResp.flush();
-        } catch (UnsupportedEncodingException |
-            IllegalStateException |
-            NumberFormatException |
-            NullPointerException e) {
+        } catch (UnsupportedEncodingException
+            | IllegalStateException
+            | NumberFormatException
+            | NullPointerException e) {
             this.sendError(resp, "Bad request", (short) 400, "Body is wrong",
                 "Body is wrong");
         } catch (JsonParseException e) {
