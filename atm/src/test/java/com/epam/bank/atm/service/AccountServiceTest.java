@@ -1,5 +1,6 @@
 package com.epam.bank.atm.service;
 
+import com.epam.bank.atm.BaseTest;
 import com.epam.bank.atm.repository.AccountRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -9,7 +10,7 @@ import org.mockito.Mockito;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-public class AccountServiceTest {
+public class AccountServiceTest extends BaseTest {
 
     private final double currentAmount = 5678.58;
     private final double positiveAmount = 578.58;

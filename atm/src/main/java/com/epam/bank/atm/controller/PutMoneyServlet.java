@@ -1,5 +1,6 @@
 package com.epam.bank.atm.controller;
 
+import com.epam.bank.atm.controller.dto.response.ErrorResponse;
 import com.epam.bank.atm.controller.session.TokenSessionService;
 import com.epam.bank.atm.di.DIContainer;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
@@ -45,28 +46,33 @@ public class PutMoneyServlet extends HttpServlet {
         String str = builder.toString().replaceAll("\\s+", "");
         PrintWriter writer = resp.getWriter();
 
+        resp.setContentType("text/json");
+        resp.setCharacterEncoding("UTF-8");
+
         try {
             JsonObject jsonObject = JsonParser.parseString(str).getAsJsonObject();
 
             Double amount = new Gson().fromJson(jsonObject.get("amount"), Double.class);
 
-            resp.setContentType("text/json");
-            resp.setCharacterEncoding("UTF-8");
-
             if (amount == null || amount == 0) {
-                writer.write("Error! Amount is not filled");
+                writer.write(new Gson().toJson(new ErrorResponse("Amount is not filled", (short) 400,
+                    "Amount is not filled", "Amount is not filled")));
                 resp.setStatus(400);
             } else {
                 double balance = accountService.putMoney(authDescriptor.getAccount().getId(), amount);
-                writer.write("Your balance is: " + balance);
+                JsonObject jsonResponse = new JsonObject();
+                jsonResponse.addProperty("balance", balance);
+                writer.write(new Gson().toJson(jsonResponse));
                 resp.setStatus(200);
             }
         } catch (JsonSyntaxException e) {
-            writer.write("Wrong JSON format!");
-            resp.setStatus(500);
+            writer.write(new Gson().toJson(new ErrorResponse("Wrong JSON format", (short) 400,
+                "Wrong JSON format", "Wrong JSON format in \"Amount\"")));
+            resp.setStatus(400);
         } catch (IllegalArgumentException e) {
-            writer.write(e.getMessage());
-            resp.setStatus(500);
+            writer.write(new Gson().toJson(new ErrorResponse("IllegalArgumentException", (short) 400,
+                "IllegalArgumentException", e.getMessage())));
+            resp.setStatus(400);
         } finally {
             writer.flush();
             writer.close();

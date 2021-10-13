@@ -2,6 +2,7 @@ package com.epam.bank.atm.infrastructure.session;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.epam.bank.atm.BaseTest;
 import com.epam.bank.atm.controller.session.TokenService;
 import com.epam.bank.atm.controller.session.TokenSessionService;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
@@ -20,7 +21,7 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
-public class JWTTokenSessionServiceTest {
+public class JWTTokenSessionServiceTest extends BaseTest {
     @Test
     void shouldGenerateValidToken() {
         var sessionService = this.initSessionService(null, null, null, null);
@@ -124,9 +125,7 @@ public class JWTTokenSessionServiceTest {
     }
 
     private User getTestUser() {
-        return new User(1L, "name", "surname",
-            "username", "email@mail.com", "username",
-            "phone number", User.Role.client);
+        return new User(1L, "name", "surname", "email@mail.com", "username", "phone number");
     }
 
     private Account getTestAccount() {
