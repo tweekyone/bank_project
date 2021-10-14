@@ -21,7 +21,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class JWTTokenSessionServiceTest {
+public class JwtTokenSessionServiceTest {
     @Test
     void shouldGenerateValidToken() {
         var sessionService = this.initSessionService(null, null, null, null);
