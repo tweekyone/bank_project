@@ -5,17 +5,6 @@
   version="3.1">
 
   <servlet>
-    <servlet-name>TestServlet</servlet-name>
-    <servlet-class>com.epam.bank.atm.controller.TestServlet</servlet-class>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>TestServlet</servlet-name>
-    <url-pattern>/test</url-pattern>
-  </servlet-mapping>
-
-  <servlet>
     <servlet-name>AuthServlet</servlet-name>
     <servlet-class>com.epam.bank.atm.controller.AuthServlet</servlet-class>
     <load-on-startup>1</load-on-startup>

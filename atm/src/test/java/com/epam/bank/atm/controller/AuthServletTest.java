@@ -1,5 +1,11 @@
 package com.epam.bank.atm.controller;
 
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.epam.bank.atm.controller.session.TokenSessionService;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
 import com.epam.bank.atm.entity.Account;
@@ -8,17 +14,13 @@ import com.epam.bank.atm.entity.User;
 import com.epam.bank.atm.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import org.junit.jupiter.api.Test;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.time.LocalDateTime;
-
-import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Test;
 
 public class AuthServletTest extends BaseServletTest {
     private final HttpServletRequest requestMock;

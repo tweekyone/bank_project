@@ -2,7 +2,7 @@ package com.epam.bank.atm.controller;
 
 import com.epam.bank.atm.controller.dto.response.ErrorResponse;
 import com.epam.bank.atm.controller.session.TokenSessionService;
-import com.epam.bank.atm.di.DIContainer;
+import com.epam.bank.atm.di.DiContainer;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
 import com.epam.bank.atm.service.AccountService;
 import com.google.gson.Gson;
@@ -13,7 +13,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -24,8 +23,8 @@ public class PutMoneyServlet extends HttpServlet {
     private final TokenSessionService tokenSessionService;
 
     public PutMoneyServlet() {
-        this.accountService = DIContainer.instance().getSingleton(AccountService.class);
-        this.tokenSessionService = DIContainer.instance().getSingleton(TokenSessionService.class);
+        this.accountService = DiContainer.instance().getSingleton(AccountService.class);
+        this.tokenSessionService = DiContainer.instance().getSingleton(TokenSessionService.class);
     }
 
     public PutMoneyServlet(AccountService accountService, TokenSessionService tokenSessionService) {

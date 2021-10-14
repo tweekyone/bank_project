@@ -2,8 +2,8 @@ package com.epam.bank.atm.controller;
 
 import com.epam.bank.atm.controller.dto.response.ErrorResponse;
 import com.google.gson.Gson;
-import org.junit.jupiter.api.Assertions;
 import java.io.StringWriter;
+import org.junit.jupiter.api.Assertions;
 
 abstract class BaseServletTest {
     protected void assertErrorResponse(StringWriter sw, String type, short status, String title, String detail) {

@@ -1,5 +1,9 @@
 package com.epam.bank.atm.infrastructure.session;
 
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.epam.bank.atm.controller.session.TokenService;
@@ -11,14 +15,11 @@ import com.epam.bank.atm.entity.User;
 import com.epam.bank.atm.repository.AccountRepository;
 import com.epam.bank.atm.repository.CardRepository;
 import com.epam.bank.atm.repository.UserRepository;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
-
-import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class JWTTokenSessionServiceTest {
     @Test
@@ -65,7 +66,7 @@ public class JWTTokenSessionServiceTest {
 
     @Test
     void shouldReturnTrueIfTokenIsExpired() throws InterruptedException {
-        var jwtTokenPolicy = this.getCommonMockForJWTTokenPolicy();
+        var jwtTokenPolicy = this.getCommonMockForJwtTokenPolicy();
         when(jwtTokenPolicy.getExpirationPeriod()).thenReturn(1);
 
         var sessionService = this.initSessionService(jwtTokenPolicy, null, null, null);
@@ -77,21 +78,21 @@ public class JWTTokenSessionServiceTest {
     }
 
     private TokenSessionService initSessionService(
-        JWTTokenPolicy jwtTokenPolicy,
+        JwtTokenPolicy jwtTokenPolicy,
         UserRepository userRepository,
         AccountRepository accountRepository,
         CardRepository cardRepository
     ) {
-        return new JWTTokenSessionService(
-            jwtTokenPolicy != null ? jwtTokenPolicy : this.getCommonMockForJWTTokenPolicy(),
+        return new JwtTokenSessionService(
+            jwtTokenPolicy != null ? jwtTokenPolicy : this.getCommonMockForJwtTokenPolicy(),
             userRepository != null ? userRepository : this.getCommonMockForUserRepository(),
             accountRepository != null ? accountRepository : this.getCommonMockForAccountRepository(),
             cardRepository != null ? cardRepository : this.getCommonMockForCardRepository()
         );
     }
 
-    private JWTTokenPolicy getCommonMockForJWTTokenPolicy() {
-        var jwtTokenPolicy = mock(JWTTokenPolicy.class);
+    private JwtTokenPolicy getCommonMockForJwtTokenPolicy() {
+        var jwtTokenPolicy = mock(JwtTokenPolicy.class);
         when(jwtTokenPolicy.getExpirationPeriod()).thenReturn(3600);
         when(jwtTokenPolicy.getAlgorithm()).thenReturn(Algorithm.HMAC512("secret"));
 
