@@ -88,6 +88,7 @@ public final class Transaction {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, sourceAccountId, destinationAccountId, amount, dateTime, operationType, state);
+        return Objects.hash(id, sourceAccountId, destinationAccountId,
+            amount, dateTime, operationType, state);
     }
 }
