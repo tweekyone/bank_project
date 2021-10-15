@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.epam.bank.atm.BaseTest;
 import com.epam.bank.atm.controller.session.TokenService;
 import com.epam.bank.atm.controller.session.TokenSessionService;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
@@ -22,7 +21,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class JwtTokenSessionServiceTest extends BaseTest {
+public class JwtTokenSessionServiceTest {
     @Test
     void shouldGenerateValidToken() {
         var sessionService = this.initSessionService(null, null, null, null);

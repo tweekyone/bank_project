@@ -3,7 +3,6 @@ package com.epam.bank.atm.service;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.epam.bank.atm.BaseTest;
 import com.epam.bank.atm.domain.model.AuthDescriptor;
 import com.epam.bank.atm.entity.Account;
 import com.epam.bank.atm.entity.Card;
@@ -19,7 +18,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-public class AuthServiceTest extends BaseTest {
+public class AuthServiceTest {
     private AccountRepository mockAccountRepository;
     private CardRepository mockCardRepository;
     private UserRepository mockUserRepository;

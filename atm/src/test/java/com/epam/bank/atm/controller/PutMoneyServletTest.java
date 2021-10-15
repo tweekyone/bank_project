@@ -38,9 +38,9 @@ public class PutMoneyServletTest extends BaseServletTest {
         req = mock(HttpServletRequest.class);
         resp = mock(HttpServletResponse.class);
 
-        servlet = new PutMoneyServlet();
         accountServiceMock = mock(AccountService.class);
         tokenSessionServiceMock = mock(TokenSessionService.class);
+        servlet = new PutMoneyServlet(accountServiceMock, tokenSessionServiceMock);
         //inject into servlet
         Class servletClass = servlet.getClass();
         try {
