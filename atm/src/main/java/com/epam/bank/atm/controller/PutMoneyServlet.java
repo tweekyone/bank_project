@@ -27,6 +27,11 @@ public class PutMoneyServlet extends HttpServlet {
         this.tokenSessionService = DiContainer.instance().getSingleton(TokenSessionService.class);
     }
 
+    public PutMoneyServlet(AccountService accountService, TokenSessionService tokenSessionService) {
+        this.accountService = accountService;
+        this.tokenSessionService = tokenSessionService;
+    }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         AuthDescriptor authDescriptor = tokenSessionService.curSession();
