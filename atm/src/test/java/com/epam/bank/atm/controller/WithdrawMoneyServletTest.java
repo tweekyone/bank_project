@@ -122,7 +122,7 @@ public class WithdrawMoneyServletTest extends BaseServletTest {
         when(tokenSessionService.curSession()).thenReturn(authDescriptor);
 
         withdrawMoneyServlet.doPut(request, response);
-        this.assertErrorResponse(stringWriter, "Wrong JsonObject", (short) 400, "Wrong JsonObject", "Wrong JsonObject");
+        this.assertErrorResponse(stringWriter, "Bad request", (short) 400, "Invalid Json", "Invalid Json");
         verify(response).setContentType("text/json");
         verify(response).setCharacterEncoding("UTF-8");
         verify(response).setStatus(400);
@@ -140,7 +140,7 @@ public class WithdrawMoneyServletTest extends BaseServletTest {
         when(tokenSessionService.curSession()).thenReturn(authDescriptor);
 
         withdrawMoneyServlet.doPut(request, response);
-        this.assertErrorResponse(stringWriter, "Bad request", (short) 400, "Wrong JSON format", "Wrong JSON format");
+        this.assertErrorResponse(stringWriter, "Bad request", (short) 400, "Invalid Json", "Invalid Json");
         verify(response).setContentType("text/json");
         verify(response).setCharacterEncoding("UTF-8");
         verify(response).setStatus(400);
@@ -157,7 +157,7 @@ public class WithdrawMoneyServletTest extends BaseServletTest {
         when(tokenSessionService.curSession()).thenReturn(authDescriptor);
 
         withdrawMoneyServlet.doPut(request, response);
-        this.assertErrorResponse(stringWriter, "Bad request", (short) 400, "Body is wrong", "Body is wrong");
+        this.assertErrorResponse(stringWriter, "Bad request", (short) 400, "Invalid body", "Invalid body");
         verify(response).setContentType("text/json");
         verify(response).setCharacterEncoding("UTF-8");
         verify(response).setStatus(400);
