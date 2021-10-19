@@ -24,6 +24,11 @@ dependencies {
   implementation 'org.springframework.security:spring-security-config'
   implementation 'org.springframework.data:spring-data-jpa'
   implementation 'org.hibernate:hibernate-core'
+  implementation 'com.zaxxer:HikariCP'
+  implementation 'org.liquibase:liquibase-core'
+
+  runtimeOnly 'org.postgresql:postgresql'
+  implementation 'jakarta.persistence:jakarta.persistence-api'
 
   // Jetty
   implementation 'javax.servlet:javax.servlet-api'

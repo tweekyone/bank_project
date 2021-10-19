@@ -17,7 +17,7 @@ services :
 
   database :
     image : postgres
-    container_name: postgres
+    container_name : postgres
     restart : always
     volumes :
       - ../atm/src/main/resources/db/initDB.sql:/docker-entrypoint-initdb.d/initDB.sql:ro
@@ -25,5 +25,16 @@ services :
       - ../db-data:/var/lib/postgresql/data
     environment :
       POSTGRES_PASSWORD : 123qwe
+    ports :
+      - 5432:5432
+
+  emp-lstr-client-module-postgres :
+    image : postgres
+    container_name : emp-lstr-client-module-postgres
+    restart : on-failure
+    environment :
+      POSTGRES_USER : user
+      POSTGRES_PASSWORD : user
+      POSTGRES_DB : bank
     ports :
       - 5432:5432
