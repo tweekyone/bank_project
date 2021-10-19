@@ -17,13 +17,35 @@ javaPlatform {
 
 dependencies {
   constraints {
-    api "org.projectlombok:lombok:1.18.20"
     api 'javax.servlet:javax.servlet-api:4.0.1'
+    api 'javax.activation:activation:1.1.1'
+    api 'javax.persistence:persistence-api:1.0.2'
+    api 'javax.servlet:javax.servlet-api:4.0.1'
+
+    api 'org.projectlombok:lombok:1.18.22'
     api 'com.auth0:java-jwt:3.18.2'
     api 'com.google.code.gson:gson:2.8.8'
     api 'org.apache.commons:commons-lang3:3.12.0'
     api 'javax.persistence:persistence-api:1.0.2'
     api 'org.postgresql:postgresql:42.2.24'
+    api 'org.apache.logging.log4j:log4j-api:2.14.1'
+    api 'org.apache.logging.log4j:log4j-core:2.14.1'
+    api 'org.slf4j:slf4j-api:1.7.32'
+    api 'org.slf4j:slf4j-log4j12:1.7.32'
+
+    // Spring
+    api 'org.springframework:spring-core:5.3.10'
+    api 'org.springframework:spring-context:5.3.10'
+    api 'org.springframework:spring-websocket:5.3.10'
+    api 'org.springframework:spring-webmvc:5.3.10'
+    api 'org.springframework.security:spring-security-core:5.5.1'
+    api 'org.springframework.security:spring-security-web:5.5.1'
+    api 'org.springframework.security:spring-security-config:5.5.1'
+    api 'org.springframework.data:spring-data-jpa:2.5.4'
+    api 'org.hibernate:hibernate-core:5.6.0.Final'
+
+    // Jetty
+    api 'org.eclipse.jetty:jetty-webapp:9.2.10.v20150310'
 
     api "org.junit.jupiter:junit-jupiter-api:5.7.2"
     api "org.junit.jupiter:junit-jupiter-engine:5.7.2"
