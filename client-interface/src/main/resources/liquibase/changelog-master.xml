@@ -1,0 +1,238 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+  <changeSet author="dotmkey" id="1634289394-1">
+    <createTable tableName="user">
+      <column autoIncrement="true" name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="user_pkey"/>
+      </column>
+      <column name="name" type="VARCHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="surname" type="VARCHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="email" type="VARCHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="password" type="VARCHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="phone_number" type="VARCHAR(16)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <rollback>
+      <dropTable tableName="user"/>
+    </rollback>
+  </changeSet>
+  <changeSet author="dotmkey" id="1634289394-2">
+    <createTable tableName="account">
+      <column autoIncrement="true" name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="account_pkey"/>
+      </column>
+      <column name="number" type="numeric(20)">
+        <constraints nullable="false"/>
+      </column>
+      <column defaultValueBoolean="true" name="is_default" type="BOOLEAN">
+        <constraints nullable="false"/>
+      </column>
+      <column name="plan" type="VARCHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column defaultValueComputed="0.00" name="amount" type="numeric(13, 2)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="user_id" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <rollback>
+      <dropTable tableName="account"/>
+    </rollback>
+  </changeSet>
+  <changeSet author="dotmkey" id="1634289394-3">
+    <createTable tableName="card">
+      <column autoIncrement="true" name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="card_pkey"/>
+      </column>
+      <column name="number" type="VARCHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="pin_code" type="VARCHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="plan" type="VARCHAR">
+        <constraints nullable="false"/>
+      </column>
+      <column name="explication_date" type="TIMESTAMP WITHOUT TIME ZONE">
+        <constraints nullable="false"/>
+      </column>
+      <column name="account_id" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <rollback>
+      <dropTable tableName="card"/>
+    </rollback>
+  </changeSet>
+  <changeSet author="dotmkey" id="1634289394-4">
+    <createTable tableName="transaction">
+      <column autoIncrement="true" name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="transaction_pkey"/>
+      </column>
+      <column name="source_account_id" type="BIGINT"/>
+      <column name="destination_account_id" type="BIGINT"/>
+      <column defaultValueComputed="0.00" name="amount" type="numeric(13, 2)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="operation_type" type="VARCHAR(20)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="date_time" type="TIMESTAMP WITHOUT TIME ZONE">
+        <constraints nullable="false"/>
+      </column>
+      <column name="state" type="VARCHAR(20)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <rollback>
+      <dropTable tableName="transaction"/>
+    </rollback>
+  </changeSet>
+  <changeSet author="dotmkey" id="1634289394-5">
+    <createTable tableName="role">
+      <column autoIncrement="true" name="id" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="role_pkey"/>
+      </column>
+      <column name="name" type="VARCHAR">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <rollback>
+      <dropTable tableName="role"/>
+    </rollback>
+  </changeSet>
+  <changeSet author="dotmkey" id="1634289394-6">
+    <createTable tableName="user_role">
+      <column name="user_id" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="role_id" type="INTEGER">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <rollback>
+      <dropTable tableName="user_role"/>
+    </rollback>
+  </changeSet>
+  <changeSet author="dotmkey" id="1634289394-7">
+    <createIndex indexName="users_unique_email_idx" tableName="user" unique="true">
+      <column name="email"/>
+    </createIndex>
+    <rollback>
+      <dropIndex tableName="user" indexName="users_unique_email_idx"/>
+    </rollback>
+  </changeSet>
+  <changeSet author="dotmkey" id="1634289394-8">
+    <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="account" constraintName="account_user_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" validate="true"/>
+    <rollback>
+      <dropForeignKeyConstraint baseTableName="account" constraintName="account_user_id_fkey"/>
+    </rollback>
+  </changeSet>
+  <changeSet author="dotmkey" id="1634289394-9">
+    <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_role" constraintName="user_role_user_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user" validate="true"/>
+    <rollback>
+      <dropForeignKeyConstraint baseTableName="user_role" constraintName="user_role_user_id_fkey"/>
+    </rollback>
+  </changeSet>
+  <changeSet author="dotmkey" id="1634289394-10">
+    <addUniqueConstraint columnNames="email" constraintName="user_constraint" tableName="user"/>
+    <rollback>
+      <dropUniqueConstraint tableName="user" constraintName="user_constraint"/>
+    </rollback>
+  </changeSet>
+  <changeSet author="dotmkey" id="1634289394-11">
+    <createIndex indexName="accounts_unique_number_idx" tableName="account" unique="true">
+      <column name="user_id"/>
+      <column name="number"/>
+    </createIndex>
+    <rollback>
+      <dropIndex tableName="account" indexName="accounts_unique_number_idx"/>
+    </rollback>
+  </changeSet>
+  <changeSet author="dotmkey" id="1634289394-12">
+    <addForeignKeyConstraint baseColumnNames="account_id" baseTableName="card" constraintName="card_account_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="account" validate="true"/>
+    <rollback>
+      <dropForeignKeyConstraint baseTableName="card" constraintName="card_account_id_fkey"/>
+    </rollback>
+  </changeSet>
+  <changeSet author="dotmkey" id="1634289394-13">
+    <addForeignKeyConstraint baseColumnNames="destination_account_id" baseTableName="transaction" constraintName="transaction_destination_account_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="account" validate="true"/>
+    <rollback>
+      <dropForeignKeyConstraint baseTableName="transaction" constraintName="transaction_destination_account_id_fkey"/>
+    </rollback>
+  </changeSet>
+  <changeSet author="dotmkey" id="1634289394-14">
+    <addForeignKeyConstraint baseColumnNames="source_account_id" baseTableName="transaction" constraintName="transaction_source_account_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="account" validate="true"/>
+    <rollback>
+      <dropForeignKeyConstraint baseTableName="transaction" constraintName="transaction_source_account_id_fkey"/>
+    </rollback>
+  </changeSet>
+  <changeSet author="dotmkey" id="1634289394-15">
+    <addUniqueConstraint columnNames="number" constraintName="account_constraint" tableName="account"/>
+    <rollback>
+      <dropUniqueConstraint tableName="account" constraintName="account_constraint"/>
+    </rollback>
+  </changeSet>
+  <changeSet author="dotmkey" id="1634289394-16">
+    <createIndex indexName="cards_unique_number_idx" tableName="card" unique="true">
+      <column name="account_id"/>
+      <column name="number"/>
+    </createIndex>
+    <rollback>
+      <dropIndex tableName="card" indexName="cards_unique_number_idx"/>
+    </rollback>
+  </changeSet>
+  <changeSet author="dotmkey" id="1634289394-17">
+    <createIndex indexName="card_constraint" tableName="card" unique="true">
+      <column name="number"/>
+    </createIndex>
+    <rollback>
+      <dropIndex tableName="card" indexName="card_constraint"/>
+    </rollback>
+  </changeSet>
+  <changeSet author="dotmkey" id="1634289394-18">
+    <createIndex indexName="transaction_unique_acc_source_idx" tableName="transaction">
+      <column computed="true" name="(source_account_id IS NOT NULL)"/>
+    </createIndex>
+    <rollback>
+      <dropIndex tableName="transaction" indexName="transaction_unique_acc_source_idx"/>
+    </rollback>
+  </changeSet>
+  <changeSet author="dotmkey" id="1634289394-19">
+    <createIndex indexName="transaction_unique_acc_dest_idx" tableName="transaction">
+      <column computed="true" name="(destination_account_id IS NOT NULL)"/>
+    </createIndex>
+    <rollback>
+      <dropIndex tableName="transaction" indexName="transaction_unique_acc_dest_idx"/>
+    </rollback>
+  </changeSet>
+  <changeSet author="dotmkey" id="1634289394-20">
+    <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="user_role" constraintName="user_role_role_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="role" validate="true"/>
+    <rollback>
+      <dropForeignKeyConstraint baseTableName="user_role" constraintName="user_role_role_id_fkey"/>
+    </rollback>
+  </changeSet>
+  <changeSet author="dotmkey" id="1634289394-21">
+    <addUniqueConstraint columnNames="name" constraintName="roles_constraint" tableName="role"/>
+    <rollback>
+      <dropUniqueConstraint tableName="role" constraintName="roles_constraint"/>
+    </rollback>
+  </changeSet>
+  <changeSet author="dotmkey" id="1634289394-22">
+    <addUniqueConstraint columnNames="user_id, role_id" constraintName="user_roles_constraint" tableName="user_role"/>
+    <rollback>
+      <dropUniqueConstraint tableName="user_role" constraintName="user_roles_constraint"/>
+    </rollback>
+  </changeSet>
+</databaseChangeLog>
