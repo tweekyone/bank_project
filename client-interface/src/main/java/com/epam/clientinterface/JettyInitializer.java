@@ -1,4 +1,4 @@
-package com.epam.client_interface;
+package com.epam.clientinterface;
 
 import java.io.IOException;
 import java.util.stream.Stream;
@@ -16,15 +16,15 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.servlet.DispatcherServlet;
 
 @Slf4j
-public class AppInitializer {
+public class JettyInitializer {
     private static final int DEFAULT_PORT = 8080;
     private static final String CONTEXT_PATH = "/";
-    private static final String CONFIG_LOCATION = "com.epam.client_interface";
+    private static final String CONFIG_LOCATION = "com.epam.clientinterface";
     private static final String MAPPING_URL = "/*";
     private static final String DEFAULT_PROFILE = "default";
 
     public static void main(String[] args) throws Exception {
-        new AppInitializer().startJetty(args);
+        new JettyInitializer().startJetty(args);
     }
 
     private static int getPortFromArgs(String[] args) {
@@ -66,7 +66,6 @@ public class AppInitializer {
             .map(arg -> arg.replaceFirst("-Dspring\\.profiles\\.active=", ""))
             .ifPresent(profiles -> context.getEnvironment()
                 .setActiveProfiles(profiles.replaceAll("\\s", "").split(",")));
-        Log.getLogger(AppInitializer.class).debug("Set active profiles {}", (Object) context.getEnvironment().getActiveProfiles());
         return context;
     }
 }

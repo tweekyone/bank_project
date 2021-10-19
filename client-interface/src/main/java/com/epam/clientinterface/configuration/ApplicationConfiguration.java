@@ -1,4 +1,4 @@
-package com.epam.client_interface.configuration;
+package com.epam.clientinterface.configuration;
 
 import java.io.IOException;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +16,7 @@ import org.springframework.core.io.support.EncodedResource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
-@ComponentScan("com.epam.client_interface.*")
+@ComponentScan("com.epam.clientinterface.*")
 @EnableWebMvc
 public class ApplicationConfiguration {
 

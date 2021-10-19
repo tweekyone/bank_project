@@ -1,7 +1,6 @@
-package com.epam.client_interface.configuration;
+package com.epam.clientinterface.configuration;
 
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
