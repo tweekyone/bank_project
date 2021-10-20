@@ -61,6 +61,7 @@ public class JettyInitializer {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
         context.setConfigLocation(CONFIG_LOCATION);
         context.getEnvironment().setDefaultProfiles(DEFAULT_PROFILE);
+        // TODO won't work with war in Tomcat
         Stream.of(args).filter(arg -> arg.startsWith("-Dspring.profiles.active"))
             .findFirst()
             .map(arg -> arg.replaceFirst("-Dspring\\.profiles\\.active=", ""))
