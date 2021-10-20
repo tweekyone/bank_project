@@ -52,7 +52,3 @@ dependencies {
   annotationProcessor "org.projectlombok:lombok"
   testAnnotationProcessor "org.projectlombok:lombok"
 }
-
-test {
-  useJUnitPlatform()
-}
