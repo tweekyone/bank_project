@@ -24,7 +24,6 @@ services :
     volumes :
       - ../atm/src/main/resources/db/initDB.sql:/docker-entrypoint-initdb.d/initDB.sql:ro
       - ../atm/src/main/resources/db/populateDB.sql:/docker-entrypoint-initdb.d/populateDB.sql:ro
-      - ../db-data/atm:/var/lib/postgresql/data
     environment :
       POSTGRES_PASSWORD : ${ATM_POSTGRES_PASSWORD}
     ports :
@@ -34,8 +33,6 @@ services :
     image : postgres
     container_name : emp-lstr-client-module-postgres
     restart : on-failure
-    volumes :
-      - ../db-data/client-interface:/var/lib/postgresql/data
     environment :
       POSTGRES_USER : ${CLIENT_INTERFACE_POSTGRES_USER}
       POSTGRES_PASSWORD : ${CLIENT_INTERFACE_POSTGRES_PASSWORD}
