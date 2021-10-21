@@ -18,7 +18,7 @@ javaPlatform {
 dependencies {
   constraints {
     api "org.projectlombok:lombok:1.18.20"
-    api 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+    api 'javax.servlet:javax.servlet-api:4.0.1'
     api 'com.auth0:java-jwt:3.18.2'
     api 'com.google.code.gson:gson:2.8.8'
     api 'org.apache.commons:commons-lang3:3.12.0'
