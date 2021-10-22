@@ -6,6 +6,8 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,6 +39,7 @@ public class Account {
     @Column(name = "is_default", nullable = false)
     private boolean isDefault;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "plan", nullable = false)
     private Plan plan;
 

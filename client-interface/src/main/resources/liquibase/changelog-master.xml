@@ -200,4 +200,26 @@
   <changeSet id="8" author="Dmitrii Korolev">
     <renameColumn tableName="card" oldColumnName="explication_date" newColumnName="expiration_date"/>
   </changeSet>
+
+  <changeSet  id="9" author="Tanya Naumovets">
+    <insert  tableName="user">
+      <column  name="name"  value="Ivan"/>
+      <column  name="surname"  value="Ivanov"/>
+      <column  name="email"  value="ivan@test.com"/>
+      <column  name="password"  value="1234"/>
+      <column  name="phone_number"  value="8888888"/>
+      <column  name="username"  value="ivan@test.com"/>
+    </insert>
+  </changeSet>
+
+  <changeSet  id="10" author="Tanya Naumovets">
+    <insert  tableName="account">
+      <column  name="number"  value="40702810123456789125"/>
+      <column  name="is_default"  value="true"/>
+      <column  name="plan"  value="BASE"/>
+      <column  name="amount"  value="5000"/>
+      <column  name="user_id"  value="1"/>
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>
