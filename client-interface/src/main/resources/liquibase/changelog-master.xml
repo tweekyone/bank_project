@@ -14,9 +14,6 @@
       <column name="surname" type="VARCHAR">
         <constraints nullable="false"/>
       </column>
-      <column name="username" type="VARCHAR">
-        <constraints nullable="false"/>
-      </column>
       <column name="email" type="VARCHAR">
         <constraints nullable="false" unique="true"/>
       </column>
@@ -35,7 +32,7 @@
       <column name="id" type="BIGINT">
         <constraints primaryKey="true" primaryKeyName="account_pkey"/>
       </column>
-      <column name="number" type="VARCHAR">
+      <column name="number" type="numeric(20)">
         <constraints nullable="false"/>
       </column>
       <column defaultValueBoolean="true" name="is_default" type="BOOLEAN">
@@ -81,7 +78,7 @@
       <column name="plan" type="VARCHAR">
         <constraints nullable="false"/>
       </column>
-      <column name="expiration_date" type="TIMESTAMP WITHOUT TIME ZONE">
+      <column name="explication_date" type="TIMESTAMP WITHOUT TIME ZONE">
         <constraints nullable="false"/>
       </column>
       <column name="account_id" type="INTEGER">
@@ -189,5 +186,18 @@
     <addUniqueConstraint columnNames="user_id, role_id" tableName="user_role"/>
 
     <addAutoIncrement tableName="role" columnName="id" incrementBy="1" startWith="1"/>
+  </changeSet>
+  <changeSet id="6" author="Dmitrii Korolev">
+    <addColumn tableName="user">
+      <column name="username" type="varchar">
+        <constraints nullable="false" unique="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+  <changeSet id="7" author="Dmitrii Korolev">
+    <modifyDataType tableName="account" columnName="number" newDataType="varchar"/>
+  </changeSet>
+  <changeSet id="8" author="Dmitrii Korolev">
+    <renameColumn tableName="card" oldColumnName="explication_date" newColumnName="expiration_date"/>
   </changeSet>
 </databaseChangeLog>
