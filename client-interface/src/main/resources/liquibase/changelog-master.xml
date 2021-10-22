@@ -14,6 +14,9 @@
       <column name="surname" type="VARCHAR">
         <constraints nullable="false"/>
       </column>
+      <column name="username" type="VARCHAR">
+        <constraints nullable="false"/>
+      </column>
       <column name="email" type="VARCHAR">
         <constraints nullable="false" unique="true"/>
       </column>
@@ -32,7 +35,7 @@
       <column name="id" type="BIGINT">
         <constraints primaryKey="true" primaryKeyName="account_pkey"/>
       </column>
-      <column name="number" type="numeric(20)">
+      <column name="number" type="VARCHAR">
         <constraints nullable="false"/>
       </column>
       <column defaultValueBoolean="true" name="is_default" type="BOOLEAN">
@@ -78,7 +81,7 @@
       <column name="plan" type="VARCHAR">
         <constraints nullable="false"/>
       </column>
-      <column name="explication_date" type="TIMESTAMP WITHOUT TIME ZONE">
+      <column name="expiration_date" type="TIMESTAMP WITHOUT TIME ZONE">
         <constraints nullable="false"/>
       </column>
       <column name="account_id" type="INTEGER">
