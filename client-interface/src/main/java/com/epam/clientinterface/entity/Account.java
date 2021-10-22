@@ -61,25 +61,6 @@ public class Account {
         this.amount = amount;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
-            return false;
-        }
-        Account account = (Account) o;
-        return this.id != null && Objects.equals(this.id, account.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return this.id == null
-            ? Objects.hash(this.number, this.isDefault, this.plan, this.amount, this.user.getId())
-            : Objects.hash(this.id);
-    }
-
     public interface Factory {
         Account createFor(User user);
     }
