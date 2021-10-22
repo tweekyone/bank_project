@@ -12,13 +12,13 @@ import com.epam.bank.atm.entity.Account;
 import com.epam.bank.atm.entity.Card;
 import com.epam.bank.atm.entity.User;
 import com.epam.bank.atm.service.AccountService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.time.LocalDateTime;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -116,14 +116,13 @@ public class WithdrawMoneyServletTest extends BaseServletTest {
         "",
         "test",
     })
-    public void shouldErrorIfJsonBodyIsInValid(String jsonBody) throws Exception {
+    public void shouldErrorIfJsonObjectIsWrong(String jsonBody) throws Exception {
         when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody.replace("''", "\""))));
         when(response.getWriter()).thenReturn(writer);
         when(tokenSessionService.curSession()).thenReturn(authDescriptor);
 
         withdrawMoneyServlet.doPut(request, response);
-        this.assertErrorResponse(stringWriter, "InValid JsonObject", (short) 400, "Format body is not Json",
-            "Format body is not Json");
+        this.assertErrorResponse(stringWriter, "Bad request", (short) 400, "Invalid Json", "Invalid Json");
         verify(response).setContentType("text/json");
         verify(response).setCharacterEncoding("UTF-8");
         verify(response).setStatus(400);
@@ -133,17 +132,32 @@ public class WithdrawMoneyServletTest extends BaseServletTest {
     @ValueSource(strings = {
         "{test",
         "{''amount : 0}",
-        "{''amount'' : amount}",
         "{''amount'' : 0",
     })
-    public void shouldThrowExceptionIfRequestBodyIsInValid(String jsonBody) throws Exception {
+    public void shouldErrorIfJsonBodyIsWrong(String jsonBody) throws Exception {
         when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody.replace("''", "\""))));
         when(response.getWriter()).thenReturn(writer);
         when(tokenSessionService.curSession()).thenReturn(authDescriptor);
 
         withdrawMoneyServlet.doPut(request, response);
-        this.assertErrorResponse(stringWriter, "Bad request", (short) 400, "Body is wrong",
-            "Body does not contain the necessary data");
+        this.assertErrorResponse(stringWriter, "Bad request", (short) 400, "Invalid Json", "Invalid Json");
+        verify(response).setContentType("text/json");
+        verify(response).setCharacterEncoding("UTF-8");
+        verify(response).setStatus(400);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "{''amount'' : amount}",
+        "{''summa'' : 0}",
+    })
+    public void shouldErrorIfBodyIsWrong(String jsonBody) throws Exception {
+        when(request.getReader()).thenReturn(new BufferedReader(new StringReader(jsonBody.replace("''", "\""))));
+        when(response.getWriter()).thenReturn(writer);
+        when(tokenSessionService.curSession()).thenReturn(authDescriptor);
+
+        withdrawMoneyServlet.doPut(request, response);
+        this.assertErrorResponse(stringWriter, "Bad request", (short) 400, "Invalid body", "Invalid body");
         verify(response).setContentType("text/json");
         verify(response).setCharacterEncoding("UTF-8");
         verify(response).setStatus(400);
