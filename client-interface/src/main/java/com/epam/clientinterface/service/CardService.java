@@ -17,34 +17,47 @@ public class CardService {
     private final CardRepository cardRepository;
     private final AccountService accountService;
 
-    public Card createCard(Long accountId, String plan) throws Exception {
-        Account account = accountService.findById(accountId);
-        if (account == null) {
-            throw new Exception("Account not found.");
+    public Card createCard(Long accountId, String plan) {
+
+        Account account;
+        try {
+            account = accountService.findById(accountId);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("AccountId is null.");
         }
 
-        Card saveCard = new Card();
+        if (account == null) {
+            throw new IllegalArgumentException("Account not found.");
+        }
+
+        Card card = new Card();
+        Card.Plan cardPlan;
+        String pinCode = generatePinCode();
+
+        try {
+            cardPlan = Card.Plan.valueOf(plan);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Plan is not enum.");
+        }
+
+        card.setAccount(account);
+        card.setPinCode(pinCode);
+        card.setPlan(cardPlan);
+        card.setExpirationDate(LocalDateTime.now().plusYears(3));
+
         while (true) {
             try {
                 String number = generateCardNumber();
-                String pinCode = generatePinCode();
-                Card.Plan cardPlan = Card.Plan.valueOf(plan);
-                Card card = new Card(account, number, pinCode, cardPlan, LocalDateTime.now());
-                saveCard = save(card);
-                break;
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("Plan is not enum.");
+                card.setNumber(number);
+                return cardRepository.save(card);
             } catch (DataIntegrityViolationException e) {
                 continue;
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("CardEntity is null.");
             } catch (NullPointerException e) {
                 throw new NullPointerException("Card has not been created.");
             }
         }
-        return saveCard;
-    }
-
-    public Card save(Card card) {
-        return cardRepository.save(card);
     }
 
     protected String generateCardNumber() {
