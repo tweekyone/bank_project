@@ -16,22 +16,21 @@ dependencies {
   // Importing BOM
   implementation(platform(project(":bom")))
   annotationProcessor(platform(project(":bom")))
-  implementation 'com.auth0:java-jwt:3.18.2'
+  implementation 'com.auth0:java-jwt'
   implementation 'com.google.code.gson:gson'
   implementation 'org.apache.commons:commons-lang3'
   implementation 'org.postgresql:postgresql'
-
-  compileOnly 'jakarta.servlet:jakarta.servlet-api:5.0.0'
-  compileOnly 'org.projectlombok:lombok:1.18.20'
-  annotationProcessor 'org.projectlombok:lombok:1.18.20'
-  implementation 'javax.persistence:persistence-api:1.0.2'
+  compileOnly 'javax.servlet:javax.servlet-api'
+  compileOnly 'org.projectlombok:lombok'
+  annotationProcessor 'org.projectlombok:lombok'
+  implementation 'javax.persistence:persistence-api'
 
   testImplementation "org.junit.jupiter:junit-jupiter-api"
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
   testImplementation "org.junit.jupiter:junit-jupiter-params"
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-params"
-  testImplementation "jakarta.servlet:jakarta.servlet-api"
-  testImplementation 'org.mockito:mockito-core:3.12.4'
+  testImplementation 'javax.servlet:javax.servlet-api'
+  testImplementation 'org.mockito:mockito-core'
 }
 
 mainClassName = 'com.epam.bank.atm.App'

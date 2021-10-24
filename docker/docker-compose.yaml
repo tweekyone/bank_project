@@ -3,14 +3,16 @@ version : "3.8"
 services :
 
   tomcat :
-    image : tomcat:10-jre11
+    image : tomcat:9-jre11
     container_name : tomcat
     environment :
-      - JPDA_ADDRESS=*:8100
-      - JPDA_TRANSPORT=dt_socket
+      JPDA_ADDRESS : ${JPDA_ADDRESS}
+      JPDA_TRANSPORT : ${JPDA_TRANSPORT}
+      JAVA_OPTS : ${JAVA_OPTS}
     command : ["catalina.sh", "jpda", "run"]
     volumes :
       - ../atm/build/libs/atm.war:/usr/local/tomcat/webapps/atm.war
+      - ../client-interface/build/libs/client-interface.war:/usr/local/tomcat/webapps/client-interface.war
     ports :
       - 8080:8080
       - 8100:8100
@@ -22,19 +24,18 @@ services :
     volumes :
       - ../atm/src/main/resources/db/initDB.sql:/docker-entrypoint-initdb.d/initDB.sql:ro
       - ../atm/src/main/resources/db/populateDB.sql:/docker-entrypoint-initdb.d/populateDB.sql:ro
-      - ../db-data:/var/lib/postgresql/data
     environment :
-      POSTGRES_PASSWORD : 123qwe
+      POSTGRES_PASSWORD : ${ATM_POSTGRES_PASSWORD}
     ports :
-      - 5432:5432
+      - 5332:5432
 
   emp-lstr-client-module-postgres :
     image : postgres
     container_name : emp-lstr-client-module-postgres
     restart : on-failure
     environment :
-      POSTGRES_USER : user
-      POSTGRES_PASSWORD : user
-      POSTGRES_DB : bank
+      POSTGRES_USER : ${CLIENT_INTERFACE_POSTGRES_USER}
+      POSTGRES_PASSWORD : ${CLIENT_INTERFACE_POSTGRES_PASSWORD}
+      POSTGRES_DB : ${CLIENT_INTERFACE_POSTGRES_DB}
     ports :
-      - 5432:5432
+      - 5333:5432
