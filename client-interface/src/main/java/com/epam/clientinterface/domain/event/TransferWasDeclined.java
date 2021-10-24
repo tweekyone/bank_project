@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
-public class TransferWasDeclined {
+public class TransferWasDeclined extends DomainEvent {
     private final Transaction.AccountData sourceAccount;
     private final Transaction.AccountData destinationAccount;
     private final double amount;
