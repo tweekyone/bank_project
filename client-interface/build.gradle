@@ -24,6 +24,7 @@ dependencies {
   implementation 'org.springframework.security:spring-security-web'
   implementation 'org.springframework.security:spring-security-config'
   implementation 'org.springframework.data:spring-data-jpa'
+  implementation 'org.springframework:spring-tx'
   implementation 'org.hibernate:hibernate-core'
   implementation 'com.zaxxer:HikariCP'
   implementation 'org.liquibase:liquibase-core'
