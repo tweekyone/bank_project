@@ -200,4 +200,30 @@
   <changeSet id="8" author="Dmitrii Korolev">
     <renameColumn tableName="card" oldColumnName="explication_date" newColumnName="expiration_date"/>
   </changeSet>
+  <changeSet id="9" author="Dmitrii Korolev">
+    <dropColumn tableName="transaction" columnName="source_account_id"/>
+  </changeSet>
+  <changeSet id="10" author="Dmitrii Korolev">
+    <dropColumn tableName="transaction" columnName="destination_account_id"/>
+  </changeSet>
+  <changeSet id="11" author="Dmitrii Korolev">
+    <addColumn tableName="transaction">
+      <column name="source_account_number" type="varchar"/>
+    </addColumn>
+  </changeSet>
+  <changeSet id="12" author="Dmitrii Korolev">
+    <addColumn tableName="transaction">
+      <column name="source_is_external" type="boolean"/>
+    </addColumn>
+  </changeSet>
+  <changeSet id="13" author="Dmitrii Koroev">
+    <addColumn tableName="transaction">
+      <column name="destination_account_number" type="varchar"/>
+    </addColumn>
+  </changeSet>
+  <changeSet id="14" author="Dmitrii Korolev">
+    <addColumn tableName="transaction">
+      <column name="destination_is_external" type="boolean"/>
+    </addColumn>
+  </changeSet>
 </databaseChangeLog>
