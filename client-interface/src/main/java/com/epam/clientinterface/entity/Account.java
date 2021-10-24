@@ -2,10 +2,11 @@ package com.epam.clientinterface.entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,10 +18,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.hibernate.Hibernate;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "account", schema = "public")
@@ -38,6 +40,7 @@ public class Account {
     private boolean isDefault;
 
     @Column(name = "plan", nullable = false)
+    @Enumerated(EnumType.STRING)
     private Plan plan;
 
     @Column(name = "amount", nullable = false)
