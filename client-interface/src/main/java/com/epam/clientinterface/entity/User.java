@@ -15,11 +15,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.ToString;
 
 @Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Table(name = "user", schema = "public")
 public class User {
     @Id
@@ -65,5 +67,16 @@ public class User {
         this.email = email;
         this.password = password;
         this.accounts.add(accountFactory.createFor(this));
+    }
+
+    public User(String name, String surname, String phoneNumber, String username,
+                String email, String password, List<Account> accounts) {
+        this.name = name;
+        this.surname = surname;
+        this.phoneNumber = phoneNumber;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.accounts = accounts;
     }
 }
