@@ -26,6 +26,8 @@ dependencies {
   implementation 'org.springframework.data:spring-data-jpa'
   implementation 'org.springframework:spring-tx'
   implementation 'org.hibernate:hibernate-core'
+  implementation 'org.hibernate:hibernate-validator'
+  implementation 'org.hibernate.validator:hibernate-validator-annotation-processor'
   implementation 'com.zaxxer:HikariCP'
   implementation 'org.liquibase:liquibase-core'
   implementation 'com.fasterxml.jackson.core:jackson-databind'
@@ -34,6 +36,7 @@ dependencies {
 
   // Jetty
   implementation 'javax.servlet:javax.servlet-api'
+  implementation 'javax.validation:validation-api'
   implementation 'org.eclipse.jetty:jetty-webapp'
 
   // Logging

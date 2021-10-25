@@ -1,5 +1,6 @@
 package com.epam.clientinterface.controller.dto.request;
 
+import javax.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InnerTransferRequest {
+    @Positive
     private long sourceAccountId;
+
+    @Positive
     private long destinationAccountId;
+
+    @Positive
     private double amount;
 }
