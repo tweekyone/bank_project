@@ -3,6 +3,7 @@ package com.epam.clientinterface.controller.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
@@ -10,6 +11,5 @@ import lombok.Setter;
 public class ErrorResponse {
     private final String type;
     private final short status;
-    private final String title;
-    private final String detail;
+    //private final String title;
 }

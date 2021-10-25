@@ -2,6 +2,9 @@ package com.epam.clientinterface.service;
 
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
+import com.epam.clientinterface.exception.AccountIsNullException;
+import com.epam.clientinterface.exception.AccountNotFoundException;
+import com.epam.clientinterface.exception.PlanNotEnumException;
 import com.epam.clientinterface.repository.CardRepository;
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -23,11 +26,11 @@ public class CardService {
         try {
             account = accountService.findById(accountId);
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("AccountId is null.");
+            throw new AccountIsNullException();
         }
 
         if (account == null) {
-            throw new IllegalArgumentException("Account not found.");
+            throw new AccountNotFoundException(accountId);
         }
 
         Card card = new Card();
@@ -37,7 +40,7 @@ public class CardService {
         try {
             cardPlan = Card.Plan.valueOf(plan);
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Plan is not enum.");
+            throw new PlanNotEnumException(plan);
         }
 
         card.setAccount(account);
@@ -53,9 +56,7 @@ public class CardService {
             } catch (DataIntegrityViolationException e) {
                 continue;
             } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("CardEntity is null.");
-            } catch (NullPointerException e) {
-                throw new NullPointerException("Card has not been created.");
+                throw new IllegalArgumentException("CardEntity is null");
             }
         }
     }
