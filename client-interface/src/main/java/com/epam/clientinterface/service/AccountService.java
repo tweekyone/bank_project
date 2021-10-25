@@ -1,22 +1,20 @@
 package com.epam.clientinterface.service;
 
-import com.epam.clientinterface.domain.event.TransferWasDeclined;
-import com.epam.clientinterface.domain.event.TransferWasSucceed;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Transaction;
 import com.epam.clientinterface.repository.AccountRepository;
+import com.epam.clientinterface.repository.TransactionRepository;
 import com.fasterxml.jackson.databind.util.ArrayIterator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class AccountService {
     private final AccountRepository accountRepository;
-    private final ApplicationEventPublisher eventPublisher;
+    private final TransactionRepository transactionRepository;
 
     public void transfer(long sourceAccountId, long destinationAccountId, double amount) {
         var sourceAccount = this.accountRepository.findById(sourceAccountId).orElseThrow(() -> {
@@ -27,11 +25,12 @@ public class AccountService {
         });
 
         if (sourceAccount.getAmount() < amount) {
-            this.eventPublisher.publishEvent(new TransferWasDeclined(
+            this.transactionRepository.save(new Transaction(
                 new Transaction.AccountData(sourceAccount.getNumber(), false),
                 new Transaction.AccountData(destinationAccount.getNumber(), false),
                 amount,
-                Transaction.OperationType.INNER_TRANSFER
+                Transaction.OperationType.INNER_TRANSFER,
+                Transaction.State.DECLINE
             ));
 
             throw new NotEnoughMoneyException(sourceAccountId, amount);
@@ -41,12 +40,12 @@ public class AccountService {
         destinationAccount.setAmount(destinationAccount.getAmount() + amount);
 
         this.accountRepository.saveAll(new ArrayIterator<>(new Account[] {sourceAccount, destinationAccount}));
-
-        this.eventPublisher.publishEvent(new TransferWasSucceed(
+        this.transactionRepository.save(new Transaction(
             new Transaction.AccountData(sourceAccount.getNumber(), false),
             new Transaction.AccountData(destinationAccount.getNumber(), false),
             amount,
-            Transaction.OperationType.INNER_TRANSFER
+            Transaction.OperationType.INNER_TRANSFER,
+            Transaction.State.DECLINE
         ));
     }
 }
