@@ -7,6 +7,7 @@ import static java.util.stream.Collectors.toList;
 import com.epam.clientinterface.controller.dto.response.ErrorResponse;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
+import java.util.HashMap;
 import lombok.NonNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,10 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
         @NonNull HttpStatus status,
         @NonNull WebRequest request
     ) {
-        var errors = ex
+        var body = new HashMap<>();
+        body.put("type", "validation");
+        body.put("status", HttpStatus.UNPROCESSABLE_ENTITY.value());
+        body.put("errors", ex
             .getBindingResult()
             .getFieldErrors()
             .stream()
@@ -36,9 +40,9 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
                     FieldError::getField,
                     mapping(FieldError::getDefaultMessage, toList())
                 )
-            );
+            ));
 
-        return handleExceptionInternal(ex, errors, headers, HttpStatus.UNPROCESSABLE_ENTITY, request);
+        return handleExceptionInternal(ex, body, headers, HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
 
     @ExceptionHandler(AccountNotFoundException.class)
