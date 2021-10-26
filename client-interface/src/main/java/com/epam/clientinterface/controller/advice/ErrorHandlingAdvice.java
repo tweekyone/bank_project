@@ -49,7 +49,7 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleAccountNotFound(AccountNotFoundException exception, WebRequest request) {
         return handleExceptionInternal(
             exception,
-            new ErrorResponse("accountNotFound", HttpStatus.NOT_FOUND, "Account not found", "Account not found"),
+            new ErrorResponse("accountNotFound", HttpStatus.NOT_FOUND),
             new HttpHeaders(),
             HttpStatus.NOT_FOUND,
             request
@@ -60,12 +60,7 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleNotEnoughMoney(NotEnoughMoneyException exception, WebRequest request) {
         return handleExceptionInternal(
             exception,
-            new ErrorResponse(
-                "notEnoughMoney",
-                HttpStatus.BAD_REQUEST,
-                "Not enough money",
-                "Account does not have enough money"
-            ),
+            new ErrorResponse("notEnoughMoney", HttpStatus.BAD_REQUEST),
             new HttpHeaders(),
             HttpStatus.BAD_REQUEST,
             request

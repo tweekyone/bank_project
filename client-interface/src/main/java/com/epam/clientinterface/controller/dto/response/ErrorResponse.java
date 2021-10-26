@@ -8,18 +8,9 @@ import org.springframework.http.HttpStatus;
 public class ErrorResponse {
     private final String type;
     private final short status;
-    private final String title;
-    private final String detail;
 
-    public ErrorResponse(
-        @NonNull String type,
-        @NonNull HttpStatus status,
-        @NonNull String title,
-        @NonNull String detail
-    ) {
+    public ErrorResponse(@NonNull String type, @NonNull HttpStatus status) {
         this.type = type;
         this.status = (short) status.value();
-        this.title = title;
-        this.detail = detail;
     }
 }
