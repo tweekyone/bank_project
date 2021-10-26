@@ -1,47 +1,68 @@
 package com.epam.clientinterface.controller;
 
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.epam.clientinterface.configuration.ApplicationConfiguration;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import com.epam.clientinterface.controller.advice.ErrorHandlingAdvice;
+import com.epam.clientinterface.service.AccountService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.*;
 
-@ExtendWith(SpringExtension.class)
-@WebAppConfiguration()
-@ContextConfiguration(classes = ApplicationConfiguration.class)
 public class InnerTransferControllerTest {
-    @Autowired
-    private WebApplicationContext webApplicationContext;
+    private final MockMvc mockMvc;
+    private final String url = "/transfer/inner";
 
-    private MockMvc mockMvc;
-
-    @BeforeEach
-    public void beforeEach() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
+    public InnerTransferControllerTest() {
+        this.mockMvc = MockMvcBuilders
+            .standaloneSetup(new InnerTransferController(mock(AccountService.class)))
+            .setControllerAdvice(ErrorHandlingAdvice.class)
+            .build();
     }
 
     @Test
-    public void shouldTransferIfIncomeDataIsValid() throws Exception {
-        this.mockMvc.
-            perform(
-                post("/transfer/inner")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content("{\"sourceAccountId\":1,\"destinationAccountId\":2,\"amount\":1000.00}"))
-            .andExpect(status().isBadRequest());
+    public void shouldReturnNoContentIfIncomeDataIsValid() throws Exception {
+        var requestBody = String.format(
+            "{\"sourceAccountId\":%d,\"destinationAccountId\":%d,\"amount\":%f}", 1, 2, 1000.00
+        );
 
-        Assertions.assertEquals(1, 1);
+        this.send(requestBody).andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void shouldReturnValidationErrorResponseIfRequestIsIncorrect() throws Exception {
+        this.send("{}")
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isUnprocessableEntity())
+            .andExpect(jsonPath("$.type", is("validation")))
+            .andExpect(jsonPath("$.status", is(422)))
+            .andExpect(jsonPath("$.errors.amount", contains("must be greater than 0")))
+            .andExpect(jsonPath("$.errors.sourceAccountId", contains("must be greater than 0")))
+            .andExpect(jsonPath("$.errors.destinationAccountId", contains("must be greater than 0")));
+    }
+
+    @Test
+    public void shouldReturnEmptyBadRequestIfRequestIsInvalid() throws Exception {
+        this.send("{invalid").andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void shouldReturnUnsupportedMediaTypeIfContentTypeIsNotJson() throws Exception {
+        this.send("", MediaType.TEXT_HTML).andExpect(status().isUnsupportedMediaType());
+    }
+
+    private ResultActions send(String requestBody) throws Exception {
+        return this.send(requestBody, MediaType.APPLICATION_JSON);
+    }
+
+    private ResultActions send(String requestBody, MediaType mediaType) throws Exception {
+        return this.mockMvc.perform(post(this.url).contentType(mediaType).content(requestBody));
     }
 }
