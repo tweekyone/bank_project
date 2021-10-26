@@ -2,6 +2,9 @@ package com.epam.clientinterface.controller;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.anyDouble;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -9,8 +12,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epam.clientinterface.controller.advice.ErrorHandlingAdvice;
+import com.epam.clientinterface.domain.exception.AccountNotFoundException;
+import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
 import com.epam.clientinterface.service.AccountService;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -18,20 +24,19 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 public class InnerTransferControllerTest {
     private final MockMvc mockMvc;
-    private final String url = "/transfer/inner";
+    private final AccountService accountServiceMock = mock(AccountService.class);
+    private final String requestBodyTmpl = "{\"sourceAccountId\":%d,\"destinationAccountId\":%d,\"amount\":%f}";
 
     public InnerTransferControllerTest() {
         this.mockMvc = MockMvcBuilders
-            .standaloneSetup(new InnerTransferController(mock(AccountService.class)))
+            .standaloneSetup(new InnerTransferController(this.accountServiceMock))
             .setControllerAdvice(ErrorHandlingAdvice.class)
             .build();
     }
 
     @Test
     public void shouldReturnNoContentIfIncomeDataIsValid() throws Exception {
-        var requestBody = String.format(
-            "{\"sourceAccountId\":%d,\"destinationAccountId\":%d,\"amount\":%f}", 1, 2, 1000.00
-        );
+        var requestBody = String.format(this.requestBodyTmpl, 1L, 2L, 1000.00);
 
         this.send(requestBody).andExpect(status().isNoContent());
     }
@@ -58,11 +63,43 @@ public class InnerTransferControllerTest {
         this.send("", MediaType.TEXT_HTML).andExpect(status().isUnsupportedMediaType());
     }
 
+    @Test
+    public void shouldReturnNotFoundIfServiceThrowsAccountNotFound() throws Exception {
+        var requestBody = this.getRequestBody(1L, 2L, 1000.00);
+
+        doThrow(new AccountNotFoundException(1L))
+            .when(this.accountServiceMock)
+            .transfer(anyLong(), anyLong(), anyDouble());
+
+        this.send(requestBody)
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.type", is("accountNotFound")))
+            .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.value())));
+    }
+
+    @Test
+    public void shouldReturnBadRequestIfServiceThrowsNotEnoughMoney() throws Exception {
+        var requestBody = this.getRequestBody(1L, 2L, 10000.00);
+
+        doThrow(new NotEnoughMoneyException(1L, 10000.00))
+            .when(this.accountServiceMock)
+            .transfer(anyLong(), anyLong(), anyDouble());
+
+        this.send(requestBody)
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.type", is("notEnoughMoney")))
+            .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())));
+    }
+
+    private String getRequestBody(long sourceAccountId, long destinationAccountId, double amount) {
+        return String.format(this.requestBodyTmpl, sourceAccountId, destinationAccountId, amount);
+    }
+
     private ResultActions send(String requestBody) throws Exception {
         return this.send(requestBody, MediaType.APPLICATION_JSON);
     }
 
     private ResultActions send(String requestBody, MediaType mediaType) throws Exception {
-        return this.mockMvc.perform(post(this.url).contentType(mediaType).content(requestBody));
+        return this.mockMvc.perform(post("/transfer/inner").contentType(mediaType).content(requestBody));
     }
 }
