@@ -5,7 +5,6 @@ import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.anyDouble;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -15,19 +14,28 @@ import com.epam.clientinterface.controller.advice.ErrorHandlingAdvice;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
 import com.epam.clientinterface.service.AccountService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+@ExtendWith(MockitoExtension.class)
 public class InnerTransferControllerTest {
-    private final MockMvc mockMvc;
-    private final AccountService accountServiceMock = mock(AccountService.class);
+    private MockMvc mockMvc;
+
+    @Mock
+    private AccountService accountServiceMock;
+
     private final String requestBodyTmpl = "{\"sourceAccountId\":%d,\"destinationAccountId\":%d,\"amount\":%f}";
 
-    public InnerTransferControllerTest() {
+    @BeforeEach
+    public void beforeEach() {
         this.mockMvc = MockMvcBuilders
             .standaloneSetup(new InnerTransferController(this.accountServiceMock))
             .setControllerAdvice(ErrorHandlingAdvice.class)

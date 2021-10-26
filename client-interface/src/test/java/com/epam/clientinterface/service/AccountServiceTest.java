@@ -1,6 +1,5 @@
 package com.epam.clientinterface.service;
 
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
@@ -12,14 +11,24 @@ import com.epam.clientinterface.repository.TransactionRepository;
 import java.util.ArrayList;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 public class AccountServiceTest {
-    private final AccountService accountService;
-    private final AccountRepository accountRepositoryMock = mock(AccountRepository.class);
-    private final TransactionRepository transactionRepositoryMock = mock(TransactionRepository.class);
+    private AccountService accountService;
 
-    public AccountServiceTest() {
+    @Mock
+    private AccountRepository accountRepositoryMock;
+
+    @Mock
+    private TransactionRepository transactionRepositoryMock;
+
+    @BeforeEach
+    public void beforeEach() {
         this.accountService = new AccountService(this.accountRepositoryMock, this.transactionRepositoryMock);
     }
 
