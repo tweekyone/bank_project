@@ -21,6 +21,8 @@ dependencies {
     api 'javax.activation:activation:1.1.1'
     api 'javax.persistence:persistence-api:1.0.2'
     api 'javax.servlet:javax.servlet-api:4.0.1'
+    api 'javax.validation:validation-api:2.0.1.Final'
+    api 'org.glassfish:javax.el:3.0.0'
 
     api 'org.projectlombok:lombok:1.18.22'
     api 'com.auth0:java-jwt:3.18.2'
@@ -47,9 +49,12 @@ dependencies {
     api 'org.springframework.security:spring-security-web:5.5.1'
     api 'org.springframework.security:spring-security-config:5.5.1'
     api 'org.springframework.data:spring-data-jpa:2.5.4'
+    api 'org.springframework:spring-tx:5.3.12'
+    api 'org.springframework.restdocs:spring-restdocs-core:2.0.5.RELEASE'
 
     api 'org.hibernate:hibernate-core:5.6.0.Final'
-//    api 'org.hibernate:hibernate-entitymanager:5.5.7.Final'
+    api 'org.hibernate:hibernate-validator:6.2.0.Final'
+    api 'org.hibernate.validator:hibernate-validator-annotation-processor:6.0.1.Final'
 
     // Jetty
     api 'org.eclipse.jetty:jetty-webapp:9.2.10.v20150310'
@@ -59,6 +64,7 @@ dependencies {
     api "org.junit.jupiter:junit-jupiter-params:5.7.2"
     api "org.assertj:assertj-core:3.20.2"
     api 'org.mockito:mockito-core:3.12.4'
+    api 'org.springframework.restdocs:spring-restdocs-mockmvc:2.0.5.RELEASE'
   }
 }
 

@@ -11,5 +11,9 @@ import org.springframework.http.HttpStatus;
 public class ErrorResponse {
     private final String type;
     private final short status;
-    //private final String title;
+
+    public ErrorResponse(String type, HttpStatus status) {
+        this.type = type;
+        this.status = (short)status.value();
+    }
 }

@@ -2,15 +2,13 @@ package com.epam.clientinterface.service;
 
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
-import com.epam.clientinterface.exception.AccountIsNullException;
 import com.epam.clientinterface.exception.AccountNotFoundException;
-import com.epam.clientinterface.exception.PlanNotEnumException;
 import com.epam.clientinterface.repository.CardRepository;
 import java.time.LocalDateTime;
 import java.util.Random;
 import javax.transaction.Transactional;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,45 +18,27 @@ public class CardService {
     private final CardRepository cardRepository;
     private final AccountService accountService;
 
-    public Card createCard(Long accountId, String plan) {
+    public @NonNull Card createCard(@NonNull Long accountId, @NonNull Card.Plan plan) {
 
-        Account account;
-        try {
-            account = accountService.findById(accountId);
-        } catch (IllegalArgumentException e) {
-            throw new AccountIsNullException();
-        }
-
+        Account account = accountService.findById(accountId);
         if (account == null) {
             throw new AccountNotFoundException(accountId);
         }
 
-        Card card = new Card();
-        Card.Plan cardPlan;
         String pinCode = generatePinCode();
-
-        try {
-            cardPlan = Card.Plan.valueOf(plan);
-        } catch (IllegalArgumentException e) {
-            throw new PlanNotEnumException(plan);
-        }
-
+        Card card = new Card();
         card.setAccount(account);
         card.setPinCode(pinCode);
-        card.setPlan(cardPlan);
+        card.setPlan(plan);
         card.setExpirationDate(LocalDateTime.now().plusYears(3));
 
-        while (true) {
-            try {
-                String number = generateCardNumber();
-                card.setNumber(number);
-                return cardRepository.save(card);
-            } catch (DataIntegrityViolationException e) {
-                continue;
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("CardEntity is null");
-            }
-        }
+        String number;
+        do {
+            number = generateCardNumber();
+        } while (cardRepository.findCardByNumber(number).isPresent());
+
+        card.setNumber(number);
+        return cardRepository.save(card);
     }
 
     protected String generateCardNumber() {

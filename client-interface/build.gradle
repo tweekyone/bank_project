@@ -24,7 +24,11 @@ dependencies {
   implementation 'org.springframework.security:spring-security-web'
   implementation 'org.springframework.security:spring-security-config'
   implementation 'org.springframework.data:spring-data-jpa'
+  implementation 'org.springframework:spring-tx'
+  implementation 'org.springframework.restdocs:spring-restdocs-core'
   implementation 'org.hibernate:hibernate-core'
+  implementation 'org.hibernate:hibernate-validator'
+  implementation 'org.hibernate.validator:hibernate-validator-annotation-processor'
   implementation 'com.zaxxer:HikariCP'
   implementation 'org.liquibase:liquibase-core'
   implementation 'com.fasterxml.jackson.core:jackson-databind'
@@ -35,6 +39,8 @@ dependencies {
   // Jetty
   implementation 'javax.servlet:javax.servlet-api'
   implementation 'org.eclipse.jetty:jetty-webapp'
+  implementation 'javax.validation:validation-api'
+  implementation 'org.glassfish:javax.el'
 
   // Logging
   implementation 'org.apache.logging.log4j:log4j-api'
@@ -48,6 +54,7 @@ dependencies {
   testImplementation "org.junit.jupiter:junit-jupiter-params"
   testImplementation "org.assertj:assertj-core"
   testImplementation 'org.mockito:mockito-core'
+  testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
   // Annotation processors
   compileOnly "org.projectlombok:lombok"
