@@ -31,13 +31,13 @@ dependencies {
   implementation 'com.zaxxer:HikariCP'
   implementation 'org.liquibase:liquibase-core'
   implementation 'com.fasterxml.jackson.core:jackson-databind'
+  implementation 'javax.validation:validation-api'
   implementation 'org.glassfish:javax.el'
 
   runtimeOnly 'org.postgresql:postgresql'
 
   // Jetty
   implementation 'javax.servlet:javax.servlet-api'
-  implementation 'javax.validation:validation-api'
   implementation 'org.eclipse.jetty:jetty-webapp'
 
   // Logging
