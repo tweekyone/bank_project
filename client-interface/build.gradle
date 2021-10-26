@@ -25,9 +25,12 @@ dependencies {
   implementation 'org.springframework.security:spring-security-config'
   implementation 'org.springframework.data:spring-data-jpa'
   implementation 'org.hibernate:hibernate-core'
+  implementation 'org.hibernate:hibernate-validator'
+  implementation 'org.hibernate.validator:hibernate-validator-annotation-processor'
   implementation 'com.zaxxer:HikariCP'
   implementation 'org.liquibase:liquibase-core'
   implementation 'com.fasterxml.jackson.core:jackson-databind'
+  implementation 'javax.validation:validation-api'
 
   runtimeOnly 'org.postgresql:postgresql'
 
