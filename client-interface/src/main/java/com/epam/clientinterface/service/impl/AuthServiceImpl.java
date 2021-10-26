@@ -2,6 +2,8 @@ package com.epam.clientinterface.service.impl;
 
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.User;
+import com.epam.clientinterface.exception.UserAlreadyExistException;
+import com.epam.clientinterface.repository.UserRepository;
 import com.epam.clientinterface.service.AuthService;
 import com.epam.clientinterface.service.UserService;
 import java.util.ArrayList;
@@ -11,17 +13,26 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthServiceImpl implements AuthService {
 
+    // Autowired? TODO
     private UserService userService;
-
+    private UserRepository userRepository;
+    // Mock
     private List<Account> accounts = new ArrayList<>();
 
     @Override
     public User signUp(String name, String surname, String phoneNumber,
-                       String username, String email, String rawPassword) {
-        // User newUser = userService.create(name, surname, phoneNumber, username, email, rawPassword);
-        User newUser = new User(name, surname, phoneNumber, username, email, rawPassword, accounts);
+                       String username, String email, String rawPassword) throws UserAlreadyExistException {
+        if (emailExist(email)) {
+            throw new UserAlreadyExistException("There is an account with that email address: " + email);
+        }
+        User newUser = userService.create(name, surname, phoneNumber, username, email, rawPassword);
+        // User newUser = new User(name, surname, phoneNumber, username, email, rawPassword, accounts);
         System.out.println(newUser);
         return newUser;
+    }
+
+    private boolean emailExist(String email) {
+        return !userRepository.findByEmail(email);
     }
 
     // public User signUp(UserDto dto) {
@@ -40,9 +51,5 @@ public class AuthServiceImpl implements AuthService {
     //     }
     //
     //     // the rest of the registration operation
-    // }
-
-    // private boolean emailExist(String email) {
-    //     return userRepository.findByEmail(email) != null;
     // }
 }
