@@ -44,7 +44,7 @@ public class InnerTransferControllerTest {
 
     @Test
     public void shouldReturnNoContentIfIncomeDataIsValid() throws Exception {
-        var requestBody = String.format(this.requestBodyTmpl, 1L, 2L, 1000.00);
+        var requestBody = this.getRequestBody(1L, 2L, 1000.00);
 
         this.send(requestBody).andExpect(status().isNoContent());
     }
