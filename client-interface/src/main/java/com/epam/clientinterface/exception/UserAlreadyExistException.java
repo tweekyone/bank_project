@@ -1,11 +1,8 @@
 package com.epam.clientinterface.exception;
 
-import lombok.NoArgsConstructor;
-
-@NoArgsConstructor
 public class UserAlreadyExistException extends RuntimeException {
-
-    public UserAlreadyExistException(String message) {
-        super(message);
+    public UserAlreadyExistException(String email) {
+        super(String.format("Account with email %s already exists", email));
     }
+
 }
