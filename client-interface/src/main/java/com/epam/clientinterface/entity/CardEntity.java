@@ -1,6 +1,10 @@
 package com.epam.clientinterface.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -37,12 +41,18 @@ public class CardEntity {
 
     @Column(name = "plan")
     @Enumerated(EnumType.STRING)
-    private CardPlans plan;
+    private Plan plan;
 
     @Column(name = "explication_date")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime explicationDate;
 
     @Column(name = "account_id")
     private Integer accountId;
+
+    public enum Plan {
+        TESTPLAN
+    }
 }

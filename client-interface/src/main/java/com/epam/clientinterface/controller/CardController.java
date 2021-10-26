@@ -27,9 +27,9 @@ public class CardController {
 
     //temporary method
     @GetMapping(path = "/{number}")
-    public ResponseEntity<String> findByNumber(@PathVariable String number) throws JsonProcessingException {
-        String cardJson = new ObjectMapper().writeValueAsString(cardService.findByNumber(number));
-        return new ResponseEntity<>(cardJson, HttpStatus.OK);
+    public CardEntity findByNumber(@PathVariable String number) {
+        CardEntity card = cardService.findByNumber(number);
+        return card;
     }
 
     //temporary method

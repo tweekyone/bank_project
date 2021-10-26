@@ -31,8 +31,10 @@ dependencies {
     api 'com.zaxxer:HikariCP:5.0.0'
     api 'org.liquibase:liquibase-core:4.5.0'
     api 'jakarta.persistence:jakarta.persistence-api:3.0.0'
+
     api 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
     api 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.5'
+    api 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.12.5'
 
     // Spring
     api 'org.springframework:spring-core:5.3.10'
