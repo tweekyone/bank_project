@@ -4,9 +4,7 @@ import com.epam.clientinterface.entity.User;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface AuthService {
-    User signUp(String name, String surname, String phoneNumber,
+public interface UserService {
+    User create(String name, String surname, String phoneNumber,
                 String username, String email, String rawPassword);
-
-    // User signUp(UserDto dto);
 }
