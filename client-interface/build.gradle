@@ -28,7 +28,7 @@ dependencies {
 
   // Hibernate
   implementation 'org.hibernate:hibernate-core'
-  implementation 'org.hibernate.validator:hibernate-validator:6.2.0.Final'
+  implementation 'org.hibernate.validator:hibernate-validator'
 
 
   implementation 'com.zaxxer:HikariCP'
@@ -36,9 +36,9 @@ dependencies {
   implementation 'com.fasterxml.jackson.core:jackson-databind'
 
   // JavaX
-  implementation 'javax.validation:validation-api:2.0.1.Final'
-  implementation 'javax.el:javax.el-api:3.0.0'
-  implementation 'org.glassfish.web:javax.el:2.2.6'
+  implementation 'javax.validation:validation-api'
+  implementation 'javax.el:javax.el-api'
+  implementation 'org.glassfish.web:javax.el'
 
   runtimeOnly 'org.postgresql:postgresql'
 

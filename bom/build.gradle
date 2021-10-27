@@ -21,6 +21,9 @@ dependencies {
     api 'javax.activation:activation:1.1.1'
     api 'javax.persistence:persistence-api:1.0.2'
     api 'javax.servlet:javax.servlet-api:4.0.1'
+    api 'javax.validation:validation-api:2.0.1.Final'
+    api 'javax.el:javax.el-api:3.0.0'
+    api 'org.glassfish.web:javax.el:2.2.6'
 
     api 'org.projectlombok:lombok:1.18.22'
     api 'com.auth0:java-jwt:3.18.2'
@@ -48,6 +51,7 @@ dependencies {
     api 'org.springframework.data:spring-data-jpa:2.5.4'
 
     api 'org.hibernate:hibernate-core:5.6.0.Final'
+    api 'org.hibernate.validator:hibernate-validator:6.2.0.Final'
 //    api 'org.hibernate:hibernate-entitymanager:5.5.7.Final'
 
     // Jetty
