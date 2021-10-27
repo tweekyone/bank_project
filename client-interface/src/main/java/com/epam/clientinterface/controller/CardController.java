@@ -26,9 +26,9 @@ public class CardController {
 
     //temporary method
     @GetMapping(path = "/{number}")
-    public ResponseEntity<Card> findByNumber(@PathVariable String number) {
+    public Card findByNumber(@PathVariable String number) {
         Card card = cardService.findByNumber(number);
-        return new ResponseEntity<>(card, HttpStatus.OK);
+        return card;
     }
 
     //temporary method
@@ -40,9 +40,16 @@ public class CardController {
 
     @PatchMapping(path = "/{cardId}/change-password")
     public ResponseEntity<Card> changePassword(
-        @RequestBody ChangePinRequest request,
-        @Valid @PathVariable("cardId") String cardId) {
+        @Valid @RequestBody ChangePinRequest request,
+        @PathVariable("cardId") String cardId) {
         Card card = cardService.changePassword(Long.parseLong(cardId), request.getNewPin());
         return new ResponseEntity<>(card, HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/password")
+    public ResponseEntity<String> changePassword(
+        @Valid @RequestBody ChangePinRequest request) {
+        request.getCardId();
+        return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 }
