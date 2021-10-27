@@ -33,6 +33,7 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
             .map(v -> {
                 var fieldError = new HashMap<>();
                 fieldError.put("field", v.getField());
+                fieldError.put("type", v.getCode());
                 fieldError.put("error", v.getDefaultMessage());
 
                 return fieldError;
