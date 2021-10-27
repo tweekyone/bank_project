@@ -25,17 +25,14 @@ dependencies {
   implementation 'org.springframework.security:spring-security-config'
   implementation 'org.springframework.data:spring-data-jpa'
   implementation 'org.hibernate:hibernate-core'
+  implementation 'org.hibernate:hibernate-validator'
+  implementation 'org.hibernate.validator:hibernate-validator-annotation-processor'
   implementation 'com.zaxxer:HikariCP'
   implementation 'org.liquibase:liquibase-core'
-
   implementation 'com.fasterxml.jackson.core:jackson-databind'
-  implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-  implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
+  implementation 'javax.validation:validation-api'
 
   runtimeOnly 'org.postgresql:postgresql'
-
-  //H2 database
-  implementation 'com.h2database:h2'
 
   // Jetty
   implementation 'javax.servlet:javax.servlet-api'

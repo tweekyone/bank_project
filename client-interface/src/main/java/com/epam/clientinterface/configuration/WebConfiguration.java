@@ -4,9 +4,12 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.util.List;
+import org.hibernate.validator.HibernateValidator;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -26,5 +29,13 @@ public class WebConfiguration implements WebMvcConfigurer {
                 break;
             }
         }
+    }
+
+    @Override
+    public Validator getValidator() {
+        var validatorFactoryBean = new LocalValidatorFactoryBean();
+        validatorFactoryBean.setProviderClass(HibernateValidator.class);
+
+        return validatorFactoryBean;
     }
 }
