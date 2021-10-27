@@ -17,8 +17,6 @@ public class InnerTransferController {
 
     @PostMapping("/transfer/inner")
     public ResponseEntity<?> innerTransfer(@Valid @RequestBody InnerTransferRequest request) {
-        // ToDo: check 403 (current user owns source account)
-
         this.accountService.transfer(
             request.getSourceAccountId(),
             request.getDestinationAccountId(),
