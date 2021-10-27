@@ -1,6 +1,6 @@
 package com.epam.clientinterface.controller;
 
-import com.epam.clientinterface.controller.dto.request.InnerTransferRequest;
+import com.epam.clientinterface.controller.dto.request.InternalTransferRequest;
 import com.epam.clientinterface.service.AccountService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class InnerTransferController {
+public class InternalTransferController {
     private final AccountService accountService;
 
-    @PostMapping("/transfer/inner")
-    public ResponseEntity<?> innerTransfer(@Valid @RequestBody InnerTransferRequest request) {
+    @PostMapping("/transfer/internal")
+    public ResponseEntity<?> internalTransfer(@Valid @RequestBody InternalTransferRequest request) {
         this.accountService.transfer(
             request.getSourceAccountId(),
             request.getDestinationAccountId(),

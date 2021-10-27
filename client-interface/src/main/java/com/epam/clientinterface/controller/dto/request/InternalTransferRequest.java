@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class InnerTransferRequest {
+public class InternalTransferRequest {
     @Positive
     private long sourceAccountId;
 

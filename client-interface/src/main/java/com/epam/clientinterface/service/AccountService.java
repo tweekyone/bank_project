@@ -32,7 +32,7 @@ public class AccountService {
                 new TransactionAccountData(sourceAccount.getNumber(), false),
                 new TransactionAccountData(destinationAccount.getNumber(), false),
                 amount,
-                TransactionOperationType.INNER_TRANSFER,
+                TransactionOperationType.INTERNAL_TRANSFER,
                 TransactionState.DECLINE
             ));
 
@@ -47,7 +47,7 @@ public class AccountService {
             new TransactionAccountData(sourceAccount.getNumber(), false),
             new TransactionAccountData(destinationAccount.getNumber(), false),
             amount,
-            TransactionOperationType.INNER_TRANSFER,
+            TransactionOperationType.INTERNAL_TRANSFER,
             TransactionState.SUCCESS
         ));
     }

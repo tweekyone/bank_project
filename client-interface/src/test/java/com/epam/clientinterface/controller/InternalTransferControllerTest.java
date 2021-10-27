@@ -26,7 +26,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @ExtendWith(MockitoExtension.class)
-public class InnerTransferControllerTest {
+public class InternalTransferControllerTest {
     private MockMvc mockMvc;
 
     @Mock
@@ -37,7 +37,7 @@ public class InnerTransferControllerTest {
     @BeforeEach
     public void beforeEach() {
         this.mockMvc = MockMvcBuilders
-            .standaloneSetup(new InnerTransferController(this.accountServiceMock))
+            .standaloneSetup(new InternalTransferController(this.accountServiceMock))
             .setControllerAdvice(ErrorHandlingAdvice.class)
             .build();
     }
@@ -121,6 +121,6 @@ public class InnerTransferControllerTest {
     }
 
     private ResultActions send(String requestBody, MediaType mediaType) throws Exception {
-        return this.mockMvc.perform(post("/transfer/inner").contentType(mediaType).content(requestBody));
+        return this.mockMvc.perform(post("/transfer/internal").contentType(mediaType).content(requestBody));
     }
 }
