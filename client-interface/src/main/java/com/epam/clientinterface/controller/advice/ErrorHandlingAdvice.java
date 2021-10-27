@@ -8,6 +8,7 @@ import com.epam.clientinterface.controller.dto.response.ErrorResponse;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 import lombok.NonNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -35,12 +36,15 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
             .getBindingResult()
             .getFieldErrors()
             .stream()
-            .collect(
-                groupingBy(
-                    FieldError::getField,
-                    mapping(FieldError::getDefaultMessage, toList())
-                )
-            ));
+            .map(v -> {
+                var fieldError = new HashMap<>();
+                fieldError.put("field", v.getField());
+                fieldError.put("error", v.getDefaultMessage());
+
+                return fieldError;
+            })
+            .toArray()
+        );
 
         return handleExceptionInternal(ex, body, headers, HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
