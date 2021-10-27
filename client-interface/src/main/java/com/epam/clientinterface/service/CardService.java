@@ -3,31 +3,31 @@ package com.epam.clientinterface.service;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.exception.AccountNotFoundException;
+import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.CardRepository;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Random;
-import javax.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class CardService {
     private final CardRepository cardRepository;
-    private final AccountService accountService;
+    private final AccountRepository accountRepository;
 
     public @NonNull Card createCard(@NonNull Long accountId, @NonNull Card.Plan plan) {
 
-        Account account = accountService.findById(accountId);
-        if (account == null) {
+        Optional<Account> account = accountRepository.findById(accountId);
+        if (account.isEmpty()) {
             throw new AccountNotFoundException(accountId);
         }
 
         String pinCode = generatePinCode();
         Card card = new Card();
-        card.setAccount(account);
+        card.setAccount(account.get());
         card.setPinCode(pinCode);
         card.setPlan(plan);
         card.setExpirationDate(LocalDateTime.now().plusYears(3));

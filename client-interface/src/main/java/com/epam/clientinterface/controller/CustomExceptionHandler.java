@@ -47,17 +47,20 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    public ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
-                                                               HttpHeaders headers, HttpStatus status,
-                                                               WebRequest request) {
-        ErrorResponse error = new ErrorResponse("badRequest", HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    public @NonNull ResponseEntity<Object> handleHttpMessageNotReadable(
+        @NonNull HttpMessageNotReadableException ex,
+        @NonNull HttpHeaders headers,
+        @NonNull HttpStatus status,
+        @NonNull WebRequest request
+    ) {
+        ErrorResponse body = new ErrorResponse("badRequest", HttpStatus.BAD_REQUEST);
+        return handleExceptionInternal(ex, body, headers, HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(AccountNotFoundException.class)
-    public final ResponseEntity<ErrorResponse> handleAccountNotFound(Exception ex, WebRequest request) {
-        ErrorResponse error = new ErrorResponse("accountNotFound", HttpStatus.NOT_FOUND);
-        return new ResponseEntity<ErrorResponse>(error, HttpStatus.NOT_FOUND);
+    public final ResponseEntity<Object> handleAccountNotFound(Exception ex, WebRequest request) {
+        ErrorResponse body = new ErrorResponse("accountNotFound", HttpStatus.NOT_FOUND);
+        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
 }

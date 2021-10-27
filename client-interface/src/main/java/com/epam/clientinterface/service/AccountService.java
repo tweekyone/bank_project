@@ -12,10 +12,4 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class AccountService {
     private final AccountRepository accountRepository;
-
-    public Account findById(Long id) {
-        Optional<Account> account = accountRepository.findById(id);
-        return account.isEmpty() ? null : account.get();
-    }
-
 }
