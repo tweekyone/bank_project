@@ -8,17 +8,15 @@ import com.epam.clientinterface.service.AuthService;
 import com.epam.clientinterface.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    // @Autowired? TODO - create Beans below like in my realization
+    // TODO - create Bean of user service implementation
     private UserService userService;
+    // TODO -
     private UserRepository userRepository;
-    // Mock
-    private List<Account> accounts = new ArrayList<>();
 
     @Override
     public User signUp(String name, String surname, String phoneNumber,
@@ -28,6 +26,7 @@ public class AuthServiceImpl implements AuthService {
         // }
         // User newUser = userService.create(name, surname, phoneNumber, username, email, rawPassword);
         // Mocked user, uncomment line below to use mock instead of userService
+        List<Account> accounts = new ArrayList<>();
         User newUser = new User(name, surname, phoneNumber, username, email, rawPassword, accounts);
         System.out.println(newUser);
         return newUser;
