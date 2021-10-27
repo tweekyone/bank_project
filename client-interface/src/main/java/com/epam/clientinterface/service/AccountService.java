@@ -4,6 +4,9 @@ import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Transaction;
+import com.epam.clientinterface.entity.TransactionAccountData;
+import com.epam.clientinterface.entity.TransactionOperationType;
+import com.epam.clientinterface.entity.TransactionState;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.TransactionRepository;
 import com.fasterxml.jackson.databind.util.ArrayIterator;
@@ -26,11 +29,11 @@ public class AccountService {
 
         if (sourceAccount.getAmount() < amount) {
             this.transactionRepository.save(new Transaction(
-                new Transaction.AccountData(sourceAccount.getNumber(), false),
-                new Transaction.AccountData(destinationAccount.getNumber(), false),
+                new TransactionAccountData(sourceAccount.getNumber(), false),
+                new TransactionAccountData(destinationAccount.getNumber(), false),
                 amount,
-                Transaction.OperationType.INNER_TRANSFER,
-                Transaction.State.DECLINE
+                TransactionOperationType.INNER_TRANSFER,
+                TransactionState.DECLINE
             ));
 
             throw new NotEnoughMoneyException(sourceAccountId, amount);
@@ -41,11 +44,11 @@ public class AccountService {
 
         this.accountRepository.saveAll(new ArrayIterator<>(new Account[] {sourceAccount, destinationAccount}));
         this.transactionRepository.save(new Transaction(
-            new Transaction.AccountData(sourceAccount.getNumber(), false),
-            new Transaction.AccountData(destinationAccount.getNumber(), false),
+            new TransactionAccountData(sourceAccount.getNumber(), false),
+            new TransactionAccountData(destinationAccount.getNumber(), false),
             amount,
-            Transaction.OperationType.INNER_TRANSFER,
-            Transaction.State.DECLINE
+            TransactionOperationType.INNER_TRANSFER,
+            TransactionState.SUCCESS
         ));
     }
 }

@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -38,7 +37,7 @@ public class Transaction {
         @AttributeOverride(name = "accountNumber", column = @Column(name = "source_account_number")),
         @AttributeOverride(name = "isExternal", column = @Column(name = "source_is_external"))
     })
-    private AccountData sourceAccount;
+    private TransactionAccountData sourceAccount;
 
     @Nullable
     @Embedded
@@ -46,7 +45,7 @@ public class Transaction {
         @AttributeOverride(name = "accountNumber", column = @Column(name = "destination_account_number")),
         @AttributeOverride(name = "isExternal", column = @Column(name = "destination_is_external"))
     })
-    private AccountData destinationAccount;
+    private TransactionAccountData destinationAccount;
 
     @Column(name = "amount", nullable = false)
     private double amount;
@@ -56,39 +55,18 @@ public class Transaction {
 
     @Column(name = "operation_type", nullable = false)
     @Enumerated(EnumType.STRING)
-    private OperationType operationType;
+    private TransactionOperationType operationType;
 
     @Column(name = "state", nullable = false)
     @Enumerated(EnumType.STRING)
-    private State state;
-
-    @Getter
-    @NoArgsConstructor
-    @Embeddable
-    public static class AccountData {
-        private String accountNumber;
-        private boolean isExternal;
-
-        public AccountData(@NonNull String accountNumber, boolean isExternal) {
-            this.accountNumber = accountNumber;
-            this.isExternal = isExternal;
-        }
-    }
-
-    public enum OperationType {
-        INNER_TRANSFER, EXTERNAL_TRANSFER
-    }
-
-    public enum State {
-        SUCCESS, DECLINE
-    }
+    private TransactionState state;
 
     public Transaction(
-        @NonNull AccountData sourceAccount,
-        @NonNull AccountData destinationAccount,
+        @NonNull TransactionAccountData sourceAccount,
+        @NonNull TransactionAccountData destinationAccount,
         double amount,
-        @NonNull OperationType operationType,
-        @NonNull State state
+        @NonNull TransactionOperationType operationType,
+        @NonNull TransactionState state
     ) {
         this.sourceAccount = sourceAccount;
         this.destinationAccount = destinationAccount;
