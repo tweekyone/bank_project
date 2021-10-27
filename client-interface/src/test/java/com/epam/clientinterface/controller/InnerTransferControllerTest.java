@@ -1,6 +1,6 @@
 package com.epam.clientinterface.controller;
 
-import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.anyDouble;
 import static org.mockito.Mockito.anyLong;
@@ -56,9 +56,22 @@ public class InnerTransferControllerTest {
             .andExpect(status().isUnprocessableEntity())
             .andExpect(jsonPath("$.type", is("validation")))
             .andExpect(jsonPath("$.status", is(422)))
-            .andExpect(jsonPath("$.errors.amount", contains("must be greater than 0")))
-            .andExpect(jsonPath("$.errors.sourceAccountId", contains("must be greater than 0")))
-            .andExpect(jsonPath("$.errors.destinationAccountId", contains("must be greater than 0")));
+            .andExpect(jsonPath(
+                "$.errors[*].field",
+                containsInAnyOrder("sourceAccountId", "destinationAccountId", "amount")
+            ))
+            .andExpect(jsonPath(
+                "$.errors[?(@.field=='sourceAccountId')].error",
+                containsInAnyOrder("must be greater than 0")
+            ))
+            .andExpect(jsonPath(
+                "$.errors[?(@.field=='destinationAccountId')].error",
+                containsInAnyOrder("must be greater than 0")
+            ))
+            .andExpect(jsonPath(
+                "$.errors[?(@.field=='amount')].error",
+                containsInAnyOrder("must be greater than 0")
+            ));
     }
 
     @Test
