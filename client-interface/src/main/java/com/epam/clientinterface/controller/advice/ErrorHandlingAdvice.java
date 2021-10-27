@@ -1,15 +1,10 @@
 package com.epam.clientinterface.controller.advice;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.mapping;
-import static java.util.stream.Collectors.toList;
-
 import java.util.HashMap;
 import lombok.NonNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -31,13 +26,15 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
             .getBindingResult()
             .getFieldErrors()
             .stream()
-            .collect(
-                groupingBy(
-                    FieldError::getField,
-                    mapping(FieldError::getDefaultMessage, toList())
-                )
-            ));
+            .map(v -> {
+                var fieldError = new HashMap<>();
+                fieldError.put("field", v.getField());
+                fieldError.put("error", v.getDefaultMessage());
 
+                return fieldError;
+            })
+            .toArray()
+        );
         return handleExceptionInternal(ex, body, headers, HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
 }
