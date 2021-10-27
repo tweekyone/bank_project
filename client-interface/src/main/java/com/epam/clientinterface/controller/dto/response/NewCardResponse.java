@@ -1,6 +1,7 @@
 package com.epam.clientinterface.controller.dto.response;
 
 import com.epam.clientinterface.entity.Card;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,5 +16,5 @@ public class NewCardResponse {
     private String description;
     private String number;
     private Card.Plan plan;
-    private String expirationDate;
+    private LocalDateTime expirationDate;
 }
