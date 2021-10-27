@@ -11,7 +11,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
+public class CustomErrorHandler extends ResponseEntityExceptionHandler {
     @Override
     protected @NonNull ResponseEntity<Object> handleMethodArgumentNotValid(
         MethodArgumentNotValidException ex,

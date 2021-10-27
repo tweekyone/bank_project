@@ -1,10 +1,9 @@
 package com.epam.clientinterface.controller;
 
 import com.epam.clientinterface.controller.dto.request.ChangePinRequest;
-import com.epam.clientinterface.entity.CardEntity;
+import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.service.CardService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,25 +26,23 @@ public class CardController {
 
     //temporary method
     @GetMapping(path = "/{number}")
-    public CardEntity findByNumber(@PathVariable String number) {
-        CardEntity card = cardService.findByNumber(number);
-        return card;
+    public ResponseEntity<Card> findByNumber(@PathVariable String number) {
+        Card card = cardService.findByNumber(number);
+        return new ResponseEntity<>(card, HttpStatus.OK);
     }
 
     //temporary method
     @PostMapping(path = "/create")
-    public ResponseEntity<String> create(@RequestBody CardEntity card) throws JsonProcessingException {
-        String cardJson = new ObjectMapper().writeValueAsString(cardService.save(card));
-        return new ResponseEntity<>(cardJson, HttpStatus.OK);
+    public ResponseEntity<Card> create(@Valid @RequestBody Card card) {
+        Card newCard = cardService.save(card);
+        return new ResponseEntity<>(newCard, HttpStatus.OK);
     }
 
     @PatchMapping(path = "/{cardId}/change-password")
-    public ResponseEntity<String> changePassword(
+    public ResponseEntity<Card> changePassword(
         @RequestBody ChangePinRequest request,
-        @PathVariable("cardId") String cardId) throws JsonProcessingException {
-        CardEntity card = cardService.changePassword(Long.parseLong(cardId), request.getNewPin());
-        String cardJson = new ObjectMapper().writeValueAsString(cardService.changePassword(card.getId(),
-            request.getNewPin()));
-        return new ResponseEntity<>(cardJson, HttpStatus.OK);
+        @Valid @PathVariable("cardId") String cardId) {
+        Card card = cardService.changePassword(Long.parseLong(cardId), request.getNewPin());
+        return new ResponseEntity<>(card, HttpStatus.OK);
     }
 }
