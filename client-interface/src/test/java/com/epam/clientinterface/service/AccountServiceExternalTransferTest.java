@@ -1,5 +1,9 @@
 package com.epam.clientinterface.service;
 
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
 import com.epam.clientinterface.domain.exception.AccountIsNotSupposedForExternalTransferException;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
@@ -7,18 +11,14 @@ import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.TransactionRepository;
+import java.util.ArrayList;
+import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import java.util.ArrayList;
-import java.util.Optional;
-
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class AccountServiceExternalTransferTest {
