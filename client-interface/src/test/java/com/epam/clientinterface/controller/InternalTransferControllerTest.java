@@ -90,7 +90,7 @@ public class InternalTransferControllerTest {
 
         doThrow(new AccountNotFoundException(1L))
             .when(this.accountServiceMock)
-            .transfer(anyLong(), anyLong(), anyDouble());
+            .internalTransfer(anyLong(), anyLong(), anyDouble());
 
         this.send(requestBody)
             .andExpect(status().isNotFound())
@@ -104,7 +104,7 @@ public class InternalTransferControllerTest {
 
         doThrow(new NotEnoughMoneyException(1L, 10000.00))
             .when(this.accountServiceMock)
-            .transfer(anyLong(), anyLong(), anyDouble());
+            .internalTransfer(anyLong(), anyLong(), anyDouble());
 
         this.send(requestBody)
             .andExpect(status().isBadRequest())

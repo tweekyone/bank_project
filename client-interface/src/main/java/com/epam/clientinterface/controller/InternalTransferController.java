@@ -17,7 +17,7 @@ public class InternalTransferController {
 
     @PostMapping("/transfer/internal")
     public ResponseEntity<?> internalTransfer(@Valid @RequestBody InternalTransferRequest request) {
-        this.accountService.transfer(
+        this.accountService.internalTransfer(
             request.getSourceAccountId(),
             request.getDestinationAccountId(),
             request.getAmount()
