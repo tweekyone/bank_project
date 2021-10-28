@@ -25,11 +25,11 @@ dependencies {
   implementation 'org.springframework.security:spring-security-web'
   implementation 'org.springframework.security:spring-security-config'
   implementation 'org.springframework.data:spring-data-jpa'
+  implementation 'org.springframework:spring-tx'
 
   // Hibernate
   implementation 'org.hibernate:hibernate-core'
   implementation 'org.hibernate.validator:hibernate-validator'
-
 
   implementation 'com.zaxxer:HikariCP'
   implementation 'org.liquibase:liquibase-core'
@@ -58,6 +58,10 @@ dependencies {
   testImplementation "org.junit.jupiter:junit-jupiter-params"
   testImplementation "org.assertj:assertj-core"
   testImplementation 'org.mockito:mockito-core'
+  testImplementation 'org.mockito:mockito-junit-jupiter'
+  testImplementation 'org.springframework:spring-test'
+  testImplementation 'org.hamcrest:hamcrest-all'
+  testImplementation 'com.jayway.jsonpath:json-path'
 
   // Annotation processors
   compileOnly "org.projectlombok:lombok"
