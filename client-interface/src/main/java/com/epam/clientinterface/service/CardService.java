@@ -20,7 +20,7 @@ public class CardService {
 
     public @NonNull Card createCard(@NonNull Long accountId, @NonNull Card.Plan plan) {
 
-        Optional<Account> account = accountRepository.findById(accountId);
+        Optional<Account> account = this.accountRepository.findById(accountId);
         if (account.isEmpty()) {
             throw new AccountNotFoundException(accountId);
         }

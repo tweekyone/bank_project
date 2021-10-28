@@ -7,8 +7,8 @@ import com.epam.clientinterface.service.CardService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,11 +22,13 @@ public class CardController {
     private final CardService cardService;
 
     @PostMapping(path = "/account/{accountId}/cards")
-    public NewCardResponse releaseCard(@PathVariable Long accountId,@Valid @RequestBody NewCardRequest request) {
-        // TODO: authentication
+    public ResponseEntity<NewCardResponse> releaseCard(@PathVariable Long accountId,
+                                                       @Valid @RequestBody NewCardRequest request) {
 
         Card card = cardService.createCard(accountId, request.getPlan());
-        return new NewCardResponse(HttpStatus.CREATED, "Card has been created", card.getNumber(),
+        NewCardResponse response = new NewCardResponse(HttpStatus.CREATED, "Card has been created", card.getNumber(),
             card.getPlan(), card.getExpirationDate());
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }
+
