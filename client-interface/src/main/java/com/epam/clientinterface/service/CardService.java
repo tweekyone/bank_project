@@ -1,5 +1,6 @@
 package com.epam.clientinterface.service;
 
+import com.epam.clientinterface.controller.dto.request.ChangePinRequest;
 import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.repository.CardRepository;
 import javax.transaction.Transactional;
@@ -23,9 +24,10 @@ public class CardService {
         return cardRepository.findByNumber(number);
     }
 
-    public Card changePassword(Long cardId, String rawPin) {
-        Card card = cardRepository.getById(cardId);
-        card.setPinCode(rawPin);
-        return cardRepository.save(card);
+    public void changePinCode(ChangePinRequest pinRequest) {
+        Card card = cardRepository.getById(pinRequest.getCardId());
+        card.setPinCode(pinRequest.getNewPin());
+        save(card);
+        System.out.println();
     }
 }

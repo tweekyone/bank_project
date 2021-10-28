@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +26,8 @@ public class CardController {
 
     //temporary method
     @GetMapping(path = "/{number}")
-    public @ResponseBody Card findByNumber(@PathVariable String number) {
+    public @ResponseBody
+    Card findByNumber(@PathVariable String number) {
         Card card = cardService.findByNumber(number);
         return card;
     }
@@ -38,19 +38,24 @@ public class CardController {
         Card newCard = cardService.save(card);
         return new ResponseEntity<>(newCard, HttpStatus.OK);
     }
+    //
+    // @PatchMapping(path = "/{cardId}/change-password")
+    // public ResponseEntity<?> changePassword(
+    //     @Valid @RequestBody ChangePinRequest request,
+    //     @PathVariable("cardId") String cardId) {
+    //     cardService.changePinCode(Long.parseLong(cardId), request);
+    //     return ResponseEntity.ok("Pin Code successfully changed!");
+    // }
 
-    @PatchMapping(path = "/{cardId}/change-password")
-    public ResponseEntity<Card> changePassword(
-        @Valid @RequestBody ChangePinRequest request,
-        @PathVariable("cardId") String cardId) {
-        Card card = cardService.changePassword(Long.parseLong(cardId), request.getNewPin());
-        return new ResponseEntity<>(card, HttpStatus.OK);
+    //temporary method
+    @GetMapping("/connected")
+    public ResponseEntity<?> returnOk() {
+        return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
-    @PostMapping(path = "/password")
-    public ResponseEntity<String> changePassword(
-        @Valid @RequestBody ChangePinRequest request) {
-        request.getCardId();
-        return new ResponseEntity<>("OK", HttpStatus.OK);
+    @PostMapping(path = "/change-password")
+    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePinRequest request) {
+        cardService.changePinCode(request);
+        return ResponseEntity.ok("Pin Code successfully changed!");
     }
 }
