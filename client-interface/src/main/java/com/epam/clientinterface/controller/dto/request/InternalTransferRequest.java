@@ -1,7 +1,7 @@
 package com.epam.clientinterface.controller.dto.request;
 
-import javax.validation.constraints.Positive;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import javax.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
