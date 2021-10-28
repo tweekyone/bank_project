@@ -1,5 +1,7 @@
 package com.epam.clientinterface.controller.advice;
 
+import com.epam.clientinterface.controller.dto.response.ErrorResponse;
+import java.util.Arrays;
 import java.util.HashMap;
 import lombok.NonNull;
 import org.springframework.http.HttpHeaders;
@@ -47,6 +49,11 @@ public class CustomErrorHandler extends ResponseEntityExceptionHandler {
         @NonNull HttpStatus status,
         @NonNull WebRequest request
     ) {
-        return handleExceptionInternal(ex, "Bad Request", headers, HttpStatus.BAD_REQUEST, request);
+        String error = "Bad Request";
+        ErrorResponse errorResponse = new ErrorResponse(
+            HttpStatus.BAD_REQUEST,
+            ex.getLocalizedMessage(),
+            Arrays.asList(error));
+        return handleExceptionInternal(ex, errorResponse, headers, HttpStatus.BAD_REQUEST, request);
     }
 }

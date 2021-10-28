@@ -194,6 +194,7 @@
       </column>
     </addColumn>
   </changeSet>
+
   <changeSet id="7" author="Dmitrii Korolev">
     <modifyDataType tableName="account" columnName="number" newDataType="varchar"/>
   </changeSet>
@@ -201,7 +202,7 @@
     <renameColumn tableName="card" oldColumnName="explication_date" newColumnName="expiration_date"/>
   </changeSet>
 
-  <changeSet id="7" author="Evgenii Ponukhov">
+  <changeSet id="9" author="Evgenii Ponukhov">
     <createTable tableName="pin_counter">
       <column name="id" type="BIGINT">
         <constraints primaryKey="true" primaryKeyName="pin_counter_pkey"/>
