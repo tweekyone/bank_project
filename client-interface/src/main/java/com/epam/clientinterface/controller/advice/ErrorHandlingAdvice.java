@@ -1,6 +1,7 @@
 package com.epam.clientinterface.controller.advice;
 
 import com.epam.clientinterface.controller.dto.response.ErrorResponse;
+import com.epam.clientinterface.domain.exception.AccountIsNotSupposedForExternalTransferException;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
 import java.util.HashMap;
@@ -60,6 +61,20 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(
             exception,
             new ErrorResponse("notEnoughMoney", HttpStatus.BAD_REQUEST),
+            new HttpHeaders(),
+            HttpStatus.BAD_REQUEST,
+            request
+        );
+    }
+
+    @ExceptionHandler(AccountIsNotSupposedForExternalTransferException.class)
+    public ResponseEntity<Object> handleAccountIsNotSupposedForExternalTransfer(
+        AccountIsNotSupposedForExternalTransferException exception,
+        WebRequest request
+    ) {
+        return handleExceptionInternal(
+            exception,
+            new ErrorResponse("accountIsNotSupposedForExternalTransfer", HttpStatus.BAD_REQUEST),
             new HttpHeaders(),
             HttpStatus.BAD_REQUEST,
             request
