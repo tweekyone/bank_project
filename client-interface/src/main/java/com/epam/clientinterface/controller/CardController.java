@@ -24,7 +24,6 @@ public class CardController {
     @PostMapping(path = "/account/{accountId}/cards")
     public ResponseEntity<NewCardResponse> releaseCard(@PathVariable Long accountId,
                                                        @Valid @RequestBody NewCardRequest request) {
-
         Card card = cardService.createCard(accountId, request.getPlan());
         NewCardResponse response = new NewCardResponse(HttpStatus.CREATED, "Card has been created", card.getNumber(),
             card.getPlan(), card.getExpirationDate());

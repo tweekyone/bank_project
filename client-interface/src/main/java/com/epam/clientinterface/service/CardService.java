@@ -58,5 +58,4 @@ public class CardService {
         }
         return builder.toString();
     }
-
 }
