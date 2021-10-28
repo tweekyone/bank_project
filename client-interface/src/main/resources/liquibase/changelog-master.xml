@@ -187,4 +187,17 @@
 
     <addAutoIncrement tableName="role" columnName="id" incrementBy="1" startWith="1"/>
   </changeSet>
+  <changeSet id="6" author="Dmitrii Korolev">
+    <addColumn tableName="user">
+      <column name="username" type="varchar">
+        <constraints nullable="false" unique="true"/>
+      </column>
+    </addColumn>
+  </changeSet>
+  <changeSet id="7" author="Dmitrii Korolev">
+    <modifyDataType tableName="account" columnName="number" newDataType="varchar"/>
+  </changeSet>
+  <changeSet id="8" author="Dmitrii Korolev">
+    <renameColumn tableName="card" oldColumnName="explication_date" newColumnName="expiration_date"/>
+  </changeSet>
 </databaseChangeLog>
