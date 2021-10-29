@@ -29,7 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @ExtendWith(MockitoExtension.class)
-public class CardControllerTest {
+public class CardControllerNewCardTest {
 
     private MockMvc mockMvc;
     private final String requestBody = String.format("{\"plan\":\"%s\"}", "BASE");
@@ -45,8 +45,8 @@ public class CardControllerTest {
     }
 
     @Test
-    void shouldReturnIsCreatedIfRequestIsValid() throws Exception {
-        when(cardService.createCard(anyLong(), any(Card.Plan.class))).thenReturn(new Card());
+    void shouldReturnIsCreatedIfdRequestIsValid() throws Exception {
+        when(cardService.releaseCard(anyLong(), any(Card.Plan.class))).thenReturn(new Card());
 
         this.mockMvc.perform(post("/account/1/cards")
             .contentType(MediaType.APPLICATION_JSON)
@@ -58,7 +58,7 @@ public class CardControllerTest {
         "{\"type\":\"BASE\"}",
         "{}"
     })
-    public void shouldReturnValidationErrorResponseIfRequestIsIncorrect(String requestBody) throws Exception {
+    public void shouldReturnValidationErrorResponseIfNewCardRequestIsIncorrect(String requestBody) throws Exception {
         this.mockMvc.perform(post("/account/1/cards")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
@@ -86,10 +86,9 @@ public class CardControllerTest {
 
     @Test
     public void shouldReturnNotFoundIfServiceThrowsAccountNotFound() throws Exception {
-
         doThrow(new AccountNotFoundException(2L))
             .when(cardService)
-            .createCard(anyLong(), any(Card.Plan.class));
+            .releaseCard(anyLong(), any(Card.Plan.class));
 
         this.mockMvc.perform(post("/account/2/cards")
             .contentType(MediaType.APPLICATION_JSON)

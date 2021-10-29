@@ -25,7 +25,7 @@ public class CardController {
     @PostMapping(path = "/account/{accountId}/cards")
     public ResponseEntity<NewCardResponse> releaseCard(@PathVariable Long accountId,
                                                        @Valid @RequestBody NewCardRequest request) {
-        Card card = cardService.createCard(accountId, request.getPlan());
+        Card card = cardService.releaseCard(accountId, request.getPlan());
         NewCardResponse response = new NewCardResponse(HttpStatus.CREATED, "Card has been created", card.getNumber(),
             card.getPlan(), card.getExpirationDate());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -34,9 +34,9 @@ public class CardController {
     @PostMapping(path = "/card/{cardId}/block")
     public ResponseEntity<?> blockCard(@PathVariable Long cardId) {
         Card card = cardService.blockCard(cardId);
-        BlockCardResponse response = new BlockCardResponse(HttpStatus.CREATED, "Card has been blocked",
+        BlockCardResponse response = new BlockCardResponse(HttpStatus.OK, "Card has been blocked",
             card.getNumber());
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
 

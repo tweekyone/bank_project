@@ -9,6 +9,7 @@ import com.epam.clientinterface.repository.CardRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
+import javax.transaction.Transactional;
 import javax.validation.constraints.Positive;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +17,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CardService {
     private final CardRepository cardRepository;
     private final AccountRepository accountRepository;
 
-    public @NonNull Card createCard(@NonNull Long accountId, @NonNull Card.Plan plan) {
+    public @NonNull Card releaseCard(@NonNull Long accountId, @NonNull Card.Plan plan) {
 
         Optional<Account> account = this.accountRepository.findById(accountId);
         if (account.isEmpty()) {
@@ -49,7 +51,7 @@ public class CardService {
         if (card.isEmpty()) {
             throw new CardNotFoundException(cardId);
         }
-        card.get().setBlocked(true);
+        changeStatusIsBlocked(true, card.get());
         return cardRepository.save(card.get());
     }
 
@@ -69,5 +71,9 @@ public class CardService {
             builder.append(digit);
         }
         return builder.toString();
+    }
+    
+    protected void changeStatusIsBlocked(boolean status, Card card) {
+        card.setBlocked(status);
     }
 }

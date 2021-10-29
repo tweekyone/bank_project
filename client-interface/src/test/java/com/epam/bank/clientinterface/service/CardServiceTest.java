@@ -39,7 +39,7 @@ public class CardServiceTest {
         when(this.accountRepository.findById(1L))
             .thenReturn(Optional.of(new Account(1L, "", true, Account.Plan.BASE,
                 1000, new User(), new ArrayList<>())));
-        this.cardService.createCard(1L, Card.Plan.BASE);
+        this.cardService.releaseCard(1L, Card.Plan.BASE);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class CardServiceTest {
         when(this.accountRepository.findById(2L)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(AccountNotFoundException.class,
-            () -> this.cardService.createCard(2L, Card.Plan.BASE));
+            () -> this.cardService.releaseCard(2L, Card.Plan.BASE));
     }
 
 }
