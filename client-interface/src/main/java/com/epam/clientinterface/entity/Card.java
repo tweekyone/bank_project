@@ -43,6 +43,9 @@ public class Card {
     @Enumerated(EnumType.STRING)
     private Plan plan;
 
+    @Column(name = "is_blocked", nullable = false)
+    private boolean isBlocked;
+
     @Column(name = "expiration_date", nullable = false)
     private LocalDateTime expirationDate;
 

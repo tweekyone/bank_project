@@ -1,6 +1,7 @@
 package com.epam.clientinterface.controller;
 
 import com.epam.clientinterface.controller.dto.request.NewCardRequest;
+import com.epam.clientinterface.controller.dto.response.BlockCardResponse;
 import com.epam.clientinterface.controller.dto.response.NewCardResponse;
 import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.service.CardService;
@@ -27,6 +28,14 @@ public class CardController {
         Card card = cardService.createCard(accountId, request.getPlan());
         NewCardResponse response = new NewCardResponse(HttpStatus.CREATED, "Card has been created", card.getNumber(),
             card.getPlan(), card.getExpirationDate());
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PostMapping(path = "/card/{cardId}/block")
+    public ResponseEntity<?> blockCard(@PathVariable Long cardId) {
+        Card card = cardService.blockCard(cardId);
+        BlockCardResponse response = new BlockCardResponse(HttpStatus.CREATED, "Card has been blocked",
+            card.getNumber());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }

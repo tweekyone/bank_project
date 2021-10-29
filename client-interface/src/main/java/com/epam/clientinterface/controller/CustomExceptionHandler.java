@@ -2,6 +2,7 @@ package com.epam.clientinterface.controller;
 
 import com.epam.clientinterface.controller.dto.response.ErrorResponse;
 import com.epam.clientinterface.exception.AccountNotFoundException;
+import com.epam.clientinterface.exception.CardNotFoundException;
 import java.util.HashMap;
 import lombok.NonNull;
 import org.springframework.http.HttpHeaders;
@@ -59,6 +60,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(AccountNotFoundException.class)
     public final ResponseEntity<Object> handleAccountNotFound(Exception ex, WebRequest request) {
         ErrorResponse body = new ErrorResponse("accountNotFound", HttpStatus.NOT_FOUND);
+        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(CardNotFoundException.class)
+    public final ResponseEntity<Object> handleCardNotFound(Exception ex, WebRequest request) {
+        ErrorResponse body = new ErrorResponse("cardNotFound", HttpStatus.NOT_FOUND);
         return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 }

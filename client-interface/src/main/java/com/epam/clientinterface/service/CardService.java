@@ -3,11 +3,13 @@ package com.epam.clientinterface.service;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.exception.AccountNotFoundException;
+import com.epam.clientinterface.exception.CardNotFoundException;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.CardRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
+import javax.validation.constraints.Positive;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,7 @@ public class CardService {
         card.setPinCode(pinCode);
         card.setPlan(plan);
         card.setExpirationDate(LocalDateTime.now().plusYears(3));
+        card.setBlocked(false);
 
         String number;
         do {
@@ -39,6 +42,15 @@ public class CardService {
 
         card.setNumber(number);
         return cardRepository.save(card);
+    }
+
+    public @NonNull Card blockCard(@Positive Long cardId) {
+        Optional<Card> card = this.cardRepository.findById(cardId);
+        if (card.isEmpty()) {
+            throw new CardNotFoundException(cardId);
+        }
+        card.get().setBlocked(true);
+        return cardRepository.save(card.get());
     }
 
     protected String generateCardNumber() {
