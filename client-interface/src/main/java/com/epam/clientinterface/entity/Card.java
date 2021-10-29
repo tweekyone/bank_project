@@ -51,6 +51,7 @@ public class Card {
     private LocalDateTime expirationDate;
 
     @OneToOne(mappedBy = "card")
+    @JoinColumn(name = "card_id")
     private PinCounter pinCounter;
 
     public enum Plan {
