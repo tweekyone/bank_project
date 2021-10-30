@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PinCounterRepository extends JpaRepository<PinCounter, Long> {
+    PinCounter findByCardId(Long cardId);
 }

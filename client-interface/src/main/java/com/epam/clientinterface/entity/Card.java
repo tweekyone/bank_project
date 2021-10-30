@@ -36,7 +36,7 @@ public class Card {
     @Column(name = "number", nullable = false)
     private String number;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
 
