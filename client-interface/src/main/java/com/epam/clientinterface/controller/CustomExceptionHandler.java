@@ -4,12 +4,14 @@ import com.epam.clientinterface.controller.dto.response.ErrorResponse;
 import com.epam.clientinterface.exception.AccountNotFoundException;
 import com.epam.clientinterface.exception.CardNotFoundException;
 import java.util.HashMap;
+import javax.validation.ConstraintViolationException;
 import lombok.NonNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -55,6 +57,24 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     ) {
         ErrorResponse body = new ErrorResponse("badRequest", HttpStatus.BAD_REQUEST);
         return handleExceptionInternal(ex, body, headers, HttpStatus.BAD_REQUEST, request);
+    }
+
+    @Override
+    public @NonNull ResponseEntity<Object> handleMissingPathVariable(
+        @NonNull MissingPathVariableException ex,
+        @NonNull HttpHeaders headers,
+        @NonNull HttpStatus status,
+        @NonNull WebRequest request
+    ) {
+
+        ErrorResponse body = new ErrorResponse("badPath", HttpStatus.BAD_REQUEST);
+        return handleExceptionInternal(ex, body, headers, HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> handleConstraintViolationException(Exception ex, WebRequest request) {
+        ErrorResponse body = new ErrorResponse("inValidPath", HttpStatus.BAD_REQUEST);
+        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(AccountNotFoundException.class)
