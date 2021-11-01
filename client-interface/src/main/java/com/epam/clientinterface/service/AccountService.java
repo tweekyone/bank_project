@@ -20,12 +20,12 @@ public class AccountService {
     private final TransactionRepository transactionRepository;
 
     public void transfer(long sourceAccountId, long destinationAccountId, double amount) {
-        var sourceAccount = this.accountRepository.findById(sourceAccountId).orElseThrow(() -> {
-            throw new AccountNotFoundException(sourceAccountId);
-        });
-        var destinationAccount = this.accountRepository.findById(destinationAccountId).orElseThrow(() -> {
-            throw new AccountNotFoundException(destinationAccountId);
-        });
+        var sourceAccount = this.accountRepository.findById(sourceAccountId).orElseThrow(
+            () -> new AccountNotFoundException(sourceAccountId)
+        );
+        var destinationAccount = this.accountRepository.findById(destinationAccountId).orElseThrow(
+            () -> new AccountNotFoundException(destinationAccountId)
+        );
 
         if (sourceAccount.getAmount() < amount) {
             this.transactionRepository.save(new Transaction(
