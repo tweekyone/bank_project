@@ -41,7 +41,6 @@ public class Account {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "plan", nullable = false)
-    @Enumerated(EnumType.STRING)
     private Plan plan;
 
     @Column(name = "amount", nullable = false)
