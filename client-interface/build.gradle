@@ -27,10 +27,10 @@ dependencies {
   implementation 'org.hibernate:hibernate-core'
   implementation 'org.hibernate:hibernate-validator'
   implementation 'org.hibernate.validator:hibernate-validator-annotation-processor'
+  implementation 'javax.validation:validation-api'
   implementation 'com.zaxxer:HikariCP'
   implementation 'org.liquibase:liquibase-core'
   implementation 'com.fasterxml.jackson.core:jackson-databind'
-  implementation 'javax.validation:validation-api'
 
   runtimeOnly 'org.postgresql:postgresql'
 
