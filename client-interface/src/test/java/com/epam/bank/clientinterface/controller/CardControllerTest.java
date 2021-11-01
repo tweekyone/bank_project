@@ -13,11 +13,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.epam.clientinterface.controller.CardController;
 import com.epam.clientinterface.controller.advice.ErrorHandlingAdvice;
+import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.entity.CardPlan;
-import com.epam.clientinterface.exception.AccountNotFoundException;
 import com.epam.clientinterface.service.CardService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,7 +55,7 @@ public class CardControllerTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
-        "{\"type\":\"BASE\"}",
+        "{\"plan\":null}",
         "{}"
     })
     public void shouldReturnValidationErrorResponseIfRequestIsIncorrect(String requestBody) throws Exception {
@@ -86,14 +85,14 @@ public class CardControllerTest {
     }
 
     @Test
-    public void shouldThrowAccountNotFoundIfAccountDoesNotFound() throws Exception {
-
+    public void shouldReturnNotFoundIfServiceThrowsAccountNotFound() throws Exception {
         doThrow(new AccountNotFoundException(2L))
             .when(cardService)
             .createCard(anyLong(), any(CardPlan.class));
 
-        Assertions.assertThrows(AccountNotFoundException.class,
-            () -> cardService.createCard(2L, CardPlan.BASE));
+        mockMvc.perform(post("/account/2/cards")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody)).andExpect(status().isNotFound());
     }
 
     @Test

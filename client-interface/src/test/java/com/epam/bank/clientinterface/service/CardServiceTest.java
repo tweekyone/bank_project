@@ -3,11 +3,11 @@ package com.epam.bank.clientinterface.service;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.entity.CardPlan;
 import com.epam.clientinterface.entity.User;
-import com.epam.clientinterface.exception.AccountNotFoundException;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.CardRepository;
 import com.epam.clientinterface.service.CardService;

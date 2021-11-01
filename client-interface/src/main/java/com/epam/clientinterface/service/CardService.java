@@ -1,9 +1,9 @@
 package com.epam.clientinterface.service;
 
+import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.entity.CardPlan;
-import com.epam.clientinterface.exception.AccountNotFoundException;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.CardRepository;
 import java.time.LocalDateTime;
