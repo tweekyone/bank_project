@@ -20,6 +20,13 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
 
+    public void transfer(long sourceAccountId, long destinationAccountId, double amount) {
+        var sourceAccount = this.accountRepository.findById(sourceAccountId).orElseThrow(
+            () -> new AccountNotFoundException(sourceAccountId)
+        );
+        var destinationAccount = this.accountRepository.findById(destinationAccountId).orElseThrow(
+            () -> new AccountNotFoundException(destinationAccountId)
+        );
     public void internalTransfer(long sourceAccountId, long destinationAccountId, double amount) {
         var sourceAccount = this.accountRepository.findById(sourceAccountId).orElseThrow(() -> {
             throw new AccountNotFoundException(sourceAccountId);
