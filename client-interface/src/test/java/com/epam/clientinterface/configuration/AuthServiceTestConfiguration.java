@@ -12,17 +12,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class TestConfiguration {
+public class AuthServiceTestConfiguration {
 
-    @Bean
-    public SignUpController signUpController() {
-        return mock(SignUpController.class);
-    }
-
-    @Bean
-    public EmailValidator emailValidator() {
-        return new EmailValidator();
-    }
+    // @Bean
+    // public SignUpController signUpController() {
+    //     return mock(SignUpController.class);
+    // }
+    //
+    // @Bean
+    // public EmailValidator emailValidator() {
+    //     return new EmailValidator();
+    // }
 
     @Bean
     public AuthService authService() {

@@ -1,12 +1,13 @@
 package com.epam.clientinterface.service;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.epam.clientinterface.configuration.TestConfiguration;
+import com.epam.clientinterface.configuration.AuthServiceTestConfiguration;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.exception.UserAlreadyExistException;
@@ -16,6 +17,7 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -23,8 +25,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = TestConfiguration.class,
+@ContextConfiguration(classes = AuthServiceTestConfiguration.class,
     loader = AnnotationConfigContextLoader.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AuthServiceImplTest {
 
     // Mocked Account factory (create)
@@ -54,9 +57,11 @@ class AuthServiceImplTest {
     private static final User mockedUser = mock(User.class);
 
     @BeforeAll
-    public static void setup() {
-        // when(userService.create("Ivan", "Popov", "vanok@gmail.com", "1234",
-        //     "+79100000", "roma_mock")).thenReturn(mockedUser);
+    public void setup() {
+        when(userService.create("Ivan", "Popov", "vanok@gmail.com", "1234",
+            "+79100000", "roma_mock")).thenReturn(mockedUser);
+        System.out.println(mockedUser);
+        // verify(userService, atLeastOnce()).create(any(), any(), any(), any(), any(), any());
     }
 
     @Test
