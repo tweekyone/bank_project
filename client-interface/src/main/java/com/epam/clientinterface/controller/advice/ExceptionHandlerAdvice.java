@@ -1,8 +1,8 @@
-package com.epam.clientinterface.controller;
+package com.epam.clientinterface.controller.advice;
 
+import com.epam.clientinterface.controller.domain.exception.AccountNotFoundException;
+import com.epam.clientinterface.controller.domain.exception.CardNotFoundException;
 import com.epam.clientinterface.controller.dto.response.ErrorResponse;
-import com.epam.clientinterface.exception.AccountNotFoundException;
-import com.epam.clientinterface.exception.CardNotFoundException;
 import java.util.HashMap;
 import javax.validation.ConstraintViolationException;
 import lombok.NonNull;
@@ -18,7 +18,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
+public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
 
     @Override
     protected @NonNull ResponseEntity<Object> handleMethodArgumentNotValid(

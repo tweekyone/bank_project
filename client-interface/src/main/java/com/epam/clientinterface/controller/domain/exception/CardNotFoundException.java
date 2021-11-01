@@ -1,4 +1,4 @@
-package com.epam.clientinterface.exception;
+package com.epam.clientinterface.controller.domain.exception;
 
 public class CardNotFoundException extends RuntimeException {
     public CardNotFoundException(long cardId) {

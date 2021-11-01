@@ -1,9 +1,10 @@
 package com.epam.clientinterface.service;
 
+import com.epam.clientinterface.controller.domain.exception.AccountNotFoundException;
+import com.epam.clientinterface.controller.domain.exception.CardNotFoundException;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
-import com.epam.clientinterface.exception.AccountNotFoundException;
-import com.epam.clientinterface.exception.CardNotFoundException;
+import com.epam.clientinterface.entity.CardPlan;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.CardRepository;
 import java.time.LocalDateTime;
@@ -22,7 +23,7 @@ public class CardService {
     private final CardRepository cardRepository;
     private final AccountRepository accountRepository;
 
-    public @NonNull Card releaseCard(@NonNull Long accountId, @NonNull Card.Plan plan) {
+    public @NonNull Card releaseCard(@NonNull Long accountId, @NonNull CardPlan plan) {
 
         Optional<Account> account = this.accountRepository.findById(accountId);
         if (account.isEmpty()) {
@@ -72,7 +73,7 @@ public class CardService {
         }
         return builder.toString();
     }
-    
+
     protected void changeStatusIsBlocked(boolean status, Card card) {
         card.setBlocked(status);
     }

@@ -2,13 +2,16 @@ package com.epam.bank.clientinterface.service;
 
 import static org.mockito.Mockito.when;
 
+import com.epam.clientinterface.controller.domain.exception.AccountNotFoundException;
+import com.epam.clientinterface.controller.domain.exception.CardNotFoundException;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
+import com.epam.clientinterface.entity.CardPlan;
 import com.epam.clientinterface.entity.User;
-import com.epam.clientinterface.exception.AccountNotFoundException;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.CardRepository;
 import com.epam.clientinterface.service.CardService;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
@@ -31,23 +34,46 @@ public class CardServiceTest {
 
     @BeforeEach
     public void beforeEach() {
-        this.cardService = new CardService(cardRepository, accountRepository);
+        cardService = new CardService(cardRepository, accountRepository);
     }
 
     @Test
     public void shouldReturnNewCardIfAccountIsExist() {
-        when(this.accountRepository.findById(1L))
-            .thenReturn(Optional.of(new Account(1L, "", true, Account.Plan.BASE,
-                1000, new User(), new ArrayList<>())));
-        this.cardService.releaseCard(1L, Card.Plan.BASE);
+        when(accountRepository.findById(1L)).thenReturn(Optional.of(new Account()));
+        cardService.releaseCard(1L, CardPlan.BASE);
     }
 
     @Test
-    public void shouldThrowAccountNotFoundIfAccountDoesNotExist() {
-        when(this.accountRepository.findById(2L)).thenReturn(Optional.empty());
+    public void shouldThrowAccountNotFoundIfAccountNotFound() {
+        when(accountRepository.findById(2L)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(AccountNotFoundException.class,
-            () -> this.cardService.releaseCard(2L, Card.Plan.BASE));
+            () -> cardService.releaseCard(2L, CardPlan.BASE));
+    }
+
+    @Test
+    public void shouldBlockCardIfCardIsExist() {
+
+        Account account = new Account(1L, "", true, Account.Plan.BASE,
+            1000, new User(), new ArrayList<>());
+        Card card = new Card(account, "1234567887654321","1111",
+            CardPlan.BASE, false, LocalDateTime.now());
+        Card saveCard = new Card(account, "1234567887654321","1111",
+            CardPlan.BASE, true, LocalDateTime.now());;
+
+        when(cardRepository.findById(1L)).thenReturn(Optional.of(card));
+        when(cardRepository.save(card)).thenReturn(saveCard);
+        Card returnCard = cardService.blockCard(1L);
+        Assertions.assertEquals(returnCard, saveCard);
+        Assertions.assertTrue(card.isBlocked());
+    }
+
+    @Test
+    public void shouldThrowCardNotFoundIfCardNotFound() {
+        when(this.cardRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(CardNotFoundException.class,
+            () -> this.cardService.blockCard(1L));
     }
 
 }

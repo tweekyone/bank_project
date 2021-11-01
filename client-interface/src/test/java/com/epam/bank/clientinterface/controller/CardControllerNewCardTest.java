@@ -12,10 +12,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epam.clientinterface.controller.CardController;
-import com.epam.clientinterface.controller.CustomExceptionHandler;
+import com.epam.clientinterface.controller.advice.ExceptionHandlerAdvice;
+import com.epam.clientinterface.controller.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.entity.Card;
-import com.epam.clientinterface.exception.AccountNotFoundException;
+import com.epam.clientinterface.entity.CardPlan;
 import com.epam.clientinterface.service.CardService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +25,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -40,13 +41,13 @@ public class CardControllerNewCardTest {
     @BeforeEach
     public void setUp() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(new CardController(cardService))
-            .setControllerAdvice(CustomExceptionHandler.class)
+            .setControllerAdvice(ExceptionHandlerAdvice.class)
             .build();
     }
 
     @Test
     void shouldReturnIsCreatedIfdRequestIsValid() throws Exception {
-        when(cardService.releaseCard(anyLong(), any(Card.Plan.class))).thenReturn(new Card());
+        when(cardService.releaseCard(anyLong(), any(CardPlan.class))).thenReturn(new Card());
 
         this.mockMvc.perform(post("/account/1/cards")
             .contentType(MediaType.APPLICATION_JSON)
@@ -55,10 +56,9 @@ public class CardControllerNewCardTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
-        "{\"type\":\"BASE\"}",
         "{}"
     })
-    public void shouldReturnValidationErrorResponseIfNewCardRequestIsIncorrect(String requestBody) throws Exception {
+    public void shouldReturnValidationErrorResponseIfRequestIsIncorrect(String requestBody) throws Exception {
         this.mockMvc.perform(post("/account/1/cards")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
@@ -85,16 +85,13 @@ public class CardControllerNewCardTest {
     }
 
     @Test
-    public void shouldReturnNotFoundIfServiceThrowsAccountNotFound() throws Exception {
+    public void shouldThrowAccountNotFoundIfAccountDoesNotFound() throws Exception {
         doThrow(new AccountNotFoundException(2L))
             .when(cardService)
-            .releaseCard(anyLong(), any(Card.Plan.class));
+            .releaseCard(anyLong(), any(CardPlan.class));
 
-        this.mockMvc.perform(post("/account/2/cards")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(requestBody)).andExpect(status().isNotFound())
-            .andExpect(jsonPath("$.type", is("accountNotFound")))
-            .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.value())));
+        Assertions.assertThrows(AccountNotFoundException.class,
+            () -> cardService.releaseCard(2L, CardPlan.BASE));
     }
 
     @Test

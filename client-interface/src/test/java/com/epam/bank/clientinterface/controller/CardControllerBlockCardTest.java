@@ -9,9 +9,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epam.clientinterface.controller.CardController;
-import com.epam.clientinterface.controller.CustomExceptionHandler;
+import com.epam.clientinterface.controller.advice.ExceptionHandlerAdvice;
+import com.epam.clientinterface.controller.domain.exception.CardNotFoundException;
 import com.epam.clientinterface.entity.Card;
-import com.epam.clientinterface.exception.CardNotFoundException;
 import com.epam.clientinterface.service.CardService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -34,7 +33,7 @@ public class CardControllerBlockCardTest {
     @BeforeEach
     public void setUp() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(new CardController(cardService))
-            .setControllerAdvice(CustomExceptionHandler.class)
+            .setControllerAdvice(ExceptionHandlerAdvice.class)
             .build();
     }
 

@@ -201,7 +201,7 @@
     <renameColumn tableName="card" oldColumnName="explication_date" newColumnName="expiration_date"/>
   </changeSet>
 
-  <changeSet id="9" author="Tatiana Naumovets">
+  <changeSet id="10" author="Tatiana Naumovets">
     <addColumn tableName="card" >
       <column name="is_blocked" type="boolean">
         <constraints nullable="false"/>
