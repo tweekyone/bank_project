@@ -12,10 +12,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epam.clientinterface.controller.CardController;
-import com.epam.clientinterface.controller.CustomExceptionHandler;
+import com.epam.clientinterface.controller.advicce.ErrorHandlingAdvice;
 import com.epam.clientinterface.entity.Card;
+import com.epam.clientinterface.entity.CardPlan;
 import com.epam.clientinterface.exception.AccountNotFoundException;
 import com.epam.clientinterface.service.CardService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +25,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -35,20 +36,20 @@ public class CardControllerTest {
     private final String requestBody = String.format("{\"plan\":\"%s\"}", "BASE");
 
     @Mock
-    CardService cardService;
+    private CardService cardService;
 
     @BeforeEach
     public void setUp() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(new CardController(cardService))
-            .setControllerAdvice(CustomExceptionHandler.class)
+        mockMvc = MockMvcBuilders.standaloneSetup(new CardController(cardService))
+            .setControllerAdvice(ErrorHandlingAdvice.class)
             .build();
     }
 
     @Test
     void shouldReturnIsCreatedIfRequestIsValid() throws Exception {
-        when(cardService.createCard(anyLong(), any(Card.Plan.class))).thenReturn(new Card());
+        when(cardService.createCard(anyLong(), any(CardPlan.class))).thenReturn(new Card());
 
-        this.mockMvc.perform(post("/account/1/cards")
+        mockMvc.perform(post("/account/1/cards")
             .contentType(MediaType.APPLICATION_JSON)
             .content(requestBody)).andExpect(status().isCreated());
     }
@@ -59,7 +60,7 @@ public class CardControllerTest {
         "{}"
     })
     public void shouldReturnValidationErrorResponseIfRequestIsIncorrect(String requestBody) throws Exception {
-        this.mockMvc.perform(post("/account/1/cards")
+        mockMvc.perform(post("/account/1/cards")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -79,28 +80,25 @@ public class CardControllerTest {
         ""
     })
     public void shouldReturnBadRequestIfRequestIsInvalid(String requestBody) throws Exception {
-        this.mockMvc.perform(post("/account/1/cards")
+        mockMvc.perform(post("/account/1/cards")
             .contentType(MediaType.APPLICATION_JSON)
             .content(requestBody)).andExpect(status().isBadRequest());
     }
 
     @Test
-    public void shouldReturnNotFoundIfServiceThrowsAccountNotFound() throws Exception {
+    public void shouldThrowAccountNotFoundIfAccountDoesNotFound() throws Exception {
 
         doThrow(new AccountNotFoundException(2L))
             .when(cardService)
-            .createCard(anyLong(), any(Card.Plan.class));
+            .createCard(anyLong(), any(CardPlan.class));
 
-        this.mockMvc.perform(post("/account/2/cards")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(requestBody)).andExpect(status().isNotFound())
-            .andExpect(jsonPath("$.type", is("accountNotFound")))
-            .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.value())));
+        Assertions.assertThrows(AccountNotFoundException.class,
+            () -> cardService.createCard(2L, CardPlan.BASE));
     }
 
     @Test
     public void shouldReturnUnsupportedMediaTypeIfContentTypeIsNotJson() throws Exception {
-        this.mockMvc.perform(post("/account/1/cards")
+        mockMvc.perform(post("/account/1/cards")
             .contentType(MediaType.TEXT_HTML)
             .content("")).andExpect(status().isUnsupportedMediaType());
     }

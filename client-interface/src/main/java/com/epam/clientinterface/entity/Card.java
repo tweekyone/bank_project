@@ -41,21 +41,16 @@ public class Card {
 
     @Column(name = "plan", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Plan plan;
+    private CardPlan plan;
 
     @Column(name = "expiration_date", nullable = false)
     private LocalDateTime expirationDate;
-
-    public enum Plan {
-        BASE,
-        LIGHT
-    }
 
     public Card(
         @NonNull Account account,
         @NonNull String number,
         @NonNull String pinCode,
-        @NonNull Plan plan,
+        @NonNull CardPlan plan,
         @NonNull LocalDateTime expirationDate
     ) {
         this.account = account;

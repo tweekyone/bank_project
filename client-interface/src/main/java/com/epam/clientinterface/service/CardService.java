@@ -2,6 +2,7 @@ package com.epam.clientinterface.service;
 
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
+import com.epam.clientinterface.entity.CardPlan;
 import com.epam.clientinterface.exception.AccountNotFoundException;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.CardRepository;
@@ -18,7 +19,7 @@ public class CardService {
     private final CardRepository cardRepository;
     private final AccountRepository accountRepository;
 
-    public @NonNull Card createCard(@NonNull Long accountId, @NonNull Card.Plan plan) {
+    public @NonNull Card createCard(@NonNull Long accountId, @NonNull CardPlan plan) {
 
         Optional<Account> account = this.accountRepository.findById(accountId);
         if (account.isEmpty()) {
@@ -49,7 +50,7 @@ public class CardService {
         return generate(4);
     }
 
-    protected String generate(int length) {
+    public String generate(int length) {
         Random random = new Random();
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < length; i++) {

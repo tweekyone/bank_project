@@ -1,9 +1,12 @@
 package com.epam.bank.clientinterface.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
+import com.epam.clientinterface.entity.CardPlan;
 import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.exception.AccountNotFoundException;
 import com.epam.clientinterface.repository.AccountRepository;
@@ -30,24 +33,36 @@ public class CardServiceTest {
     private AccountRepository accountRepository;
 
     @BeforeEach
-    public void beforeEach() {
-        this.cardService = new CardService(cardRepository, accountRepository);
+    public void setUp() {
+        cardService = new CardService(cardRepository, accountRepository);
     }
 
     @Test
     public void shouldReturnNewCardIfAccountIsExist() {
-        when(this.accountRepository.findById(1L))
+        when(accountRepository.findById(1L))
             .thenReturn(Optional.of(new Account(1L, "", true, Account.Plan.BASE,
                 1000, new User(), new ArrayList<>())));
-        this.cardService.createCard(1L, Card.Plan.BASE);
+        when(cardRepository.save(any(Card.class))).thenReturn(new Card());
+        Card card = cardService.createCard(1L, CardPlan.BASE);
+        Assertions.assertEquals(Card.class, card.getClass());
     }
 
     @Test
-    public void shouldThrowAccountNotFoundIfAccountDoesNotExist() {
-        when(this.accountRepository.findById(2L)).thenReturn(Optional.empty());
+    public void shouldThrowAccountNotFoundIfAccountDoesNotFound() {
+        when(accountRepository.findById(2L)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(AccountNotFoundException.class,
-            () -> this.cardService.createCard(2L, Card.Plan.BASE));
+            () -> cardService.createCard(2L, CardPlan.BASE));
+    }
+
+    @Test
+    public void shouldReturnCardNumber() {
+        Assertions.assertEquals(16, cardService.generate(16).length());
+    }
+
+    @Test
+    public void shouldReturnPinCode() {
+        Assertions.assertEquals(4, cardService.generate(4).length());
     }
 
 }
