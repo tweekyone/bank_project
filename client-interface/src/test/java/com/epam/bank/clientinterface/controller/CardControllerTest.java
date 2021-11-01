@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epam.clientinterface.controller.CardController;
-import com.epam.clientinterface.controller.advicce.ErrorHandlingAdvice;
+import com.epam.clientinterface.controller.advice.ErrorHandlingAdvice;
 import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.entity.CardPlan;
 import com.epam.clientinterface.exception.AccountNotFoundException;
