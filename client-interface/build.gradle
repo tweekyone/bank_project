@@ -16,8 +16,6 @@ dependencies {
   annotationProcessor(platform(project(":bom"))) // importing bom for annotation processors
   testAnnotationProcessor(platform(project(":bom"))) // importing bom for annotation processors
 
-  runtimeOnly 'org.postgresql:postgresql'
-
   implementation 'org.springframework:spring-core'
   implementation 'org.springframework:spring-context'
   implementation 'org.springframework:spring-websocket'
@@ -27,17 +25,17 @@ dependencies {
   implementation 'org.springframework.security:spring-security-config'
   implementation 'org.springframework.data:spring-data-jpa'
   implementation 'org.hibernate:hibernate-core'
-
+  implementation 'org.hibernate:hibernate-validator'
+  implementation 'org.hibernate.validator:hibernate-validator-annotation-processor'
+  implementation 'javax.validation:validation-api'
+  implementation 'org.glassfish:javax.el'
+  implementation 'org.glassfish:javax.el'
   implementation 'com.zaxxer:HikariCP'
   implementation 'org.liquibase:liquibase-core'
   implementation 'com.fasterxml.jackson.core:jackson-databind'
   implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-  implementation 'org.glassfish:javax.el'
 
-  implementation 'org.hibernate:hibernate-validator'
-  implementation 'org.hibernate.validator:hibernate-validator-annotation-processor'
-  implementation 'javax.validation:validation-api'
-
+  runtimeOnly 'org.postgresql:postgresql'
   // Jetty
   implementation 'javax.servlet:javax.servlet-api'
   implementation 'org.eclipse.jetty:jetty-webapp'

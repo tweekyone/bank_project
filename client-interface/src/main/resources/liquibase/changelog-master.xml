@@ -201,4 +201,20 @@
     <renameColumn tableName="card" oldColumnName="explication_date" newColumnName="expiration_date"/>
   </changeSet>
 
+  <changeSet id="9" author="Dmitrii Korolev">
+    <dropColumn tableName="transaction" columnName="source_account_id"/>
+    <dropColumn tableName="transaction" columnName="destination_account_id"/>
+    <addColumn tableName="transaction">
+      <column name="source_account_number" type="varchar"/>
+    </addColumn>
+    <addColumn tableName="transaction">
+      <column name="source_is_external" type="boolean"/>
+    </addColumn>
+    <addColumn tableName="transaction">
+      <column name="destination_account_number" type="varchar"/>
+    </addColumn>
+    <addColumn tableName="transaction">
+      <column name="destination_is_external" type="boolean"/>
+    </addColumn>
+  </changeSet>
 </databaseChangeLog>
