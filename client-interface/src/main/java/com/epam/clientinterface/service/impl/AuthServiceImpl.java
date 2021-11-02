@@ -1,13 +1,10 @@
 package com.epam.clientinterface.service.impl;
 
-import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.exception.UserAlreadyExistException;
 import com.epam.clientinterface.repository.UserRepository;
 import com.epam.clientinterface.service.AuthService;
 import com.epam.clientinterface.service.UserService;
-import java.util.ArrayList;
-import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,9 +29,8 @@ public class AuthServiceImpl implements AuthService {
         User newUser = userService.create(name, surname, phoneNumber, username, email, rawPassword);
 
         // Uncomment line below to use mocked user instead of userService
-        // User newUser = new User(name, surname, phoneNumber, username, email, rawPassword, accounts);
         // List<Account> accounts = new ArrayList<>();
-        System.out.println(newUser);
+        // User newUser = new User(name, surname, phoneNumber, username, email, rawPassword, accounts);
         return newUser;
     }
 
