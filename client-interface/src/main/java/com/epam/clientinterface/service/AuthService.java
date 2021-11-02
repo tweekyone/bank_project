@@ -6,8 +6,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface AuthService {
-    User signUp (String name, String surname, String phoneNumber,
+    User signUp(String name, String surname, String phoneNumber,
                 String username, String email, String rawPassword) throws UserAlreadyExistException;
-
-    // User signUp(UserDto dto);
 }

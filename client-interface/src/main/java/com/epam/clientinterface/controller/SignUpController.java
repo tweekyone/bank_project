@@ -26,7 +26,6 @@ public class SignUpController {
         this.authService = authService;
     }
 
-    // Test controller
     @GetMapping("/user/registration")
     public String testRegistrationForm(Model model) {
         UserDto userDto = new UserDto();
@@ -37,6 +36,7 @@ public class SignUpController {
     @PostMapping("/user/registration")
     public ResponseEntity<User> registerUserAccount(@RequestBody @Valid UserDto userDto)
         throws UserAlreadyExistException {
+
         User registered = authService.signUp(
             userDto.getName(), userDto.getSurname(),
             userDto.getPhoneNumber(), userDto.getUsername(),
