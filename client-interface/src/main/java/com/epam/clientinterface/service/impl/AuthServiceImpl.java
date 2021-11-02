@@ -24,16 +24,16 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public User signUp(String name, String surname, String phoneNumber,
-                       String username, String email, String rawPassword) throws UserAlreadyExistException {
+                       String username, String email, String rawPassword)
+        throws UserAlreadyExistException {
         if (emailExist(email)) {
             throw new UserAlreadyExistException(email);
         }
-        // Uncomment line below to use userService
-        // User newUser = userService.create(name, surname, phoneNumber, username, email, rawPassword);
+        User newUser = userService.create(name, surname, phoneNumber, username, email, rawPassword);
 
-        // Mocked user
-        List<Account> accounts = new ArrayList<>();
-        User newUser = new User(name, surname, phoneNumber, username, email, rawPassword, accounts);
+        // Uncomment line below to use mocked user instead of userService
+        // User newUser = new User(name, surname, phoneNumber, username, email, rawPassword, accounts);
+        // List<Account> accounts = new ArrayList<>();
         System.out.println(newUser);
         return newUser;
     }

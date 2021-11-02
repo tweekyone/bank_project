@@ -9,7 +9,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 class EmailValidatorTest {
 
     private static final List<String> correctEmails
-        = Arrays.asList("Vanok@gmail.com", "vano.asd@mail.com", "123_ff@YA.RU");
+        = Arrays.asList("Vanok@gmail.com", "vano.asd@mail.ru", "123_ff@YA.RU");
 
     private static final List<String> incorrectEmails
         = Arrays.asList("3anokgmail.com", "vano@mail", "+7911000000000000");

@@ -3,87 +3,67 @@ package com.epam.clientinterface.service;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.epam.clientinterface.configuration.AuthServiceTestConfiguration;
-import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.exception.UserAlreadyExistException;
 import com.epam.clientinterface.repository.UserRepository;
-import java.util.ArrayList;
-import java.util.List;
+import com.epam.clientinterface.service.impl.AuthServiceImpl;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = AuthServiceTestConfiguration.class,
-    loader = AnnotationConfigContextLoader.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(MockitoExtension.class)
+
 class AuthServiceImplTest {
 
-    // Mocked Account factory (create)
-    // mock(Account.Factory.class);
+    private static final String name = "Ivan";
+    private static final String surname = "Popov";
+    private static final String phoneNumber = "+79110000222";
+    private static final String username = "roma_mock";
+    private static final String email = "vanok@gmail.com";
+    private static final String password = "123456";
 
-    @Autowired
-    private AuthService authService;
-
-    @Autowired
+    @Mock
     private UserService userService;
 
-    @Autowired
+    @Mock
+    private User mockedUser;
+
+    @Mock
     private UserRepository userRepository;
 
-
-    private static final List<Account> accounts = new ArrayList<>();
-
-    private static final User user =
-        new User("Ivan", "Popov", "vanok@gmail.com", "1234",
-            "+79100000", "roma_mock", accounts);
-
-    private static final String email = "vanok@gmail.com";
-
-    // private final Account mockedAccount = new Account(user, "40702810123456789125",
-    //     true, Account.Plan.BASE, 5678.58);
-
-    private static final User mockedUser = mock(User.class);
-
-    @BeforeAll
-    public void setup() {
-        when(userService.create("Ivan", "Popov", "vanok@gmail.com", "1234",
-            "+79100000", "roma_mock")).thenReturn(mockedUser);
-        System.out.println(mockedUser);
-        // verify(userService, atLeastOnce()).create(any(), any(), any(), any(), any(), any());
-    }
+    @InjectMocks
+    private final AuthService authService = new AuthServiceImpl();
 
     @Test
-    void signUpWithNewEmail() {
-        // when(userService.create("Ivan", "Popov", "vanok@gmail.com", "1234",
-        //     "+79100000", "roma_mock")).thenReturn(user);
-        when(userRepository.existsByEmail(email)).thenReturn(false);
-        authService.signUp("Ivan", "Popov", "+79100000",
-            "1234", email, "roma_mock");
-        // verify(userService, atLeastOnce()).create(eq("email"), any(), any(), any(), any(), any());
-        verify(userRepository, atLeastOnce()).existsByEmail(eq(email));
+    void shouldSignUpWithNewEmail() {
+        when(userService.create(name, surname, phoneNumber, username, email, password))
+            .thenReturn(mockedUser);
+        when(userRepository.existsByEmail(email))
+            .thenReturn(false);
+
+        authService.signUp(name, surname, phoneNumber, username, email, password);
+
+        verify(userRepository).existsByEmail(eq(email));
+        verify(userService).create(any(), any(), any(), any(), any(), any());
     }
 
+    // sign up with existing email
     @Test
-    void signUpWithAlreadyExistsEmail() {
-        when(userRepository.existsByEmail(email)).thenReturn(true);
-        //.thenThrow(new UserAlreadyExistException(email));
+    void shouldThrowUserAlreadyExistException() {
+        when(userRepository.existsByEmail(email))
+            .thenReturn(true);
 
-        Assertions.assertThrows(UserAlreadyExistException.class, () -> authService.signUp("Ivan",
-            "Popov", "+79100000",
-            "1234", email, "roma_mock"));
-
-        verify(userRepository, atLeastOnce()).existsByEmail(eq(email));
+        Assertions.assertThrows(UserAlreadyExistException.class,
+            () -> authService.signUp(
+                name, surname, phoneNumber,
+                username, email, password)
+        );
+        verify(userRepository).existsByEmail(eq(email));
     }
 }
