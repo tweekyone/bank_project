@@ -21,10 +21,10 @@ public class CardController {
 
     private final CardService cardService;
 
-    @PostMapping(path = "/account/{accountId}/cards")
+    @PostMapping(path = "/account/{accountId}/releaseCard")
     public ResponseEntity<NewCardResponse> releaseCard(@PathVariable Long accountId,
                                                        @Valid @RequestBody NewCardRequest request) {
-        Card card = cardService.createCard(accountId, request.getPlan());
+        Card card = cardService.releaseCard(accountId, request.getPlan());
         NewCardResponse response = new NewCardResponse(HttpStatus.CREATED, "Card has been created", card.getNumber(),
             card.getPlan(), card.getExpirationDate());
         return new ResponseEntity<>(response, HttpStatus.CREATED);

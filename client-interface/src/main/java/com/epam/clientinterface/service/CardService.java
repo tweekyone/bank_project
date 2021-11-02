@@ -19,26 +19,20 @@ public class CardService {
     private final CardRepository cardRepository;
     private final AccountRepository accountRepository;
 
-    public @NonNull Card createCard(@NonNull Long accountId, @NonNull CardPlan plan) {
+    public @NonNull Card releaseCard(@NonNull Long accountId, @NonNull CardPlan plan) {
 
-        Optional<Account> account = this.accountRepository.findById(accountId);
+        Optional<Account> account = accountRepository.findById(accountId);
         if (account.isEmpty()) {
             throw new AccountNotFoundException(accountId);
         }
 
         String pinCode = generatePinCode();
-        Card card = new Card();
-        card.setAccount(account.get());
-        card.setPinCode(pinCode);
-        card.setPlan(plan);
-        card.setExpirationDate(LocalDateTime.now().plusYears(3));
-
         String number;
         do {
             number = generateCardNumber();
         } while (cardRepository.findCardByNumber(number).isPresent());
 
-        card.setNumber(number);
+        Card card = new Card(account.get(), number, pinCode, plan, LocalDateTime.now().plusYears(3));
         return cardRepository.save(card);
     }
 

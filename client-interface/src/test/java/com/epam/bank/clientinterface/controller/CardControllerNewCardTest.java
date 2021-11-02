@@ -29,7 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @ExtendWith(MockitoExtension.class)
-public class CardControllerTest {
+public class CardControllerNewCardTest {
 
     private MockMvc mockMvc;
     private final String requestBody = String.format("{\"plan\":\"%s\"}", "BASE");
@@ -46,9 +46,9 @@ public class CardControllerTest {
 
     @Test
     void shouldReturnIsCreatedIfRequestIsValid() throws Exception {
-        when(cardService.createCard(anyLong(), any(CardPlan.class))).thenReturn(new Card());
+        when(cardService.releaseCard(anyLong(), any(CardPlan.class))).thenReturn(new Card());
 
-        mockMvc.perform(post("/account/1/cards")
+        mockMvc.perform(post("/account/1/releaseCard")
             .contentType(MediaType.APPLICATION_JSON)
             .content(requestBody)).andExpect(status().isCreated());
     }
@@ -56,10 +56,11 @@ public class CardControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {
         "{\"plan\":null}",
+        "{\"type\":\"BASE\"}",
         "{}"
     })
     public void shouldReturnValidationErrorResponseIfRequestIsIncorrect(String requestBody) throws Exception {
-        mockMvc.perform(post("/account/1/cards")
+        mockMvc.perform(post("/account/1/releaseCard")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -79,25 +80,25 @@ public class CardControllerTest {
         ""
     })
     public void shouldReturnBadRequestIfRequestIsInvalid(String requestBody) throws Exception {
-        mockMvc.perform(post("/account/1/cards")
+        mockMvc.perform(post("/account/1/releaseCard")
             .contentType(MediaType.APPLICATION_JSON)
             .content(requestBody)).andExpect(status().isBadRequest());
     }
 
     @Test
     public void shouldReturnNotFoundIfServiceThrowsAccountNotFound() throws Exception {
-        doThrow(new AccountNotFoundException(2L))
+        doThrow(AccountNotFoundException.class)
             .when(cardService)
-            .createCard(anyLong(), any(CardPlan.class));
+            .releaseCard(anyLong(), any(CardPlan.class));
 
-        mockMvc.perform(post("/account/2/cards")
+        mockMvc.perform(post("/account/2/releaseCard")
             .contentType(MediaType.APPLICATION_JSON)
             .content(requestBody)).andExpect(status().isNotFound());
     }
 
     @Test
     public void shouldReturnUnsupportedMediaTypeIfContentTypeIsNotJson() throws Exception {
-        mockMvc.perform(post("/account/1/cards")
+        mockMvc.perform(post("/account/1/releaseCard")
             .contentType(MediaType.TEXT_HTML)
             .content("")).andExpect(status().isUnsupportedMediaType());
     }
