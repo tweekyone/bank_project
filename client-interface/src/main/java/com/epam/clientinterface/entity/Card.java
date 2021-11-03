@@ -1,6 +1,7 @@
 package com.epam.clientinterface.entity;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -72,5 +73,20 @@ public class Card {
         this.plan = plan;
         this.expirationDate = expirationDate;
         this.pinCounter = pinCounter.createFor(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Card card = (Card) o;
+        return id.equals(card.id) && number.equals(card.number) && account.equals(card.account) && pinCode.equals(
+            card.pinCode) && plan == card.plan && expirationDate.equals(card.expirationDate) && pinCounter.equals(
+            card.pinCounter);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, number, account, pinCode, plan, expirationDate, pinCounter);
     }
 }

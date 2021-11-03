@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -25,6 +26,8 @@ class ChangePinCardServiceTest {
 
     private CardService cardService;
     private ChangePinRequest changePinRequest;
+    private Account testAccount;
+    private Card testCard;
 
     @Mock
     private CardRepository cardRepositoryMock;
@@ -36,6 +39,10 @@ class ChangePinCardServiceTest {
     public void setUp() {
         cardService = new CardService(cardRepositoryMock, pinCounterRepositoryMock);
         changePinRequest = new ChangePinRequest(1l, "1111", "1234");
+        testAccount = new Account(1l, "", true, Account.Plan.TESTPLAN,
+            1000, new User(), new ArrayList<>());
+        testCard = new Card(1l, "", testAccount, "1111", Card.Plan.TESTPLAN,
+            LocalDateTime.now(), null);
     }
 
     @Test
@@ -45,25 +52,57 @@ class ChangePinCardServiceTest {
         CardNotFoundException thrownException = Assertions.assertThrows(CardNotFoundException.class,
             () -> cardService.changePinCode(changePinRequest));
 
-        Assertions.assertEquals(thrownException.getMessage(),
-            String.format("Card with id %s not found", changePinRequest.getCardId()));
+        Assertions.assertEquals(String.format("Card with id %s not found", changePinRequest.getCardId()),
+            thrownException.getMessage());
     }
 
     @Test
     public void throwsChangePinException() {
-        Account account = new Account(1l, "", true, Account.Plan.TESTPLAN,
-            1000, new User(), new ArrayList<>());
-        Card card = new Card(1l, "", account, "1111", Card.Plan.TESTPLAN,
-            LocalDateTime.now(), null);
-        PinCounter pinCounter = new PinCounter(1l, card, LocalDateTime.now(), 3);
+        PinCounter pinCounter = new PinCounter(1l, testCard, LocalDateTime.now(), 3);
 
-        Mockito.when(cardRepositoryMock.findById(Mockito.anyLong())).thenReturn(Optional.of(card));
+        Mockito.when(cardRepositoryMock.findById(Mockito.anyLong())).thenReturn(Optional.of(testCard));
         Mockito.when(pinCounterRepositoryMock.findByCardId(Mockito.anyLong())).thenReturn(pinCounter);
 
         ChangePinException thrownException = Assertions.assertThrows(ChangePinException.class,
             () -> cardService.changePinCode(changePinRequest));
 
-        Assertions.assertEquals(thrownException.getMessage(),
-            "You have already changed your pin for 3 times! Try again tomorrow!");
+        Assertions.assertEquals("You have already changed your pin for 3 times! Try again tomorrow!",
+            thrownException.getMessage());
+    }
+
+    @Test
+    public void changePinIfLastChangeToday() {
+        PinCounter pinCounter = new PinCounter(1l, testCard, LocalDateTime.now(), 2);
+        ArgumentCaptor<PinCounter> pinCounterArgumentCaptor = ArgumentCaptor.forClass(PinCounter.class);
+        ArgumentCaptor<Card> cardArgumentCaptor = ArgumentCaptor.forClass(Card.class);
+
+        Mockito.when(cardRepositoryMock.findById(Mockito.anyLong())).thenReturn(Optional.of(testCard));
+        Mockito.when(pinCounterRepositoryMock.findByCardId(Mockito.anyLong())).thenReturn(pinCounter);
+
+        cardService.changePinCode(changePinRequest);
+
+        Mockito.verify(pinCounterRepositoryMock).save(pinCounterArgumentCaptor.capture());
+        Mockito.verify(cardRepositoryMock).save(cardArgumentCaptor.capture());
+
+        Assertions.assertEquals(pinCounter, pinCounterArgumentCaptor.getValue());
+        Assertions.assertEquals(testCard, cardArgumentCaptor.getValue());
+    }
+
+    @Test
+    public void changePinIfLastChangeNotToday() {
+        PinCounter pinCounter = new PinCounter(1l, testCard, LocalDateTime.now().minusDays(1), 3);
+        ArgumentCaptor<PinCounter> pinCounterArgumentCaptor = ArgumentCaptor.forClass(PinCounter.class);
+        ArgumentCaptor<Card> cardArgumentCaptor = ArgumentCaptor.forClass(Card.class);
+
+        Mockito.when(cardRepositoryMock.findById(Mockito.anyLong())).thenReturn(Optional.of(testCard));
+        Mockito.when(pinCounterRepositoryMock.findByCardId(Mockito.anyLong())).thenReturn(pinCounter);
+
+        cardService.changePinCode(changePinRequest);
+
+        Mockito.verify(pinCounterRepositoryMock).save(pinCounterArgumentCaptor.capture());
+        Mockito.verify(cardRepositoryMock).save(cardArgumentCaptor.capture());
+
+        Assertions.assertEquals(pinCounter, pinCounterArgumentCaptor.getValue());
+        Assertions.assertEquals(testCard, cardArgumentCaptor.getValue());
     }
 }

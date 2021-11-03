@@ -1,6 +1,7 @@
 package com.epam.clientinterface.entity;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -69,5 +70,19 @@ public class PinCounter {
         public PinCounter createFor(Card card) {
             return new PinCounter(card, this.lastChangingDate, 0);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PinCounter that = (PinCounter) o;
+        return id.equals(that.id) && card.equals(that.card) && lastChangingDate.equals(that.lastChangingDate)
+            && changeCount.equals(that.changeCount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, card, lastChangingDate, changeCount);
     }
 }
