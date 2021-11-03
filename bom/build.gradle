@@ -48,6 +48,7 @@ dependencies {
     api 'org.springframework.security:spring-security-web:5.5.1'
     api 'org.springframework.security:spring-security-config:5.5.1'
     api 'org.springframework.data:spring-data-jpa:2.5.4'
+    api 'org.springframework:spring-tx:5.3.12'
     api 'org.springframework:spring-test:5.3.12'
 
     api 'org.hibernate:hibernate-core:5.6.0.Final'
