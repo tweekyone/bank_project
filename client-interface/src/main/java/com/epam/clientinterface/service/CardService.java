@@ -3,11 +3,11 @@ package com.epam.clientinterface.service;
 import com.epam.clientinterface.controller.dto.request.ChangePinRequest;
 import com.epam.clientinterface.domain.exception.CardNotFoundException;
 import com.epam.clientinterface.domain.exception.ChangePinException;
-import com.epam.clientinterface.domain.exception.IncorrectPinException;
 import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.entity.PinCounter;
 import com.epam.clientinterface.repository.CardRepository;
 import com.epam.clientinterface.repository.PinCounterRepository;
+import com.epam.clientinterface.service.util.NewPinValidator;
 import java.time.LocalDateTime;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -32,28 +32,16 @@ public class CardService {
             throw new CardNotFoundException(pinRequest.getCardId());
         }
 
-        if (!card.getPinCode().equals(pinRequest.getOldPin())) {
-            throw new IncorrectPinException("Old pin is incorrect");
-        } else if (pinRequest.getNewPin().equals(pinRequest.getOldPin())) {
-            throw new IncorrectPinException("New pin must be different");
-        } else if (!pinRequest.getNewPin().matches("[0-9]+")) {
-            throw new IncorrectPinException("Pin must contains numbers only");
-        } else if (pinRequest.getNewPin().length() != 4) {
-            throw new IncorrectPinException("Pin must contains 4 numbers only");
-        }
+        NewPinValidator.validatePinCode(card, pinRequest);
 
         PinCounter pinCounter = pinCounterRepository.findByCardId(card.getId());
-        if (pinCounter.getLastChangingDate().getYear() == LocalDateTime.now().getYear()
-            && pinCounter.getLastChangingDate().getDayOfYear() == LocalDateTime.now().getDayOfYear()
-            && pinCounter.getChangeCount() < 3) {
+        if (isLastChangingDateToday(pinCounter) && pinCounter.getChangeCount() < 3) {
             card.setPinCode(pinRequest.getNewPin());
             pinCounter.setLastChangingDate(LocalDateTime.now());
             pinCounter.setChangeCount(pinCounter.getChangeCount() + 1);
             pinCounterRepository.save(pinCounter);
             return cardRepository.save(card);
-        } else if (pinCounter.getLastChangingDate().getYear() == LocalDateTime.now().getYear()
-            && pinCounter.getLastChangingDate().getDayOfYear() == LocalDateTime.now().getDayOfYear()
-            && pinCounter.getChangeCount() >= 3) {
+        } else if (isLastChangingDateToday(pinCounter) && pinCounter.getChangeCount() >= 3) {
             throw new ChangePinException();
         } else {
             card.setPinCode(pinRequest.getNewPin());
@@ -61,6 +49,15 @@ public class CardService {
             pinCounter.setChangeCount(1);
             pinCounterRepository.save(pinCounter);
             return cardRepository.save(card);
+        }
+    }
+
+    private boolean isLastChangingDateToday(PinCounter pinCounter) {
+        if (pinCounter.getLastChangingDate().getYear() == LocalDateTime.now().getYear()
+            && pinCounter.getLastChangingDate().getDayOfYear() == LocalDateTime.now().getDayOfYear()) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
