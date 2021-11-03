@@ -1,4 +1,4 @@
-package com.epam.clientinterface.controller.domain.exception;
+package com.epam.clientinterface.domain.exception;
 
 public class AccountNotFoundException extends RuntimeException {
     public AccountNotFoundException(long accountId) {

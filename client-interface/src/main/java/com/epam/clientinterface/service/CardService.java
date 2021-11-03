@@ -1,7 +1,7 @@
 package com.epam.clientinterface.service;
 
-import com.epam.clientinterface.controller.domain.exception.AccountNotFoundException;
-import com.epam.clientinterface.controller.domain.exception.CardNotFoundException;
+import com.epam.clientinterface.domain.exception.AccountNotFoundException;
+import com.epam.clientinterface.domain.exception.CardNotFoundException;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.entity.CardPlan;
@@ -25,25 +25,18 @@ public class CardService {
 
     public @NonNull Card releaseCard(@NonNull Long accountId, @NonNull CardPlan plan) {
 
-        Optional<Account> account = this.accountRepository.findById(accountId);
+        Optional<Account> account = accountRepository.findById(accountId);
         if (account.isEmpty()) {
             throw new AccountNotFoundException(accountId);
         }
 
         String pinCode = generatePinCode();
-        Card card = new Card();
-        card.setAccount(account.get());
-        card.setPinCode(pinCode);
-        card.setPlan(plan);
-        card.setExpirationDate(LocalDateTime.now().plusYears(3));
-        card.setBlocked(false);
-
         String number;
         do {
             number = generateCardNumber();
         } while (cardRepository.findCardByNumber(number).isPresent());
 
-        card.setNumber(number);
+        Card card = new Card(account.get(), number, pinCode, plan, false,LocalDateTime.now().plusYears(3));
         return cardRepository.save(card);
     }
 

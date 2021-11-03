@@ -25,7 +25,7 @@ public class CardController {
 
     private final CardService cardService;
 
-    @PostMapping(path = "/account/{accountId}/cards")
+    @PostMapping(path = "/account/{accountId}/releaseCard")
     public ResponseEntity<NewCardResponse> releaseCard(@PathVariable("accountId") @Positive Long accountId,
                                                        @Valid @RequestBody NewCardRequest request) {
         Card card = cardService.releaseCard(accountId, request.getPlan());

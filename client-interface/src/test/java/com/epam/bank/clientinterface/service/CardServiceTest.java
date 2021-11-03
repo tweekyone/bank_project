@@ -1,9 +1,12 @@
 package com.epam.bank.clientinterface.service;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.epam.clientinterface.controller.domain.exception.AccountNotFoundException;
-import com.epam.clientinterface.controller.domain.exception.CardNotFoundException;
+import com.epam.clientinterface.domain.exception.AccountNotFoundException;
+import com.epam.clientinterface.domain.exception.CardNotFoundException;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.entity.CardPlan;
@@ -18,6 +21,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -25,6 +29,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class CardServiceTest {
 
     private CardService cardService;
+    private final Account account = new Account(1L, "", true, Account.Plan.BASE,
+        1000, new User(), new ArrayList<>());
+    private final Card card = new Card(account, "1234567887654321","1111",
+        CardPlan.BASE, false, LocalDateTime.now());
+
 
     @Mock
     private CardRepository cardRepository;
@@ -53,23 +62,20 @@ public class CardServiceTest {
 
     @Test
     public void shouldBlockCardIfCardIsExist() {
+        when(cardRepository.findById(anyLong())).thenReturn(Optional.of(card));
 
-        Account account = new Account(1L, "", true, Account.Plan.BASE,
-            1000, new User(), new ArrayList<>());
-        Card card = new Card(account, "1234567887654321","1111",
-            CardPlan.BASE, false, LocalDateTime.now());
-        Card saveCard = new Card(account, "1234567887654321","1111",
-            CardPlan.BASE, true, LocalDateTime.now());;
+        cardService.blockCard(1L);
 
-        when(cardRepository.findById(1L)).thenReturn(Optional.of(card));
-        when(cardRepository.save(card)).thenReturn(saveCard);
-        Card returnCard = cardService.blockCard(1L);
-        Assertions.assertEquals(returnCard, saveCard);
-        Assertions.assertTrue(card.isBlocked());
+        ArgumentCaptor<Card> cardCaptor = ArgumentCaptor.forClass(Card.class);
+        verify(cardRepository).save(cardCaptor.capture());
+
+        Card blockedCard = cardCaptor.getValue();
+        verify(cardRepository).save(card);
+        Assertions.assertTrue(blockedCard.isBlocked());
     }
 
     @Test
-    public void shouldThrowCardNotFoundIfCardNotFound() {
+    public void shouldThrowCardNotFoundIfCardDoesNotExist() {
         when(this.cardRepository.findById(1L)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(CardNotFoundException.class,
