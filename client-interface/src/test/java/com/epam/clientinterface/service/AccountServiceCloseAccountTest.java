@@ -7,6 +7,7 @@ import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.repository.AccountRepository;
+import com.epam.clientinterface.repository.TransactionRepository;
 import java.util.ArrayList;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
@@ -23,9 +24,12 @@ public class AccountServiceCloseAccountTest {
     @Mock
     private AccountRepository accountRepositoryMock;
 
+    @Mock
+    private TransactionRepository transactionRepositoryMock;
+
     @BeforeEach
     public void beforeEach() {
-        this.accountService = new AccountService(this.accountRepositoryMock);
+        this.accountService = new AccountService(this.accountRepositoryMock, this.transactionRepositoryMock);
     }
 
     @Test

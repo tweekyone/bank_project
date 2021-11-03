@@ -1,7 +1,6 @@
 package com.epam.clientinterface.service;
 
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
-import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Transaction;
