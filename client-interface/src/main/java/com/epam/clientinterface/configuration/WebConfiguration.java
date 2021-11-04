@@ -29,8 +29,9 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     @Override
     public Validator getValidator() {
-        LocalValidatorFactoryBean validatorFactoryBean = new LocalValidatorFactoryBean();
+        var validatorFactoryBean = new LocalValidatorFactoryBean();
         validatorFactoryBean.setProviderClass(HibernateValidator.class);
+
         return validatorFactoryBean;
     }
 }

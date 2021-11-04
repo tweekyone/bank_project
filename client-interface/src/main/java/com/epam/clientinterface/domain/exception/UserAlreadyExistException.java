@@ -1,4 +1,4 @@
-package com.epam.clientinterface.exception;
+package com.epam.clientinterface.domain.exception;
 
 public class UserAlreadyExistException extends RuntimeException {
     public UserAlreadyExistException(String email) {

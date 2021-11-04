@@ -1,7 +1,9 @@
 package com.epam.clientinterface.controller.advice;
 
 import com.epam.clientinterface.controller.dto.response.ErrorResponse;
-import com.epam.clientinterface.exception.UserAlreadyExistException;
+import com.epam.clientinterface.domain.exception.AccountNotFoundException;
+import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
+import com.epam.clientinterface.domain.exception.UserAlreadyExistException;
 import java.util.HashMap;
 import lombok.NonNull;
 import org.springframework.http.HttpHeaders;
@@ -39,7 +41,30 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
             })
             .toArray()
         );
+
         return handleExceptionInternal(ex, body, headers, HttpStatus.UNPROCESSABLE_ENTITY, request);
+    }
+
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ResponseEntity<Object> handleAccountNotFound(AccountNotFoundException exception, WebRequest request) {
+        return handleExceptionInternal(
+            exception,
+            new ErrorResponse("accountNotFound", HttpStatus.NOT_FOUND),
+            new HttpHeaders(),
+            HttpStatus.NOT_FOUND,
+            request
+        );
+    }
+
+    @ExceptionHandler(NotEnoughMoneyException.class)
+    public ResponseEntity<Object> handleNotEnoughMoney(NotEnoughMoneyException exception, WebRequest request) {
+        return handleExceptionInternal(
+            exception,
+            new ErrorResponse("notEnoughMoney", HttpStatus.BAD_REQUEST),
+            new HttpHeaders(),
+            HttpStatus.BAD_REQUEST,
+            request
+        );
     }
 
     @ExceptionHandler(UserAlreadyExistException.class)

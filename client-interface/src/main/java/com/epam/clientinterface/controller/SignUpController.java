@@ -1,8 +1,8 @@
 package com.epam.clientinterface.controller;
 
+import com.epam.clientinterface.domain.exception.UserAlreadyExistException;
 import com.epam.clientinterface.dto.UserDto;
 import com.epam.clientinterface.entity.User;
-import com.epam.clientinterface.exception.UserAlreadyExistException;
 import com.epam.clientinterface.service.AuthService;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

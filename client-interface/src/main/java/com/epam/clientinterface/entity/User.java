@@ -69,8 +69,10 @@ public class User {
         this.accounts.add(accountFactory.createFor(this));
     }
 
-    public User(String name, String surname, String phoneNumber, String username,
-                String email, String password, List<Account> accounts) {
+    public User(@NonNull String name, @NonNull String surname,
+                @NonNull String phoneNumber, @NonNull String username,
+                @NonNull String email, @NonNull String password,
+                List<Account> accounts) {
         this.name = name;
         this.surname = surname;
         this.phoneNumber = phoneNumber;

@@ -1,7 +1,7 @@
 package com.epam.clientinterface.service;
 
+import com.epam.clientinterface.domain.exception.UserAlreadyExistException;
 import com.epam.clientinterface.entity.User;
-import com.epam.clientinterface.exception.UserAlreadyExistException;
 import org.springframework.stereotype.Service;
 
 @Service

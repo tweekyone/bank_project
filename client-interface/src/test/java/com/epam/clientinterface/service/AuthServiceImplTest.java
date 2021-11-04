@@ -1,13 +1,12 @@
 package com.epam.clientinterface.service;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.epam.clientinterface.domain.exception.UserAlreadyExistException;
 import com.epam.clientinterface.entity.User;
-import com.epam.clientinterface.exception.UserAlreadyExistException;
 import com.epam.clientinterface.repository.UserRepository;
 import com.epam.clientinterface.service.impl.AuthServiceImpl;
 import org.junit.jupiter.api.Assertions;
