@@ -16,6 +16,7 @@ dependencies {
   annotationProcessor(platform(project(":bom"))) // importing bom for annotation processors
   testAnnotationProcessor(platform(project(":bom"))) // importing bom for annotation processors
 
+  // Spring
   implementation 'org.springframework:spring-core'
   implementation 'org.springframework:spring-context'
   implementation 'org.springframework:spring-websocket'
@@ -25,9 +26,12 @@ dependencies {
   implementation 'org.springframework.security:spring-security-config'
   implementation 'org.springframework.data:spring-data-jpa'
   implementation 'org.springframework:spring-tx'
+
+  // Hibernate
   implementation 'org.hibernate:hibernate-core'
   implementation 'org.hibernate:hibernate-validator'
   implementation 'org.hibernate.validator:hibernate-validator-annotation-processor'
+
   implementation 'javax.validation:validation-api'
   implementation 'org.glassfish:javax.el'
   implementation 'com.zaxxer:HikariCP'

@@ -17,6 +17,7 @@ javaPlatform {
 
 dependencies {
   constraints {
+    // Javax
     api 'javax.servlet:javax.servlet-api:4.0.1'
     api 'javax.activation:activation:1.1.1'
     api 'javax.persistence:persistence-api:1.0.2'
@@ -51,6 +52,7 @@ dependencies {
     api 'org.springframework:spring-tx:5.3.12'
     api 'org.springframework:spring-test:5.3.12'
 
+    // Hibernate
     api 'org.hibernate:hibernate-core:5.6.0.Final'
     api 'org.hibernate:hibernate-validator:6.2.0.Final'
     api 'org.hibernate.validator:hibernate-validator-annotation-processor:6.2.0.Final'
@@ -59,6 +61,7 @@ dependencies {
     // Jetty
     api 'org.eclipse.jetty:jetty-webapp:9.2.10.v20150310'
 
+    // Tests
     api "org.junit.jupiter:junit-jupiter-api:5.7.2"
     api "org.junit.jupiter:junit-jupiter-engine:5.7.2"
     api "org.junit.jupiter:junit-jupiter-params:5.7.2"
