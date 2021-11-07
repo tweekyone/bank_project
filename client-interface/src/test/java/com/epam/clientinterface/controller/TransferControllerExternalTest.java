@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @ExtendWith(MockitoExtension.class)
-public class ExternalTransferControllerTest {
+public class TransferControllerExternalTest {
     private MockMvc mockMvc;
 
     @Mock
@@ -36,7 +36,7 @@ public class ExternalTransferControllerTest {
     @BeforeEach
     public void beforeEach() {
         this.mockMvc = MockMvcBuilders
-            .standaloneSetup(new ExternalTransferController(this.accountServiceMock))
+            .standaloneSetup(new TransferController(this.accountServiceMock))
             .setControllerAdvice(ErrorHandlingAdvice.class)
             .build();
     }
