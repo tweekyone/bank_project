@@ -1,5 +1,6 @@
 package com.epam.clientinterface.service;
 
+import com.epam.clientinterface.domain.exception.AccountIsClosedException;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
 import com.epam.clientinterface.entity.Account;
@@ -53,8 +54,16 @@ public class AccountService {
     }
 
     public void closeAccount(long accountId) {
-        this.accountRepository.delete(this.accountRepository.findById(accountId).orElseThrow(() -> {
-            throw new AccountNotFoundException(accountId);
-        }));
+        var account = this.accountRepository.findById(accountId).orElseThrow(
+            () -> new AccountNotFoundException(accountId)
+        );
+
+        if (account.isClosed()) {
+            throw new AccountIsClosedException(accountId);
+        }
+
+        account.close();
+
+        this.accountRepository.save(account);
     }
 }
