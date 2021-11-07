@@ -65,7 +65,7 @@ public class AccountServiceTest {
 
     private Account getAccountFixture(long id) {
         return new Account(
-            id, "11111111111111111111", true, Account.Plan.BASE, 10000.00, new User(), new ArrayList<>()
+            id, "11111111111111111111", true, Account.Plan.BASE, 10000.00, new User(), new ArrayList<>(), null
         );
     }
 }
