@@ -78,7 +78,7 @@ public class AccountService {
             new TransactionAccountData(destinationAccountNumber, true),
             amount,
             TransactionOperationType.EXTERNAL_TRANSFER,
-            TransactionState.PENDING
+            TransactionState.SUCCESS
         ));
     }
 }
