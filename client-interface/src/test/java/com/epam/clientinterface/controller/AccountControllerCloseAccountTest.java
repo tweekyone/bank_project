@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @ExtendWith(MockitoExtension.class)
-public class CloseAccountControllerTest {
+public class AccountControllerCloseAccountTest {
     private MockMvc mockMvc;
 
     @Mock
@@ -32,7 +32,7 @@ public class CloseAccountControllerTest {
     @BeforeEach
     public void beforeEach() {
         this.mockMvc = MockMvcBuilders
-            .standaloneSetup(new CloseAccountController(this.accountServiceMock))
+            .standaloneSetup(new AccountController(this.accountServiceMock))
             .setControllerAdvice(ErrorHandlingAdvice.class)
             .build();
     }
