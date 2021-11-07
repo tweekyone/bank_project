@@ -18,8 +18,8 @@ public class NewPinValidatorTest {
 
     @BeforeEach
     public void beforeEach() {
-        testChangePinRequest = new ChangePinRequest(1l, "1111", "2222");
-        testCard = new Card(1l, "", new Account(), "1111", Card.Plan.TESTPLAN,
+        testChangePinRequest = new ChangePinRequest(1L, "1111", "2222");
+        testCard = new Card(1L, "", new Account(), "1111", Card.Plan.TESTPLAN,
             LocalDateTime.now(), null);
     }
 

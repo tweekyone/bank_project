@@ -6,7 +6,7 @@ import com.epam.clientinterface.entity.Card;
 
 public class NewPinValidator {
 
-    public static void validatePinCode(Card card, ChangePinRequest pinRequest){
+    public static void validatePinCode(Card card, ChangePinRequest pinRequest) {
         if (!card.getPinCode().equals(pinRequest.getOldPin())) {
             throw new IncorrectPinException("Old pin is incorrect");
         } else if (pinRequest.getNewPin().equals(pinRequest.getOldPin())) {

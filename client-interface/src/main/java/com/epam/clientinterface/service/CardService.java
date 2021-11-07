@@ -21,11 +21,6 @@ public class CardService {
     private final CardRepository cardRepository;
     private final PinCounterRepository pinCounterRepository;
 
-    //temporary method
-    public Card getById(Long id) {
-        return cardRepository.findById(id).orElse(null);
-    }
-
     public Card changePinCode(ChangePinRequest pinRequest) {
         Card card = cardRepository.findById(pinRequest.getCardId()).orElse(null);
         if (card == null) {

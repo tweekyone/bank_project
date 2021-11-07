@@ -74,8 +74,12 @@ public class PinCounter {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         PinCounter that = (PinCounter) o;
         return id.equals(that.id) && card.equals(that.card) && lastChangingDate.equals(that.lastChangingDate)
             && changeCount.equals(that.changeCount);

@@ -24,29 +24,6 @@ public class CardController {
 
     private final CardService cardService;
 
-    //temporary method
-    @GetMapping(path = "/{number}")
-    public @ResponseBody
-    Card findByNumber(@PathVariable Long number) {
-        Card card = cardService.getById(number);
-        return card;
-    }
-
-    //
-    // @PatchMapping(path = "/{cardId}/change-password")
-    // public ResponseEntity<?> changePassword(
-    //     @Valid @RequestBody ChangePinRequest request,
-    //     @PathVariable("cardId") String cardId) {
-    //     cardService.changePinCode(Long.parseLong(cardId), request);
-    //     return ResponseEntity.ok("Pin Code successfully changed!");
-    // }
-
-    //temporary method
-    @GetMapping("/connected")
-    public ResponseEntity<?> returnOk() {
-        return new ResponseEntity<>("OK", HttpStatus.OK);
-    }
-
     @PostMapping(path = "/change-password")
     public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePinRequest request) {
         cardService.changePinCode(request);

@@ -38,10 +38,10 @@ class ChangePinCardServiceTest {
     @BeforeEach
     public void setUp() {
         cardService = new CardService(cardRepositoryMock, pinCounterRepositoryMock);
-        changePinRequest = new ChangePinRequest(1l, "1111", "1234");
-        testAccount = new Account(1l, "", true, Account.Plan.TESTPLAN,
+        changePinRequest = new ChangePinRequest(1L, "1111", "1234");
+        testAccount = new Account(1L, "", true, Account.Plan.BASE,
             1000, new User(), new ArrayList<>());
-        testCard = new Card(1l, "", testAccount, "1111", Card.Plan.TESTPLAN,
+        testCard = new Card(1L, "", testAccount, "1111", Card.Plan.TESTPLAN,
             LocalDateTime.now(), null);
     }
 
@@ -58,7 +58,7 @@ class ChangePinCardServiceTest {
 
     @Test
     public void throwsChangePinException() {
-        PinCounter pinCounter = new PinCounter(1l, testCard, LocalDateTime.now(), 3);
+        PinCounter pinCounter = new PinCounter(1L, testCard, LocalDateTime.now(), 3);
 
         Mockito.when(cardRepositoryMock.findById(Mockito.anyLong())).thenReturn(Optional.of(testCard));
         Mockito.when(pinCounterRepositoryMock.findByCardId(Mockito.anyLong())).thenReturn(pinCounter);
@@ -72,7 +72,7 @@ class ChangePinCardServiceTest {
 
     @Test
     public void changePinIfLastChangeToday() {
-        PinCounter pinCounter = new PinCounter(1l, testCard, LocalDateTime.now(), 2);
+        PinCounter pinCounter = new PinCounter(1L, testCard, LocalDateTime.now(), 2);
         ArgumentCaptor<PinCounter> pinCounterArgumentCaptor = ArgumentCaptor.forClass(PinCounter.class);
         ArgumentCaptor<Card> cardArgumentCaptor = ArgumentCaptor.forClass(Card.class);
 
@@ -90,7 +90,7 @@ class ChangePinCardServiceTest {
 
     @Test
     public void changePinIfLastChangeNotToday() {
-        PinCounter pinCounter = new PinCounter(1l, testCard, LocalDateTime.now().minusDays(1), 3);
+        PinCounter pinCounter = new PinCounter(1L, testCard, LocalDateTime.now().minusDays(1), 3);
         ArgumentCaptor<PinCounter> pinCounterArgumentCaptor = ArgumentCaptor.forClass(PinCounter.class);
         ArgumentCaptor<Card> cardArgumentCaptor = ArgumentCaptor.forClass(Card.class);
 

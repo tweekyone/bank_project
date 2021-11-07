@@ -1,6 +1,6 @@
 package com.epam.clientinterface.controller;
 
-import com.epam.clientinterface.controller.advice.CustomErrorHandler;
+import com.epam.clientinterface.controller.advice.ErrorHandlingAdvice;
 import com.epam.clientinterface.controller.dto.request.ChangePinRequest;
 import com.epam.clientinterface.controller.util.JsonHelper;
 import com.epam.clientinterface.service.CardService;
@@ -29,7 +29,7 @@ class ChangePinCardControllerTest {
     public void beforeEach() {
         mockMvc = MockMvcBuilders
             .standaloneSetup(new CardController(cardServiceMock))
-            .setControllerAdvice(CustomErrorHandler.class)
+            .setControllerAdvice(ErrorHandlingAdvice.class)
             .build();
         objectMapper = new ObjectMapper();
     }
