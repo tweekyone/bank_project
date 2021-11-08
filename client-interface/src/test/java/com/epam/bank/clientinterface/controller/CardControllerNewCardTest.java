@@ -11,12 +11,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.epam.clientinterface.controller.CardController;
-import com.epam.clientinterface.controller.advice.ErrorHandlingAdvice;
-import com.epam.clientinterface.domain.exception.AccountNotFoundException;
-import com.epam.clientinterface.entity.Card;
-import com.epam.clientinterface.entity.CardPlan;
-import com.epam.clientinterface.service.CardService;
+import com.epam.bank.clientinterface.controller.advice.ErrorHandlingAdvice;
+import com.epam.bank.clientinterface.domain.exception.AccountNotFoundException;
+import com.epam.bank.clientinterface.entity.Card;
+import com.epam.bank.clientinterface.entity.CardPlan;
+import com.epam.bank.clientinterface.service.CardService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
