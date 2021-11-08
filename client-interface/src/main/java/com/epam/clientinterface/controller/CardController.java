@@ -1,5 +1,6 @@
 package com.epam.clientinterface.controller;
 
+import com.epam.clientinterface.controller.dto.request.ChangePinRequest;
 import com.epam.clientinterface.controller.dto.request.NewCardRequest;
 import com.epam.clientinterface.controller.dto.response.NewCardResponse;
 import com.epam.clientinterface.entity.Card;
@@ -29,7 +30,6 @@ public class CardController {
             card.getPlan(), card.getExpirationDate());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
-}
 
     @PostMapping(path = "/cards/change-password")
     public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePinRequest request) {

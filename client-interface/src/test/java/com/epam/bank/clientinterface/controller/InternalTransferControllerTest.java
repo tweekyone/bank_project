@@ -15,6 +15,7 @@ import com.epam.clientinterface.controller.advice.ErrorHandlingAdvice;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
 import com.epam.clientinterface.service.AccountService;
+import java.util.Locale;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -114,7 +115,7 @@ public class InternalTransferControllerTest {
     }
 
     private String getRequestBody(long sourceAccountId, long destinationAccountId, double amount) {
-        return String.format(this.requestBodyTmpl, sourceAccountId, destinationAccountId, amount);
+        return String.format(Locale.ROOT, this.requestBodyTmpl, sourceAccountId, destinationAccountId, amount);
     }
 
     private ResultActions send(String requestBody) throws Exception {

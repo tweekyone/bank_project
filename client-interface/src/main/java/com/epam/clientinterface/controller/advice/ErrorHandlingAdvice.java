@@ -6,7 +6,6 @@ import com.epam.clientinterface.domain.exception.CardNotFoundException;
 import com.epam.clientinterface.domain.exception.ChangePinException;
 import com.epam.clientinterface.domain.exception.IncorrectPinException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
-import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import java.util.HashMap;
 import lombok.NonNull;
 import org.springframework.http.HttpHeaders;
@@ -85,17 +84,6 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
             HttpStatus.BAD_REQUEST,
             request
         );
-    }
-
-    @Override
-    public ResponseEntity<Object> handleHttpMessageNotReadable(
-        @NonNull HttpMessageNotReadableException ex,
-        @NonNull HttpHeaders headers,
-        @NonNull HttpStatus status,
-        @NonNull WebRequest request
-    ) {
-        ErrorResponse errorResponse = new ErrorResponse("Bad Request", HttpStatus.BAD_REQUEST);
-        return handleExceptionInternal(ex, errorResponse, headers, HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler({IncorrectPinException.class, ChangePinException.class, CardNotFoundException.class})

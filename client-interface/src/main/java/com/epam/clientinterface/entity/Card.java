@@ -1,6 +1,7 @@
 package com.epam.clientinterface.entity;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -57,7 +58,8 @@ public class Card {
         @NonNull String number,
         @NonNull String pinCode,
         @NonNull CardPlan plan,
-        @NonNull LocalDateTime expirationDate
+        @NonNull LocalDateTime expirationDate,
+        PinCounter.Factory pinCounter
     ) {
         this.account = account;
         this.number = number;

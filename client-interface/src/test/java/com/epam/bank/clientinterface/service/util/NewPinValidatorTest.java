@@ -1,9 +1,11 @@
-package com.epam.clientinterface.service.util;
+package com.epam.bank.clientinterface.service.util;
 
 import com.epam.clientinterface.controller.dto.request.ChangePinRequest;
 import com.epam.clientinterface.domain.exception.IncorrectPinException;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
+import com.epam.clientinterface.entity.CardPlan;
+import com.epam.clientinterface.service.util.NewPinValidator;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +21,7 @@ public class NewPinValidatorTest {
     @BeforeEach
     public void beforeEach() {
         testChangePinRequest = new ChangePinRequest(1L, "1111", "2222");
-        testCard = new Card(1L, "", new Account(), "1111", Card.Plan.TESTPLAN,
+        testCard = new Card(1L, "", new Account(), "1111", CardPlan.BASE,
             LocalDateTime.now(), null);
     }
 
