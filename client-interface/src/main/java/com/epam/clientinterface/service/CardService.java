@@ -1,5 +1,6 @@
 package com.epam.clientinterface.service;
 
+<<<<<<< HEAD
 import com.epam.clientinterface.controller.dto.request.ChangePinRequest;
 import com.epam.clientinterface.domain.exception.CardNotFoundException;
 import com.epam.clientinterface.domain.exception.ChangePinException;
@@ -10,6 +11,18 @@ import com.epam.clientinterface.repository.PinCounterRepository;
 import com.epam.clientinterface.service.util.NewPinValidator;
 import java.time.LocalDateTime;
 import javax.transaction.Transactional;
+=======
+import com.epam.clientinterface.domain.exception.AccountNotFoundException;
+import com.epam.clientinterface.entity.Account;
+import com.epam.clientinterface.entity.Card;
+import com.epam.clientinterface.entity.CardPlan;
+import com.epam.clientinterface.repository.AccountRepository;
+import com.epam.clientinterface.repository.CardRepository;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.Random;
+import lombok.NonNull;
+>>>>>>> master
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +58,42 @@ public class CardService {
             pinCounterRepository.save(pinCounter);
             return cardRepository.save(card);
         }
+    }
+
+    public @NonNull Card releaseCard(@NonNull Long accountId, @NonNull CardPlan plan) {
+
+        Optional<Account> account = accountRepository.findById(accountId);
+        if (account.isEmpty()) {
+            throw new AccountNotFoundException(accountId);
+        }
+
+        String pinCode = generatePinCode();
+        String number;
+        // TODO: a potentially infinite loop
+        do {
+            number = generateCardNumber();
+        } while (cardRepository.findCardByNumber(number).isPresent());
+
+        Card card = new Card(account.get(), number, pinCode, plan, LocalDateTime.now().plusYears(3));
+        return cardRepository.save(card);
+    }
+
+    protected String generateCardNumber() {
+        return randomGenerateStringOfInt(16);
+    }
+
+    protected String generatePinCode() {
+        return randomGenerateStringOfInt(4);
+    }
+
+    public String randomGenerateStringOfInt(int length) {
+        Random random = new Random();
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            int digit = random.nextInt(10);
+            builder.append(digit);
+        }
+        return builder.toString();
     }
 
     private boolean isLastChangingDateToday(PinCounter pinCounter) {

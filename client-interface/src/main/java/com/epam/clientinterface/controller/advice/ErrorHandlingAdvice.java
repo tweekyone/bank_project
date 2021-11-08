@@ -6,6 +6,7 @@ import com.epam.clientinterface.domain.exception.CardNotFoundException;
 import com.epam.clientinterface.domain.exception.ChangePinException;
 import com.epam.clientinterface.domain.exception.IncorrectPinException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import java.util.HashMap;
 import lombok.NonNull;
 import org.springframework.http.HttpHeaders;
@@ -48,10 +49,26 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, body, headers, HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
 
-    @ExceptionHandler(AccountNotFoundException.class)
-    public ResponseEntity<Object> handleAccountNotFound(AccountNotFoundException exception, WebRequest request) {
+    @Override
+    public @NonNull ResponseEntity<Object> handleHttpMessageNotReadable(
+        @NonNull HttpMessageNotReadableException ex,
+        @NonNull HttpHeaders headers,
+        @NonNull HttpStatus status,
+        @NonNull WebRequest request
+    ) {
         return handleExceptionInternal(
-            exception,
+            ex,
+            new ErrorResponse("badRequest", HttpStatus.BAD_REQUEST),
+            new HttpHeaders(),
+            HttpStatus.BAD_REQUEST,
+            request
+        );
+    }
+
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ResponseEntity<Object> handleAccountNotFound(AccountNotFoundException ex, WebRequest request) {
+        return handleExceptionInternal(
+            ex,
             new ErrorResponse("accountNotFound", HttpStatus.NOT_FOUND),
             new HttpHeaders(),
             HttpStatus.NOT_FOUND,
@@ -60,9 +77,9 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(NotEnoughMoneyException.class)
-    public ResponseEntity<Object> handleNotEnoughMoney(NotEnoughMoneyException exception, WebRequest request) {
+    public ResponseEntity<Object> handleNotEnoughMoney(NotEnoughMoneyException ex, WebRequest request) {
         return handleExceptionInternal(
-            exception,
+            ex,
             new ErrorResponse("notEnoughMoney", HttpStatus.BAD_REQUEST),
             new HttpHeaders(),
             HttpStatus.BAD_REQUEST,

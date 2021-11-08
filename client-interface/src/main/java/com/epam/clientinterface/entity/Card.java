@@ -1,7 +1,6 @@
 package com.epam.clientinterface.entity;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -37,7 +36,6 @@ public class Card {
     private String number;
 
     @ManyToOne
-    @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
 
     @Column(name = "pin_code", nullable = false)
@@ -45,7 +43,7 @@ public class Card {
 
     @Column(name = "plan", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Plan plan;
+    private CardPlan plan;
 
     @Column(name = "expiration_date", nullable = false)
     private LocalDateTime expirationDate;
@@ -54,17 +52,12 @@ public class Card {
     @JoinColumn(name = "card_id")
     private PinCounter pinCounter;
 
-    public enum Plan {
-        TESTPLAN
-    }
-
     public Card(
         @NonNull Account account,
         @NonNull String number,
         @NonNull String pinCode,
-        @NonNull Plan plan,
-        @NonNull LocalDateTime expirationDate,
-        PinCounter.Factory pinCounter
+        @NonNull CardPlan plan,
+        @NonNull LocalDateTime expirationDate
     ) {
         this.account = account;
         this.number = number;
