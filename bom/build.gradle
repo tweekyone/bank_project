@@ -21,7 +21,6 @@ dependencies {
     api 'javax.activation:activation:1.1.1'
     api 'javax.persistence:persistence-api:1.0.2'
     api 'javax.servlet:javax.servlet-api:4.0.1'
-    api 'javax.validation:validation-api:2.0.1.Final'
     api 'org.glassfish:javax.el:3.0.0'
     api 'jakarta.validation:jakarta.validation-api:3.0.0'
 
@@ -50,12 +49,12 @@ dependencies {
     api 'org.springframework.security:spring-security-web:5.5.1'
     api 'org.springframework.security:spring-security-config:5.5.1'
     api 'org.springframework.data:spring-data-jpa:2.5.4'
-    api 'org.springframework:spring-tx:5.3.12'
     api 'org.springframework:spring-test:5.3.12'
 
     api 'org.hibernate:hibernate-core:5.6.0.Final'
     api 'org.hibernate:hibernate-validator:6.2.0.Final'
     api 'org.hibernate.validator:hibernate-validator-annotation-processor:6.0.1.Final'
+    api 'javax.validation:validation-api:2.0.1.Final'
 
     // Jetty
     api 'org.eclipse.jetty:jetty-webapp:9.2.10.v20150310'

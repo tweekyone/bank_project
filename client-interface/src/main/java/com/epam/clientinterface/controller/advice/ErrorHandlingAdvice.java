@@ -3,6 +3,7 @@ package com.epam.clientinterface.controller.advice;
 import com.epam.clientinterface.controller.dto.response.ErrorResponse;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.CardNotFoundException;
+import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
 import java.util.HashMap;
 import javax.validation.ConstraintViolationException;
 import lombok.NonNull;
@@ -55,8 +56,13 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
         @NonNull HttpStatus status,
         @NonNull WebRequest request
     ) {
-        ErrorResponse body = new ErrorResponse("badRequest", HttpStatus.BAD_REQUEST);
-        return handleExceptionInternal(ex, body, headers, HttpStatus.BAD_REQUEST, request);
+        return handleExceptionInternal(
+            ex,
+            new ErrorResponse("badRequest", HttpStatus.BAD_REQUEST),
+            new HttpHeaders(),
+            HttpStatus.BAD_REQUEST,
+            request
+        );
     }
 
     @Override
@@ -78,9 +84,25 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(AccountNotFoundException.class)
-    public final ResponseEntity<Object> handleAccountNotFound(Exception ex, WebRequest request) {
-        ErrorResponse body = new ErrorResponse("accountNotFound", HttpStatus.NOT_FOUND);
-        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    public ResponseEntity<Object> handleAccountNotFound(AccountNotFoundException ex, WebRequest request) {
+        return handleExceptionInternal(
+            ex,
+            new ErrorResponse("accountNotFound", HttpStatus.NOT_FOUND),
+            new HttpHeaders(),
+            HttpStatus.NOT_FOUND,
+            request
+        );
+    }
+
+    @ExceptionHandler(NotEnoughMoneyException.class)
+    public ResponseEntity<Object> handleNotEnoughMoney(NotEnoughMoneyException ex, WebRequest request) {
+        return handleExceptionInternal(
+            ex,
+            new ErrorResponse("notEnoughMoney", HttpStatus.BAD_REQUEST),
+            new HttpHeaders(),
+            HttpStatus.BAD_REQUEST,
+            request
+        );
     }
 
     @ExceptionHandler(CardNotFoundException.class)
