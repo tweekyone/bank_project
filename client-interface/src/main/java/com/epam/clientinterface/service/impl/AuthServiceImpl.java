@@ -28,7 +28,8 @@ public class AuthServiceImpl implements AuthService {
         }
         User newUser = userService.create(name, surname, phoneNumber, username, email, rawPassword);
 
-        // Uncomment line below to use direct save in user repo instead of user service (only for check!)
+        // !Attention - solution below is a temporary. While User service is not implemented!
+        // Uncomment lines to use direct save in User repo instead of User service.
         // List<Account> accounts = new ArrayList<>();
         // User newUser = new User(name, surname, phoneNumber, username, email, rawPassword, accounts);
         // userRepository.save(newUser);

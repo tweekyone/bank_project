@@ -1,6 +1,6 @@
 package com.epam.clientinterface.dto;
 
-import com.epam.clientinterface.controller.validator.ValidEmail;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
@@ -28,7 +28,7 @@ public class UserDto {
     @NotEmpty
     private String username;
 
-    @ValidEmail
+    @Email
     @NotNull
     @NotEmpty
     private String email;
