@@ -9,6 +9,7 @@ import lombok.NonNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
+
     @Override
     protected @NonNull ResponseEntity<Object> handleMethodArgumentNotValid(
         MethodArgumentNotValidException ex,
@@ -43,6 +45,22 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
         );
 
         return handleExceptionInternal(ex, body, headers, HttpStatus.UNPROCESSABLE_ENTITY, request);
+    }
+
+    @Override
+    public @NonNull ResponseEntity<Object> handleHttpMessageNotReadable(
+        @NonNull HttpMessageNotReadableException ex,
+        @NonNull HttpHeaders headers,
+        @NonNull HttpStatus status,
+        @NonNull WebRequest request
+    ) {
+        return handleExceptionInternal(
+            ex,
+            new ErrorResponse("badRequest", HttpStatus.BAD_REQUEST),
+            new HttpHeaders(),
+            HttpStatus.BAD_REQUEST,
+            request
+        );
     }
 
     @ExceptionHandler(AccountNotFoundException.class)
