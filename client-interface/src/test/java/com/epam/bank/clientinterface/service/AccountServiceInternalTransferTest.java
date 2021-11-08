@@ -1,16 +1,15 @@
-package com.epam.clientinterface.service;
+package com.epam.bank.clientinterface.service;
 
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-import com.epam.clientinterface.domain.exception.AccountIsNotSupposedForExternalTransferException;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.TransactionRepository;
+import com.epam.clientinterface.service.AccountService;
 import java.util.ArrayList;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
@@ -21,7 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class AccountServiceExternalTransferTest {
+public class AccountServiceInternalTransferTest {
     private AccountService accountService;
 
     @Mock
@@ -38,9 +37,9 @@ public class AccountServiceExternalTransferTest {
     @Test
     public void shouldReturnNothingIfAccountsExistAndThereIsEnoughMoney() {
         when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(this.getAccountFixture(1L)));
-        when(this.accountRepositoryMock.findByNumber(anyString())).thenReturn(Optional.empty());
+        when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(this.getAccountFixture(2L)));
 
-        this.accountService.externalTransfer(1L, "123", 1000.00);
+        this.accountService.internalTransfer(1L, 2L, 1000.00);
     }
 
     @Test
@@ -49,29 +48,29 @@ public class AccountServiceExternalTransferTest {
 
         Assertions.assertThrows(
             AccountNotFoundException.class,
-            () -> this.accountService.externalTransfer(1L, "123", 1000.00)
+            () -> this.accountService.internalTransfer(1L, 2L, 1000.00)
         );
     }
 
     @Test
-    public void shouldThrowAccountIsNotSupposedForExternalTransferDestinationAccountExists() {
+    public void shouldThrowAccountNotFoundIfTheDestinationAccountDoesNotExist() {
         when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(this.getAccountFixture(1L)));
-        when(this.accountRepositoryMock.findByNumber(anyString())).thenReturn(Optional.of(this.getAccountFixture(2L)));
+        when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.empty());
 
         Assertions.assertThrows(
-            AccountIsNotSupposedForExternalTransferException.class,
-            () -> this.accountService.externalTransfer(1L, "123", 1000.00)
+            AccountNotFoundException.class,
+            () -> this.accountService.internalTransfer(1L, 2L, 1000.00)
         );
     }
 
     @Test
     public void shouldThrowNotEnoughMoneyIfSourceAccountDoesNotHaveEnoughMoney() {
         when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(this.getAccountFixture(1L)));
-        when(this.accountRepositoryMock.findByNumber(anyString())).thenReturn(Optional.empty());
+        when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(this.getAccountFixture(2L)));
 
         Assertions.assertThrows(
             NotEnoughMoneyException.class,
-            () -> this.accountService.externalTransfer(1L, "123", 100000.00)
+            () -> this.accountService.internalTransfer(1L, 2L, 100000.00)
         );
     }
 

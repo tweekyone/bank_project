@@ -39,8 +39,8 @@ public class Account {
     @Column(name = "is_default", nullable = false)
     private boolean isDefault;
 
-    @Column(name = "plan", nullable = false)
     @Enumerated(EnumType.STRING)
+    @Column(name = "plan", nullable = false)
     private Plan plan;
 
     @Column(name = "amount", nullable = false)
