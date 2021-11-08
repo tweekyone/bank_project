@@ -29,13 +29,13 @@ dependencies {
   implementation 'org.hibernate.validator:hibernate-validator-annotation-processor'
   implementation 'javax.validation:validation-api'
   implementation 'org.glassfish:javax.el'
-  implementation 'org.glassfish:javax.el'
   implementation 'com.zaxxer:HikariCP'
   implementation 'org.liquibase:liquibase-core'
   implementation 'com.fasterxml.jackson.core:jackson-databind'
   implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
   runtimeOnly 'org.postgresql:postgresql'
+
   // Jetty
   implementation 'javax.servlet:javax.servlet-api'
   implementation 'org.eclipse.jetty:jetty-webapp'

@@ -16,30 +16,27 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 public class CardServiceTest {
 
-    private CardService cardService;
     private final Account account = new Account(1L, "", true, Account.Plan.BASE,
         1000, new User(), new ArrayList<>());
+
+    @InjectMocks
+    private CardService cardService;
 
     @Mock
     private CardRepository cardRepository;
 
     @Mock
     private AccountRepository accountRepository;
-
-    @BeforeEach
-    public void setUp() {
-        cardService = new CardService(cardRepository, accountRepository);
-    }
 
     @Test
     public void shouldReturnNewCardIfAccountIsExist() {
@@ -91,12 +88,12 @@ public class CardServiceTest {
 
     @Test
     public void shouldReturnCardNumber() {
-        Assertions.assertEquals(16, cardService.generate(16).length());
+        Assertions.assertEquals(16, cardService.randomGenerateStringOfInt(16).length());
     }
 
     @Test
     public void shouldReturnPinCode() {
-        Assertions.assertEquals(4, cardService.generate(4).length());
+        Assertions.assertEquals(4, cardService.randomGenerateStringOfInt(4).length());
     }
 
 }

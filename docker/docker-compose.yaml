@@ -14,7 +14,7 @@ services :
       - ../atm/build/libs/atm.war:/usr/local/tomcat/webapps/atm.war
       - ../client-interface/build/libs/client-interface.war:/usr/local/tomcat/webapps/client-interface.war
     ports :
-      - 8081:8080
+      - 8080:8080
       - 8100:8100
 
   database :

@@ -28,6 +28,7 @@ public class CardService {
 
         String pinCode = generatePinCode();
         String number;
+        // TODO: a potentially infinite loop
         do {
             number = generateCardNumber();
         } while (cardRepository.findCardByNumber(number).isPresent());
@@ -37,14 +38,14 @@ public class CardService {
     }
 
     protected String generateCardNumber() {
-        return generate(16);
+        return randomGenerateStringOfInt(16);
     }
 
     protected String generatePinCode() {
-        return generate(4);
+        return randomGenerateStringOfInt(4);
     }
 
-    public String generate(int length) {
+    public String randomGenerateStringOfInt(int length) {
         Random random = new Random();
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < length; i++) {
