@@ -14,6 +14,7 @@ import com.epam.bank.clientinterface.controller.advice.ErrorHandlingAdvice;
 import com.epam.bank.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.bank.clientinterface.domain.exception.NotEnoughMoneyException;
 import com.epam.bank.clientinterface.service.AccountService;
+import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,7 +43,7 @@ public class TransferControllerInternalTest {
 
     @Test
     public void shouldReturnNoContentIfIncomeDataIsValid() throws Exception {
-        var requestBody = this.getRequestBody(1L, 2L, 1000.00);
+        var requestBody = this.getRequestBody(1L, 2L, RandomUtils.nextDouble(1000.0, 10000.0));
 
         this.send(requestBody).andExpect(status().isNoContent());
     }
@@ -84,7 +85,7 @@ public class TransferControllerInternalTest {
 
     @Test
     public void shouldReturnNotFoundIfServiceThrowsAccountNotFound() throws Exception {
-        var requestBody = this.getRequestBody(1L, 2L, 1000.00);
+        var requestBody = this.getRequestBody(1L, 2L, RandomUtils.nextDouble(1000.0, 10000.0));
 
         doThrow(new AccountNotFoundException(1L))
             .when(this.accountServiceMock)
@@ -98,7 +99,7 @@ public class TransferControllerInternalTest {
 
     @Test
     public void shouldReturnBadRequestIfServiceThrowsNotEnoughMoney() throws Exception {
-        var requestBody = this.getRequestBody(1L, 2L, 10000.00);
+        var requestBody = this.getRequestBody(1L, 2L, RandomUtils.nextDouble(1000.0, 10000.0));
 
         doThrow(new NotEnoughMoneyException(1L, 10000.00))
             .when(this.accountServiceMock)

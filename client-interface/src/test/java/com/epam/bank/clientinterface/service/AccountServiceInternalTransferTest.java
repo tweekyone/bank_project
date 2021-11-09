@@ -11,6 +11,8 @@ import com.epam.bank.clientinterface.repository.AccountRepository;
 import com.epam.bank.clientinterface.repository.TransactionRepository;
 import java.util.ArrayList;
 import java.util.Optional;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,7 +36,7 @@ public class AccountServiceInternalTransferTest {
         when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(this.getAccountFixture(1L)));
         when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(this.getAccountFixture(2L)));
 
-        this.accountService.internalTransfer(1L, 2L, 1000.00);
+        this.accountService.internalTransfer(1L, 2L, RandomUtils.nextDouble(1000.0, 10000.0));
     }
 
     @Test
@@ -43,7 +45,7 @@ public class AccountServiceInternalTransferTest {
 
         Assertions.assertThrows(
             AccountNotFoundException.class,
-            () -> this.accountService.internalTransfer(1L, 2L, 1000.00)
+            () -> this.accountService.internalTransfer(1L, 2L, RandomUtils.nextDouble(1000.0, 10000.0))
         );
     }
 
@@ -54,7 +56,7 @@ public class AccountServiceInternalTransferTest {
 
         Assertions.assertThrows(
             AccountNotFoundException.class,
-            () -> this.accountService.internalTransfer(1L, 2L, 1000.00)
+            () -> this.accountService.internalTransfer(1L, 2L, RandomUtils.nextDouble(1000.0, 10000.0))
         );
     }
 
@@ -65,13 +67,19 @@ public class AccountServiceInternalTransferTest {
 
         Assertions.assertThrows(
             NotEnoughMoneyException.class,
-            () -> this.accountService.internalTransfer(1L, 2L, 100000.00)
+            () -> this.accountService.internalTransfer(1L, 2L, RandomUtils.nextDouble(100000.0, 1000000.0))
         );
     }
 
     private Account getAccountFixture(long id) {
         return new Account(
-            id, "11111111111111111111", true, Account.Plan.BASE, 10000.00, new User(), new ArrayList<>()
+            id,
+            RandomStringUtils.randomNumeric(20),
+            RandomUtils.nextBoolean(),
+            Account.Plan.values()[RandomUtils.nextInt(0, Account.Plan.values().length)],
+            RandomUtils.nextDouble(10000.0, 100000.0),
+            new User(),
+            new ArrayList<>()
         );
     }
 }
