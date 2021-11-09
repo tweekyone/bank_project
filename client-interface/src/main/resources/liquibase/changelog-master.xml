@@ -219,9 +219,7 @@
 
   <changeSet id="10" author="Tatiana Naumovets">
     <addColumn tableName="card" >
-      <column name="is_blocked" type="boolean">
-        <constraints nullable="false"/>
-      </column>
+      <column name="is_blocked" type="boolean" defaultValue="false" />
     </addColumn>
   </changeSet>
 </databaseChangeLog>

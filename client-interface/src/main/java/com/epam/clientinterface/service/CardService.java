@@ -36,7 +36,7 @@ public class CardService {
             number = generateCardNumber();
         } while (cardRepository.findCardByNumber(number).isPresent());
 
-        Card card = new Card(account.get(), number, pinCode, plan, false,LocalDateTime.now().plusYears(3));
+        Card card = new Card(account.get(), number, pinCode, plan, false, LocalDateTime.now().plusYears(3));
         return cardRepository.save(card);
     }
 
@@ -45,7 +45,7 @@ public class CardService {
         if (card.isEmpty()) {
             throw new CardNotFoundException(cardId);
         }
-        changeStatusIsBlocked(true, card.get());
+        card.get().setBlocked(true);
         return cardRepository.save(card.get());
     }
 
@@ -65,9 +65,5 @@ public class CardService {
             builder.append(digit);
         }
         return builder.toString();
-    }
-
-    protected void changeStatusIsBlocked(boolean status, Card card) {
-        card.setBlocked(status);
     }
 }
