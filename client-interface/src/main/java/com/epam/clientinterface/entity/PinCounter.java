@@ -4,10 +4,12 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -27,12 +29,10 @@ public class PinCounter {
 
     @Id
     @Column(name = "id")
-    @SequenceGenerator(name = "pinCounter_id_seq", sequenceName = "pinCounter_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pinCounter_id_seq")
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "card_id", referencedColumnName = "id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
     private Card card;
 
     @Column(name = "last_changing_date")
@@ -41,35 +41,10 @@ public class PinCounter {
     @Column(name = "change_count")
     private Integer changeCount;
 
-    public interface Factory {
-        PinCounter createFor(Card card);
-    }
-
     public PinCounter(@NonNull Card card, @NonNull LocalDateTime lastChangingDate, Integer changeCount) {
         this.card = card;
         this.lastChangingDate = lastChangingDate;
         this.changeCount = changeCount;
-    }
-
-    @AllArgsConstructor
-    public static class SimpleFactory implements Factory {
-        private LocalDateTime lastChangingDate;
-        private Integer changeCount;
-
-        @Override
-        public PinCounter createFor(Card card) {
-            return new PinCounter(card, this.lastChangingDate, this.changeCount);
-        }
-    }
-
-    @AllArgsConstructor
-    public static class AsFirstFactory implements Factory {
-        private LocalDateTime lastChangingDate;
-
-        @Override
-        public PinCounter createFor(Card card) {
-            return new PinCounter(card, this.lastChangingDate, 0);
-        }
     }
 
     @Override

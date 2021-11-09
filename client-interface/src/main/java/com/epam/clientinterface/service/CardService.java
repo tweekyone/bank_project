@@ -37,8 +37,13 @@ public class CardService {
 
         NewPinValidator.validatePinCode(card, pinRequest);
 
-        PinCounter pinCounter = pinCounterRepository.findByCardId(card.getId());
-        if (isLastChangingDateToday(pinCounter) && pinCounter.getChangeCount() < 3) {
+        PinCounter pinCounter = pinCounterRepository.findByCardId(card.getId()).orElse(null);
+        if (pinCounter == null) {
+            pinCounter = new PinCounter(card, LocalDateTime.now(), 1);
+            card.setPinCode(pinRequest.getNewPin());
+            pinCounterRepository.save(pinCounter);
+            return cardRepository.save(card);
+        } else if (isLastChangingDateToday(pinCounter) && pinCounter.getChangeCount() < 3) {
             card.setPinCode(pinRequest.getNewPin());
             pinCounter.setLastChangingDate(LocalDateTime.now());
             pinCounter.setChangeCount(pinCounter.getChangeCount() + 1);
@@ -69,8 +74,7 @@ public class CardService {
             number = generateCardNumber();
         } while (cardRepository.findCardByNumber(number).isPresent());
 
-        Card card = new Card(account.get(), number, pinCode, plan, LocalDateTime.now().plusYears(3),
-            new PinCounter.AsFirstFactory(LocalDateTime.now()));
+        Card card = new Card(account.get(), number, pinCode, plan, LocalDateTime.now().plusYears(3));
         return cardRepository.save(card);
     }
 

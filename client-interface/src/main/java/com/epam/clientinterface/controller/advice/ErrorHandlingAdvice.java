@@ -88,17 +88,17 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({IncorrectPinException.class, ChangePinException.class, CardNotFoundException.class})
     public ResponseEntity<Object> handleChangePinException(Exception ex, WebRequest request) {
-        String errorMessage;
+        String type;
 
         if (ex instanceof IncorrectPinException) {
-            errorMessage = "Pin code is not valid";
+            type = "Pin code is not valid";
         } else if (ex instanceof ChangePinException) {
-            errorMessage = "Limit of attempts";
+            type = "Limit of attempts";
         } else {
-            errorMessage = "Card not found";
+            type = "Card not found";
         }
 
-        ErrorResponse errorResponse = new ErrorResponse(errorMessage, HttpStatus.BAD_REQUEST);
+        ErrorResponse errorResponse = new ErrorResponse(type, HttpStatus.BAD_REQUEST);
         return handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 }

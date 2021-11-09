@@ -49,7 +49,7 @@ class ChangePinCardServiceTest {
         testAccount = new Account(1L, "", true, Account.Plan.BASE,
             1000, new User(), new ArrayList<>());
         testCard = new Card(1L, "", testAccount, "1111", CardPlan.BASE,
-            LocalDateTime.now(), null);
+            LocalDateTime.now());
     }
 
     @Test
@@ -68,7 +68,7 @@ class ChangePinCardServiceTest {
         PinCounter pinCounter = new PinCounter(1L, testCard, LocalDateTime.now(), 3);
 
         Mockito.when(cardRepositoryMock.findById(Mockito.anyLong())).thenReturn(Optional.of(testCard));
-        Mockito.when(pinCounterRepositoryMock.findByCardId(Mockito.anyLong())).thenReturn(pinCounter);
+        Mockito.when(pinCounterRepositoryMock.findByCardId(Mockito.anyLong())).thenReturn(Optional.of(pinCounter));
 
         ChangePinException thrownException = Assertions.assertThrows(ChangePinException.class,
             () -> cardService.changePinCode(changePinRequest));
@@ -84,7 +84,7 @@ class ChangePinCardServiceTest {
         ArgumentCaptor<Card> cardArgumentCaptor = ArgumentCaptor.forClass(Card.class);
 
         Mockito.when(cardRepositoryMock.findById(Mockito.anyLong())).thenReturn(Optional.of(testCard));
-        Mockito.when(pinCounterRepositoryMock.findByCardId(Mockito.anyLong())).thenReturn(pinCounter);
+        Mockito.when(pinCounterRepositoryMock.findByCardId(Mockito.anyLong())).thenReturn(Optional.of(pinCounter));
 
         cardService.changePinCode(changePinRequest);
 
@@ -102,7 +102,7 @@ class ChangePinCardServiceTest {
         ArgumentCaptor<Card> cardArgumentCaptor = ArgumentCaptor.forClass(Card.class);
 
         Mockito.when(cardRepositoryMock.findById(Mockito.anyLong())).thenReturn(Optional.of(testCard));
-        Mockito.when(pinCounterRepositoryMock.findByCardId(Mockito.anyLong())).thenReturn(pinCounter);
+        Mockito.when(pinCounterRepositoryMock.findByCardId(Mockito.anyLong())).thenReturn(Optional.of(pinCounter));
 
         cardService.changePinCode(changePinRequest);
 
