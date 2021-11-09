@@ -70,12 +70,12 @@ public class Card {
             return false;
         }
         Card card = (Card) o;
-        return id.equals(card.id) && number.equals(card.number) && account.equals(card.account) && pinCode.equals(
+        return number.equals(card.number) && account.equals(card.account) && pinCode.equals(
             card.pinCode) && plan == card.plan && expirationDate.equals(card.expirationDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, number, account, pinCode, plan, expirationDate);
+        return Objects.hash(number, account, pinCode, plan, expirationDate);
     }
 }
