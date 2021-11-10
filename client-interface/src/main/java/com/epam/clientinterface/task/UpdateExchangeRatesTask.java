@@ -22,8 +22,8 @@ public class UpdateExchangeRatesTask {
             .map(currency -> MonetaryConversions.getConversion(currency.name()))
             .flatMap(toCurrencyConversion -> Arrays.stream(Currency.values())
                 .map(currency -> toCurrencyConversion.getExchangeRate(
-                    Monetary.getDefaultAmountFactory().setCurrency(currency.name()).setNumber(1).create())
-                )
+                    Monetary.getDefaultAmountFactory().setCurrency(currency.name()).setNumber(1).create()
+                ))
             )
             .filter(exchangeRate -> !exchangeRate.getBaseCurrency().getCurrencyCode().equals(
                     exchangeRate.getCurrency().getCurrencyCode()
@@ -36,7 +36,7 @@ public class UpdateExchangeRatesTask {
                     currencyFrom,
                     currencyTo
                 ).orElseGet(() -> new ExchangeRate(
-                    currencyFrom, currencyTo, exchangeRate.getFactor().doubleValueExact())
+                    currencyFrom, currencyTo, exchangeRate.getFactor().doubleValue())
                 );
 
                 exchangeRateEntity.setRate(exchangeRate.getFactor().doubleValue());

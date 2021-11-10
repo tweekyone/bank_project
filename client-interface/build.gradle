@@ -33,6 +33,7 @@ dependencies {
   implementation 'org.liquibase:liquibase-core'
   implementation 'com.fasterxml.jackson.core:jackson-databind'
   implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+  implementation 'org.apache.commons:commons-lang3'
   implementation 'org.javamoney:moneta'
 
   runtimeOnly 'org.postgresql:postgresql'
@@ -57,6 +58,7 @@ dependencies {
   testImplementation 'org.springframework:spring-test'
   testImplementation 'org.hamcrest:hamcrest-all'
   testImplementation 'com.jayway.jsonpath:json-path'
+  testImplementation 'org.mockito:mockito-inline'
 
   // Annotation processors
   compileOnly "org.projectlombok:lombok"
