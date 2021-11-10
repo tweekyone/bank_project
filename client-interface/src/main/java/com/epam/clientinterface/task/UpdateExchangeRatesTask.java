@@ -35,9 +35,7 @@ public class UpdateExchangeRatesTask {
                 var exchangeRateEntity = this.exchangeRateRepository.findOneByCurrencies(
                     currencyFrom,
                     currencyTo
-                ).orElseGet(() -> new ExchangeRate(
-                    currencyFrom, currencyTo, exchangeRate.getFactor().doubleValue())
-                );
+                ).orElseGet(() -> new ExchangeRate(currencyFrom, currencyTo, exchangeRate.getFactor().doubleValue()));
 
                 exchangeRateEntity.setRate(exchangeRate.getFactor().doubleValue());
 
