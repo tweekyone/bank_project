@@ -14,6 +14,7 @@ import com.epam.clientinterface.controller.advice.ErrorHandlingAdvice;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
 import com.epam.clientinterface.service.AccountService;
+import net.minidev.json.JSONObject;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +28,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import java.util.Map;
 
 @ExtendWith(MockitoExtension.class)
 public class TransferControllerExternalTest {
@@ -120,12 +122,9 @@ public class TransferControllerExternalTest {
     }
 
     private String getRequestBody(long sourceAccountId, String destinationAccountNumber, double amount) {
-        return String.format(
-            "{\"sourceAccountId\":%d,\"destinationAccountNumber\":\"%s\",\"amount\":%f}",
-            sourceAccountId,
-            destinationAccountNumber,
-            amount
-        );
+        return JSONObject.toJSONString(Map.of(
+            "sourceAccountId", sourceAccountId, "destinationAccountNumber", destinationAccountNumber, "amount", amount
+        ));
     }
 
     private ResultActions send(String requestBody) throws Exception {
