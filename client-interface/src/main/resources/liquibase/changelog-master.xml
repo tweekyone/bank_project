@@ -222,27 +222,8 @@
   </changeSet>
 
   <changeSet id="10" author="Evgenii Ponukhov">
-    <createTable tableName="pin_counter">
-      <column name="card_id" type="BIGINT">
-        <constraints primaryKey="true" primaryKeyName="pin_counter_pkey"/>
-      </column>
-      <column name="last_changing_date" type="TIMESTAMP WITHOUT TIME ZONE">
-        <constraints nullable="false"/>
-      </column>
-      <column name="change_count" type="INTEGER">
-        <constraints nullable="false"/>
-      </column>
-    </createTable>
-    <addForeignKeyConstraint
-      baseColumnNames="card_id"
-      baseTableName="pin_counter"
-      constraintName="pin_counter_id_fkey"
-      deferrable="false"
-      initiallyDeferred="false"
-      onDelete="CASCADE"
-      onUpdate="NO ACTION"
-      referencedColumnNames="id"
-      referencedTableName="card"
-      validate="true"/>
+    <addColumn tableName="card">
+      <column name="pin_counter" type="INTEGER"/>
+    </addColumn>
   </changeSet>
 </databaseChangeLog>

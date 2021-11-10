@@ -13,9 +13,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.DefaultPropertySourceFactory;
 import org.springframework.core.io.support.EncodedResource;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
 @ComponentScan("com.epam.clientinterface.*")
+@EnableScheduling
 public class ApplicationConfiguration {
 
     @Bean
@@ -48,7 +50,8 @@ public class ApplicationConfiguration {
     }
 
     private static void addDefaultPropertyFile(Environment environment, ResourceLoader resourceLoader,
-                                  DefaultPropertySourceFactory defaultPropertySourceFactory) throws IOException {
+                                               DefaultPropertySourceFactory defaultPropertySourceFactory)
+        throws IOException {
         String resolvedLocation = environment.resolveRequiredPlaceholders("classpath:application.properties");
         Resource resource = resourceLoader.getResource(resolvedLocation);
         String name = "application.properties";

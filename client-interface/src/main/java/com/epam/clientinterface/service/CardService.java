@@ -7,10 +7,8 @@ import com.epam.clientinterface.domain.exception.ChangePinException;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.entity.CardPlan;
-import com.epam.clientinterface.entity.PinCounter;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.CardRepository;
-import com.epam.clientinterface.repository.PinCounterRepository;
 import com.epam.clientinterface.service.util.NewPinValidator;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -18,6 +16,9 @@ import java.util.Random;
 import javax.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,8 +27,8 @@ import org.springframework.stereotype.Service;
 public class CardService {
 
     private final CardRepository cardRepository;
-    private final PinCounterRepository pinCounterRepository;
     private final AccountRepository accountRepository;
+    private final SessionFactory sessionFactory;
 
     public Card changePinCode(ChangePinRequest pinRequest) {
         Card card = cardRepository.findById(pinRequest.getCardId()).orElse(null);
@@ -37,27 +38,26 @@ public class CardService {
 
         NewPinValidator.validatePinCode(card, pinRequest);
 
-        PinCounter pinCounter = pinCounterRepository.findByCardId(card.getId()).orElse(null);
+        Integer pinCounter = card.getPinCounter();
+
         if (pinCounter == null) {
-            pinCounter = new PinCounter(card, LocalDateTime.now(), 1);
+            card.setPinCounter(1);
             card.setPinCode(pinRequest.getNewPin());
-            pinCounterRepository.save(pinCounter);
             return cardRepository.save(card);
-        } else if (isLastChangingDateToday(pinCounter) && pinCounter.getChangeCount() < 3) {
+        } else if (pinCounter < 3) {
+            card.setPinCounter(card.getPinCounter() + 1);
             card.setPinCode(pinRequest.getNewPin());
-            pinCounter.setLastChangingDate(LocalDateTime.now());
-            pinCounter.setChangeCount(pinCounter.getChangeCount() + 1);
-            pinCounterRepository.save(pinCounter);
             return cardRepository.save(card);
-        } else if (isLastChangingDateToday(pinCounter) && pinCounter.getChangeCount() >= 3) {
-            throw new ChangePinException();
         } else {
-            card.setPinCode(pinRequest.getNewPin());
-            pinCounter.setLastChangingDate(LocalDateTime.now());
-            pinCounter.setChangeCount(1);
-            pinCounterRepository.save(pinCounter);
-            return cardRepository.save(card);
+            throw new ChangePinException();
         }
+    }
+
+    @Scheduled(cron = "20 * * * * *")
+    public void dropPinCounter() {
+        Query query = sessionFactory.getCurrentSession().createQuery("update Card set pinCounter = :countParam");
+        query.setParameter("countParam", 0);
+        query.executeUpdate();
     }
 
     public @NonNull Card releaseCard(@NonNull Long accountId, @NonNull CardPlan plan) {
@@ -74,7 +74,7 @@ public class CardService {
             number = generateCardNumber();
         } while (cardRepository.findCardByNumber(number).isPresent());
 
-        Card card = new Card(account.get(), number, pinCode, plan, LocalDateTime.now().plusYears(3));
+        Card card = new Card(account.get(), number, pinCode, plan, LocalDateTime.now().plusYears(3), 0);
         return cardRepository.save(card);
     }
 
@@ -94,14 +94,5 @@ public class CardService {
             builder.append(digit);
         }
         return builder.toString();
-    }
-
-    private boolean isLastChangingDateToday(PinCounter pinCounter) {
-        if (pinCounter.getLastChangingDate().getYear() == LocalDateTime.now().getYear()
-            && pinCounter.getLastChangingDate().getDayOfYear() == LocalDateTime.now().getDayOfYear()) {
-            return true;
-        } else {
-            return false;
-        }
     }
 }

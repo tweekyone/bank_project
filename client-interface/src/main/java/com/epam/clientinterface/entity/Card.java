@@ -47,18 +47,23 @@ public class Card {
     @Column(name = "expiration_date", nullable = false)
     private LocalDateTime expirationDate;
 
+    @Column(name = "pin_counter", nullable = false)
+    private Integer pinCounter;
+
     public Card(
         @NonNull Account account,
         @NonNull String number,
         @NonNull String pinCode,
         @NonNull CardPlan plan,
-        @NonNull LocalDateTime expirationDate
+        @NonNull LocalDateTime expirationDate,
+        @NonNull Integer pinCounter
     ) {
         this.account = account;
         this.number = number;
         this.pinCode = pinCode;
         this.plan = plan;
         this.expirationDate = expirationDate;
+        this.pinCounter = pinCounter;
     }
 
     @Override
