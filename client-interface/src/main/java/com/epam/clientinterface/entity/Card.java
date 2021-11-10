@@ -3,20 +3,26 @@ package com.epam.clientinterface.entity;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "card", schema = "public")
 public class Card {
     @Id
     @Column(name = "id")
@@ -34,20 +40,17 @@ public class Card {
     private String pinCode;
 
     @Column(name = "plan", nullable = false)
-    private Plan plan;
+    @Enumerated(EnumType.STRING)
+    private CardPlan plan;
 
     @Column(name = "expiration_date", nullable = false)
     private LocalDateTime expirationDate;
-
-    public enum Plan {
-        BASE
-    }
 
     public Card(
         @NonNull Account account,
         @NonNull String number,
         @NonNull String pinCode,
-        @NonNull Plan plan,
+        @NonNull CardPlan plan,
         @NonNull LocalDateTime expirationDate
     ) {
         this.account = account;

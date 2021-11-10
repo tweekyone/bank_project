@@ -1,4 +1,4 @@
-package com.epam.clientinterface.service;
+package com.epam.bank.clientinterface.service;
 
 import static org.mockito.Mockito.when;
 
@@ -8,6 +8,7 @@ import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.TransactionRepository;
+import com.epam.clientinterface.service.AccountService;
 import java.util.ArrayList;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
