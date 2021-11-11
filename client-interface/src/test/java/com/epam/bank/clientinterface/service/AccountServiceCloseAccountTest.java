@@ -1,4 +1,4 @@
-package com.epam.clientinterface.service;
+package com.epam.bank.clientinterface.service;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
@@ -11,6 +11,7 @@ import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.repository.AccountRepository;
 import java.util.ArrayList;
 import java.util.Optional;
+import com.epam.clientinterface.service.AccountService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

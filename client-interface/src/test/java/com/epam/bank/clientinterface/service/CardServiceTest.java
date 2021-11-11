@@ -27,7 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class CardServiceTest {
 
     private final Account account = new Account(1L, "", true, Account.Plan.BASE,
-        1000, new User(), new ArrayList<>());
+        1000, new User(), new ArrayList<>(), null);
 
     @InjectMocks
     private CardService cardService;
