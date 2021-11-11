@@ -1,4 +1,4 @@
-package com.epam.bank.clientinterface.service;
+package com.epam.clientinterface.service;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
@@ -9,7 +9,6 @@ import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.repository.AccountRepository;
-import com.epam.clientinterface.service.AccountService;
 import java.util.ArrayList;
 import java.util.Optional;
 import org.apache.commons.lang3.RandomStringUtils;

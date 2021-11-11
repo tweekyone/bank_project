@@ -1,4 +1,4 @@
-package com.epam.bank.clientinterface.service;
+package com.epam.clientinterface.service;
 
 import static org.mockito.Mockito.when;
 
@@ -8,7 +8,6 @@ import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.TransactionRepository;
-import com.epam.clientinterface.service.AccountService;
 import java.util.ArrayList;
 import java.util.Optional;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -40,14 +39,17 @@ public class AccountServiceInternalTransferTest {
         when(this.accountRepositoryMock.findById(1L)).thenReturn(Optional.of(this.getAccountFixture(1L)));
         when(this.accountRepositoryMock.findById(2L)).thenReturn(Optional.of(this.getAccountFixture(2L)));
 
-        this.accountService.transfer(1L, 2L, 1000.00);
+        this.accountService.internalTransfer(1L, 2L, 1000.00);
     }
 
     @Test
     public void shouldThrowAccountNotFoundIfTheSourceAccountDoesNotExist() {
         when(this.accountRepositoryMock.findById(1L)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(AccountNotFoundException.class, () -> this.accountService.transfer(1L, 2L, 1000.00));
+        Assertions.assertThrows(
+            AccountNotFoundException.class,
+            () -> this.accountService.internalTransfer(1L, 2L, 1000.00)
+        );
     }
 
     @Test
@@ -55,7 +57,10 @@ public class AccountServiceInternalTransferTest {
         when(this.accountRepositoryMock.findById(1L)).thenReturn(Optional.of(this.getAccountFixture(1L)));
         when(this.accountRepositoryMock.findById(2L)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(AccountNotFoundException.class, () -> this.accountService.transfer(1L, 2L, 1000.00));
+        Assertions.assertThrows(
+            AccountNotFoundException.class,
+            () -> this.accountService.internalTransfer(1L, 2L, 1000.00)
+        );
     }
 
     @Test
@@ -63,7 +68,10 @@ public class AccountServiceInternalTransferTest {
         when(this.accountRepositoryMock.findById(1L)).thenReturn(Optional.of(this.getAccountFixture(1L)));
         when(this.accountRepositoryMock.findById(2L)).thenReturn(Optional.of(this.getAccountFixture(2L)));
 
-        Assertions.assertThrows(NotEnoughMoneyException.class, () -> this.accountService.transfer(1L, 2L, 100000.00));
+        Assertions.assertThrows(
+            NotEnoughMoneyException.class,
+            () -> this.accountService.internalTransfer(1L, 2L, 100000.00)
+        );
     }
 
     private Account getAccountFixture(long id) {

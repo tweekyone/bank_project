@@ -13,6 +13,7 @@ import com.epam.clientinterface.controller.advice.ErrorHandlingAdvice;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
 import com.epam.clientinterface.service.AccountService;
+import java.util.Map;
 import net.minidev.json.JSONObject;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +27,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import java.util.Map;
 
 @ExtendWith(MockitoExtension.class)
 public class TransferControllerInternalTest {
