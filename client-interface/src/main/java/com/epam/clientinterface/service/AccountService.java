@@ -1,5 +1,7 @@
 package com.epam.clientinterface.service;
 
+import com.epam.clientinterface.domain.exception.AccountIsClosedException;
+import com.epam.clientinterface.domain.exception.AccountIsNotSupposedForExternalTransferException;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
 import com.epam.clientinterface.entity.Account;
@@ -19,7 +21,7 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
 
-    public void transfer(long sourceAccountId, long destinationAccountId, double amount) {
+    public void internalTransfer(long sourceAccountId, long destinationAccountId, double amount) {
         var sourceAccount = this.accountRepository.findById(sourceAccountId).orElseThrow(
             () -> new AccountNotFoundException(sourceAccountId)
         );
@@ -50,5 +52,48 @@ public class AccountService {
             TransactionOperationType.INTERNAL_TRANSFER,
             TransactionState.SUCCESS
         ));
+    }
+
+    public void externalTransfer(long sourceAccountId, String destinationAccountNumber, double amount) {
+        var sourceAccount = this.accountRepository.findById(sourceAccountId).orElseThrow(
+            () -> new AccountNotFoundException(sourceAccountId)
+        );
+        this.accountRepository.findByNumber(destinationAccountNumber).ifPresent(account -> {
+            throw new AccountIsNotSupposedForExternalTransferException(account.getId());
+        });
+
+        if (sourceAccount.getAmount() < amount) {
+            this.transactionRepository.save(new Transaction(
+                new TransactionAccountData(sourceAccount.getNumber(), false),
+                new TransactionAccountData(destinationAccountNumber, true),
+                amount,
+                TransactionOperationType.EXTERNAL_TRANSFER,
+                TransactionState.DECLINE
+            ));
+
+            throw new NotEnoughMoneyException(sourceAccountId, amount);
+        }
+
+        this.transactionRepository.save(new Transaction(
+            new TransactionAccountData(sourceAccount.getNumber(), false),
+            new TransactionAccountData(destinationAccountNumber, true),
+            amount,
+            TransactionOperationType.EXTERNAL_TRANSFER,
+            TransactionState.SUCCESS
+        ));
+    }
+
+    public void closeAccount(long accountId) {
+        var account = this.accountRepository.findById(accountId).orElseThrow(
+            () -> new AccountNotFoundException(accountId)
+        );
+
+        if (account.isClosed()) {
+            throw new AccountIsClosedException(accountId);
+        }
+
+        account.close();
+
+        this.accountRepository.save(account);
     }
 }
