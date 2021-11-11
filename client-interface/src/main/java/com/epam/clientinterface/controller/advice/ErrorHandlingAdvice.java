@@ -5,7 +5,6 @@ import com.epam.clientinterface.domain.exception.AccountIsNotSupposedForExternal
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.CardNotFoundException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
-import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import java.util.HashMap;
 import javax.validation.ConstraintViolationException;
 import lombok.NonNull;

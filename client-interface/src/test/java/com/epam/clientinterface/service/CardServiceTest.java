@@ -1,5 +1,6 @@
-package com.epam.bank.clientinterface.service;
+package com.epam.clientinterface.service;
 
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -12,7 +13,6 @@ import com.epam.clientinterface.entity.CardPlan;
 import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.CardRepository;
-import com.epam.clientinterface.service.CardService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -28,7 +28,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class CardServiceTest {
 
     private final Account account = new Account(1L, "", true, Account.Plan.BASE,
-        1000, new User(), new ArrayList<>());
+        1000, new User(), new ArrayList<>(), null);
     private final Card card = new Card(account, "1234567887654321","1111",
         CardPlan.BASE, false, LocalDateTime.now());
 

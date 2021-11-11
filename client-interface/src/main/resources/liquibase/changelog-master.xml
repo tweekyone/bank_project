@@ -216,8 +216,12 @@
       <column name="destination_is_external" type="boolean"/>
     </addColumn>
   </changeSet>
-
-  <changeSet id="10" author="Tatiana Naumovets">
+  <changeSet id="10" author="Dmitrii Korolev">
+    <addColumn tableName="account">
+      <column name="closed_at" type="timestamp"/>
+    </addColumn>
+  </changeSet>
+  <changeSet id="11" author="Tatiana Naumovets">
     <addColumn tableName="card" >
       <column name="is_blocked" type="boolean" defaultValue="false" />
     </addColumn>
