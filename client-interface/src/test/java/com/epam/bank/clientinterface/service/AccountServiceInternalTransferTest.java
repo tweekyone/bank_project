@@ -11,6 +11,8 @@ import com.epam.clientinterface.repository.TransactionRepository;
 import com.epam.clientinterface.service.AccountService;
 import java.util.ArrayList;
 import java.util.Optional;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +21,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class AccountServiceTest {
+public class AccountServiceInternalTransferTest {
     private AccountService accountService;
 
     @Mock
@@ -66,7 +68,14 @@ public class AccountServiceTest {
 
     private Account getAccountFixture(long id) {
         return new Account(
-            id, "11111111111111111111", true, Account.Plan.BASE, 10000.00, new User(), new ArrayList<>()
+            id,
+            RandomStringUtils.randomNumeric(20),
+            RandomUtils.nextBoolean(),
+            Account.Plan.values()[RandomUtils.nextInt(0, Account.Plan.values().length)],
+            RandomUtils.nextDouble(0, 10000.00),
+            new User(),
+            new ArrayList<>(),
+            null
         );
     }
 }
