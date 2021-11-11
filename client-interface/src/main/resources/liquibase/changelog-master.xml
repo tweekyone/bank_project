@@ -217,6 +217,11 @@
     </addColumn>
   </changeSet>
   <changeSet id="10" author="Dmitrii Korolev">
+    <addColumn tableName="account">
+      <column name="closed_at" type="timestamp"/>
+    </addColumn>
+  </changeSet>
+  <changeSet id="11" author="Dmitrii Korolev">
     <createTable tableName="exchange_rate">
       <column name="id" type="BIGINT">
         <constraints primaryKey="true" primaryKeyName="exchange_rate_pkey"/>
