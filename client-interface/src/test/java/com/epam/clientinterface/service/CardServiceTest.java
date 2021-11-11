@@ -1,6 +1,5 @@
 package com.epam.bank.clientinterface.service;
 
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

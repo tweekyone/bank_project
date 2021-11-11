@@ -1,9 +1,11 @@
 package com.epam.clientinterface.controller.advice;
 
 import com.epam.clientinterface.controller.dto.response.ErrorResponse;
+import com.epam.clientinterface.domain.exception.AccountIsNotSupposedForExternalTransferException;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.CardNotFoundException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import java.util.HashMap;
 import javax.validation.ConstraintViolationException;
 import lombok.NonNull;
@@ -109,5 +111,19 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
     public final ResponseEntity<Object> handleCardNotFound(Exception ex, WebRequest request) {
         ErrorResponse body = new ErrorResponse("cardNotFound", HttpStatus.NOT_FOUND);
         return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(AccountIsNotSupposedForExternalTransferException.class)
+    public ResponseEntity<Object> handleAccountIsNotSupposedForExternalTransfer(
+        AccountIsNotSupposedForExternalTransferException exception,
+        WebRequest request
+    ) {
+        return handleExceptionInternal(
+            exception,
+            new ErrorResponse("accountIsNotSupposedForExternalTransfer", HttpStatus.BAD_REQUEST),
+            new HttpHeaders(),
+            HttpStatus.BAD_REQUEST,
+            request
+        );
     }
 }
