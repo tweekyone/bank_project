@@ -9,9 +9,11 @@ import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.repository.AccountRepository;
+import com.epam.clientinterface.service.AccountService;
 import java.util.ArrayList;
 import java.util.Optional;
-import com.epam.clientinterface.service.AccountService;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -61,7 +63,14 @@ public class AccountServiceCloseAccountTest {
 
     private Account getAccountFixture(long id) {
         return new Account(
-            id, "11111111111111111111", true, Account.Plan.BASE, 10000.00, new User(), new ArrayList<>(), null
+            id,
+            RandomStringUtils.randomNumeric(20),
+            RandomUtils.nextBoolean(),
+            Account.Plan.values()[RandomUtils.nextInt(0, Account.Plan.values().length)],
+            RandomUtils.nextDouble(0, 10000.00),
+            new User(),
+            new ArrayList<>(),
+            null
         );
     }
 }
