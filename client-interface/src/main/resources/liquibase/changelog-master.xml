@@ -236,5 +236,6 @@
         <constraints nullable="false"/>
       </column>
     </createTable>
+    <addUniqueConstraint tableName="exchange_rate" columnNames="currency_from, currency_to"/>
   </changeSet>
 </databaseChangeLog>
