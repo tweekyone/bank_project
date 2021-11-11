@@ -1,4 +1,4 @@
-package com.epam.bank.clientinterface.service;
+package com.epam.clientinterface.service;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -11,7 +11,6 @@ import com.epam.clientinterface.entity.CardPlan;
 import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.CardRepository;
-import com.epam.clientinterface.service.CardService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
