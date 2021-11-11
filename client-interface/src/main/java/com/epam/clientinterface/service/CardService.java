@@ -13,14 +13,10 @@ import com.epam.clientinterface.service.util.NewPinValidator;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
-import javax.persistence.EntityManagerFactory;
 import javax.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +27,6 @@ public class CardService {
 
     private final CardRepository cardRepository;
     private final AccountRepository accountRepository;
-    private final EntityManagerFactory entityManagerFactory;
 
     public Card changePinCode(ChangePinRequest pinRequest) {
         Card card = cardRepository.findById(pinRequest.getCardId()).orElse(null);
@@ -56,15 +51,9 @@ public class CardService {
         }
     }
 
-    @Scheduled(cron = "20 * * * * *")
+    @Scheduled(cron = "${cron.expression}")
     public void dropPinCounter() {
-        SessionFactory sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
-        Session session = sessionFactory.openSession();
-        Transaction txn = session.beginTransaction();
-        Query query = session.createQuery("update Card set pinCounter = :countParam");
-        query.setParameter("countParam", 0);
-        query.executeUpdate();
-        txn.commit();
+        cardRepository.dropPinCounter();
     }
 
     public @NonNull Card releaseCard(@NonNull Long accountId, @NonNull CardPlan plan) {
