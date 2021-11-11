@@ -1,6 +1,7 @@
 package com.epam.clientinterface.service;
 
 import com.epam.clientinterface.domain.exception.AccountIsNotSupposedForExternalTransferException;
+import com.epam.clientinterface.domain.exception.AccountIsClosedException;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
 import com.epam.clientinterface.entity.Account;
@@ -80,5 +81,19 @@ public class AccountService {
             TransactionOperationType.EXTERNAL_TRANSFER,
             TransactionState.SUCCESS
         ));
+    }
+
+    public void closeAccount(long accountId) {
+        var account = this.accountRepository.findById(accountId).orElseThrow(
+            () -> new AccountNotFoundException(accountId)
+        );
+
+        if (account.isClosed()) {
+            throw new AccountIsClosedException(accountId);
+        }
+
+        account.close();
+
+        this.accountRepository.save(account);
     }
 }
