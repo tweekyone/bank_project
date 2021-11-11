@@ -8,7 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ExchangeRateRepository extends JpaRepository<ExchangeRate, Long> {
+public interface ExchangeRateRepository extends JpaRepository<ExchangeRate, Short> {
+
     @Query("select er from ExchangeRate er where er.currencyFrom = ?1 and er.currencyTo = ?2")
     Optional<ExchangeRate> findOneByCurrencies(Currency currencyFrom, Currency currencyTo);
+
+    ExchangeRate getAllById(short id);
 }
