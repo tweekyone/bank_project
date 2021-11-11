@@ -216,4 +216,9 @@
       <column name="destination_is_external" type="boolean"/>
     </addColumn>
   </changeSet>
+  <changeSet id="10" author="Dmitrii Korolev">
+    <addColumn tableName="account">
+      <column name="closed_at" type="timestamp"/>
+    </addColumn>
+  </changeSet>
 </databaseChangeLog>

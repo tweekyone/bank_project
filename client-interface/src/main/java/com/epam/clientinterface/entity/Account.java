@@ -1,5 +1,6 @@
 package com.epam.clientinterface.entity;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -39,8 +40,8 @@ public class Account {
     @Column(name = "is_default", nullable = false)
     private boolean isDefault;
 
-    @Column(name = "plan", nullable = false)
     @Enumerated(EnumType.STRING)
+    @Column(name = "plan", nullable = false)
     private Plan plan;
 
     @Column(name = "amount", nullable = false)
@@ -52,6 +53,9 @@ public class Account {
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Card> cards = new ArrayList<>();
 
+    @Column(name = "closed_at", nullable = false)
+    private LocalDateTime closedAt;
+
     public enum Plan {
         BASE
     }
@@ -62,6 +66,14 @@ public class Account {
         this.isDefault = isDefault;
         this.plan = plan;
         this.amount = amount;
+    }
+
+    public void close() {
+        this.closedAt = LocalDateTime.now();
+    }
+
+    public boolean isClosed() {
+        return this.closedAt != null;
     }
 
     public interface Factory {
