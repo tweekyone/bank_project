@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,7 +35,7 @@ public class CardController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PostMapping(path = "/card/{cardId}/block")
+    @PatchMapping(path = "/card/{cardId}/blockCard")
     public ResponseEntity<?> blockCard(@PathVariable @Positive Long cardId) {
         Card card = cardService.blockCard(cardId);
         BlockCardResponse response = new BlockCardResponse(HttpStatus.OK, "Card has been blocked",

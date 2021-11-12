@@ -3,7 +3,7 @@ package com.epam.clientinterface.controller;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epam.clientinterface.controller.advice.ErrorHandlingAdvice;
@@ -28,27 +28,26 @@ public class CardControllerBlockCardTest {
 
     @BeforeEach
     public void setUp() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(new CardController(cardService))
+        mockMvc = MockMvcBuilders.standaloneSetup(new CardController(cardService))
             .setControllerAdvice(ErrorHandlingAdvice.class)
             .build();
     }
 
     @Test
-    void shouldReturnIsOkIfCardBlocked() throws Exception {
+    public void shouldReturnIsOkIfRequestIsValid() throws Exception {
         when(cardService.blockCard(anyLong())).thenReturn(new Card());
 
-        this.mockMvc.perform(post("/card/6320/block"))
+        mockMvc.perform(patch("/card/1/blockCard"))
             .andExpect(status().isOk());
     }
 
     @Test
     public void shouldReturnNotFoundIfServiceThrowsCardNotFound() throws Exception {
-        doThrow(new CardNotFoundException(11L))
+        doThrow(CardNotFoundException.class)
             .when(cardService)
             .blockCard(anyLong());
 
-        mockMvc.perform(post("/card/11/block"))
+        mockMvc.perform(patch("/card/11/blockCard"))
             .andExpect(status().isNotFound());
     }
-
 }

@@ -80,7 +80,7 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Object> handleConstraintViolationException(Exception ex, WebRequest request) {
-        ErrorResponse body = new ErrorResponse("inValidPath", HttpStatus.BAD_REQUEST);
+        ErrorResponse body = new ErrorResponse("invalidPath", HttpStatus.BAD_REQUEST);
         return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 

@@ -32,6 +32,7 @@ public class CardService {
 
         String pinCode = generatePinCode();
         String number;
+        // TODO: a potentially infinite loop
         do {
             number = generateCardNumber();
         } while (cardRepository.findCardByNumber(number).isPresent());
@@ -45,6 +46,7 @@ public class CardService {
         if (card.isEmpty()) {
             throw new CardNotFoundException(cardId);
         }
+
         card.get().setBlocked(true);
         return cardRepository.save(card.get());
     }
