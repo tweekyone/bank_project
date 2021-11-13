@@ -1,25 +1,28 @@
-package com.epam.bank.clientinterface.controller;
+package com.epam.clientinterface.controller;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.anyDouble;
-import static org.mockito.Mockito.anyLong;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.epam.clientinterface.controller.InternalTransferController;
 import com.epam.clientinterface.controller.advice.ErrorHandlingAdvice;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
 import com.epam.clientinterface.service.AccountService;
-import java.util.Locale;
+import java.util.Map;
+import net.minidev.json.JSONObject;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,25 +31,25 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @ExtendWith(MockitoExtension.class)
-public class InternalTransferControllerTest {
+public class TransferControllerExternalTest {
     private MockMvc mockMvc;
 
     @Mock
     private AccountService accountServiceMock;
 
-    private final String requestBodyTmpl = "{\"sourceAccountId\":%d,\"destinationAccountId\":%d,\"amount\":%f}";
-
     @BeforeEach
     public void beforeEach() {
         this.mockMvc = MockMvcBuilders
-            .standaloneSetup(new InternalTransferController(this.accountServiceMock))
+            .standaloneSetup(new TransferController(this.accountServiceMock))
             .setControllerAdvice(ErrorHandlingAdvice.class)
             .build();
     }
 
     @Test
     public void shouldReturnNoContentIfIncomeDataIsValid() throws Exception {
-        var requestBody = this.getRequestBody(1L, 2L, 1000.00);
+        var requestBody = this.getRequestBody(
+            1L, RandomStringUtils.randomNumeric(20), RandomUtils.nextDouble(1000.0, 10000.0)
+        );
 
         this.send(requestBody).andExpect(status().isNoContent());
     }
@@ -60,15 +63,15 @@ public class InternalTransferControllerTest {
             .andExpect(jsonPath("$.status", is(422)))
             .andExpect(jsonPath(
                 "$.errors[*].field",
-                containsInAnyOrder("sourceAccountId", "destinationAccountId", "amount")
+                containsInAnyOrder("sourceAccountId", "destinationAccountNumber", "amount")
             ))
             .andExpect(jsonPath(
                 "$.errors[?(@.field=='sourceAccountId')].error",
                 containsInAnyOrder("must be greater than 0")
             ))
             .andExpect(jsonPath(
-                "$.errors[?(@.field=='destinationAccountId')].error",
-                containsInAnyOrder("must be greater than 0")
+                "$.errors[?(@.field=='destinationAccountNumber')].error",
+                containsInAnyOrder("must not be blank")
             ))
             .andExpect(jsonPath(
                 "$.errors[?(@.field=='amount')].error",
@@ -88,11 +91,13 @@ public class InternalTransferControllerTest {
 
     @Test
     public void shouldReturnNotFoundIfServiceThrowsAccountNotFound() throws Exception {
-        var requestBody = this.getRequestBody(1L, 2L, 1000.00);
+        var requestBody = this.getRequestBody(
+            1L, RandomStringUtils.randomNumeric(20), RandomUtils.nextDouble(1000.0, 10000.0)
+        );
 
-        doThrow(new AccountNotFoundException(1L))
+        Mockito.doThrow(new AccountNotFoundException(1L))
             .when(this.accountServiceMock)
-            .transfer(anyLong(), anyLong(), anyDouble());
+            .externalTransfer(anyLong(), anyString(), anyDouble());
 
         this.send(requestBody)
             .andExpect(status().isNotFound())
@@ -102,11 +107,13 @@ public class InternalTransferControllerTest {
 
     @Test
     public void shouldReturnBadRequestIfServiceThrowsNotEnoughMoney() throws Exception {
-        var requestBody = this.getRequestBody(1L, 2L, 10000.00);
+        var requestBody = this.getRequestBody(
+            1L, RandomStringUtils.randomNumeric(20), RandomUtils.nextDouble(1000.0, 10000.0)
+        );
 
-        doThrow(new NotEnoughMoneyException(1L, 10000.00))
+        Mockito.doThrow(new NotEnoughMoneyException(1L, 10000.00))
             .when(this.accountServiceMock)
-            .transfer(anyLong(), anyLong(), anyDouble());
+            .externalTransfer(anyLong(), anyString(), anyDouble());
 
         this.send(requestBody)
             .andExpect(status().isBadRequest())
@@ -114,8 +121,10 @@ public class InternalTransferControllerTest {
             .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())));
     }
 
-    private String getRequestBody(long sourceAccountId, long destinationAccountId, double amount) {
-        return String.format(Locale.ROOT, this.requestBodyTmpl, sourceAccountId, destinationAccountId, amount);
+    private String getRequestBody(long sourceAccountId, String destinationAccountNumber, double amount) {
+        return JSONObject.toJSONString(Map.of(
+            "sourceAccountId", sourceAccountId, "destinationAccountNumber", destinationAccountNumber, "amount", amount
+        ));
     }
 
     private ResultActions send(String requestBody) throws Exception {
@@ -123,6 +132,6 @@ public class InternalTransferControllerTest {
     }
 
     private ResultActions send(String requestBody, MediaType mediaType) throws Exception {
-        return this.mockMvc.perform(post("/transfer/internal").contentType(mediaType).content(requestBody));
+        return this.mockMvc.perform(post("/transfer/external").contentType(mediaType).content(requestBody));
     }
 }

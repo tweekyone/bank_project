@@ -86,6 +86,20 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
         );
     }
 
+    @ExceptionHandler(AccountIsNotSupposedForExternalTransferException.class)
+    public ResponseEntity<Object> handleAccountIsNotSupposedForExternalTransfer(
+        AccountIsNotSupposedForExternalTransferException exception,
+        WebRequest request
+    ) {
+        return handleExceptionInternal(
+            exception,
+            new ErrorResponse("accountIsNotSupposedForExternalTransfer", HttpStatus.BAD_REQUEST),
+            new HttpHeaders(),
+            HttpStatus.BAD_REQUEST,
+            request
+        );
+    }
+
     @ExceptionHandler({IncorrectPinException.class, ChangePinException.class, CardNotFoundException.class})
     public ResponseEntity<Object> handleChangePinException(Exception ex, WebRequest request) {
         String type;
