@@ -1,4 +1,4 @@
-package com.epam.bank.clientinterface.service;
+package com.epam.clientinterface.service;
 
 import com.epam.clientinterface.controller.dto.request.ChangePinRequest;
 import com.epam.clientinterface.domain.exception.CardNotFoundException;
@@ -8,7 +8,6 @@ import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.entity.CardPlan;
 import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.repository.CardRepository;
-import com.epam.clientinterface.service.CardService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -37,7 +36,7 @@ class ChangePinCardServiceTest {
     public void setUp() {
         changePinRequest = new ChangePinRequest(1L, "1111", "1234");
         testAccount = new Account(1L, "", true, Account.Plan.BASE,
-            1000, new User(), new ArrayList<>());
+            1000, new User(), new ArrayList<>(), LocalDateTime.now());
     }
 
     @Test
