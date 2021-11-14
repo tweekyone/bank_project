@@ -80,7 +80,7 @@ public class AccountServiceInternalTransferTest {
             RandomStringUtils.randomNumeric(20),
             RandomUtils.nextBoolean(),
             Account.Plan.values()[RandomUtils.nextInt(0, Account.Plan.values().length)],
-            RandomUtils.nextDouble(10000.0, 100000.0),
+            RandomUtils.nextDouble(0, 10000.00),
             new User(),
             new ArrayList<>(),
             null

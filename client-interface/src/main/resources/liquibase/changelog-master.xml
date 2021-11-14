@@ -221,4 +221,27 @@
       <column name="closed_at" type="timestamp"/>
     </addColumn>
   </changeSet>
+  <changeSet id="11" author="Dmitrii Korolev">
+    <createTable tableName="exchange_rate">
+      <column name="id" type="BIGINT">
+        <constraints primaryKey="true" primaryKeyName="exchange_rate_pkey"/>
+      </column>
+      <column name="currency_from" type="text">
+        <constraints nullable="false"/>
+      </column>
+      <column name="currency_to" type="text">
+        <constraints nullable="false"/>
+      </column>
+      <column name="rate" type="double">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <addUniqueConstraint tableName="exchange_rate" columnNames="currency_from, currency_to"/>
+  </changeSet>
+  <changeSet author="Renat Faizrakhmanov" id="12">
+    <modifyDataType
+      columnName="id"
+      newDataType="SMALLINT"
+      tableName="exchange_rate"/>
+  </changeSet>
 </databaseChangeLog>
