@@ -1,7 +1,6 @@
-package com.epam.bank.clientinterface.controller;
+package com.epam.clientinterface.controller;
 
 import com.epam.bank.clientinterface.controller.util.JsonHelper;
-import com.epam.clientinterface.controller.CardController;
 import com.epam.clientinterface.controller.advice.ErrorHandlingAdvice;
 import com.epam.clientinterface.controller.dto.request.ChangePinRequest;
 import com.epam.clientinterface.service.CardService;
@@ -40,7 +39,7 @@ class ChangePinCardControllerTest {
     public void test() throws Exception {
         ChangePinRequest pinRequest = new ChangePinRequest(1L, "1234", "1235");
 
-        mockMvc.perform(MockMvcRequestBuilders.post(CHANGEPASSWORD)
+        mockMvc.perform(MockMvcRequestBuilders.patch(CHANGEPASSWORD)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonHelper.toJson(objectMapper, pinRequest)))
             .andExpect(MockMvcResultMatchers.status().isOk())

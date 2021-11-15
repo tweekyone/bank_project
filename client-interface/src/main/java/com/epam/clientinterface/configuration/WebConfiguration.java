@@ -23,9 +23,7 @@ public class WebConfiguration implements WebMvcConfigurer {
         for (HttpMessageConverter<?> converter : converters) {
             if (converter instanceof MappingJackson2HttpMessageConverter) {
                 ((MappingJackson2HttpMessageConverter) converter).getObjectMapper()
-                    .registerModule(new JavaTimeModule())
-                    .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                    .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+                    .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
                 break;
             }
         }
@@ -33,7 +31,7 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     @Override
     public Validator getValidator() {
-        LocalValidatorFactoryBean validatorFactoryBean = new LocalValidatorFactoryBean();
+        var validatorFactoryBean = new LocalValidatorFactoryBean();
         validatorFactoryBean.setProviderClass(HibernateValidator.class);
         return validatorFactoryBean;
     }
