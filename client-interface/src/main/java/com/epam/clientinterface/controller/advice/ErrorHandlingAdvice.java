@@ -3,6 +3,7 @@ package com.epam.clientinterface.controller.advice;
 import com.epam.clientinterface.controller.dto.response.ErrorResponse;
 import com.epam.clientinterface.domain.exception.AccountIsNotSupposedForExternalTransferException;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
+import com.epam.clientinterface.domain.exception.CurrencyNotFoundException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
 import com.epam.clientinterface.domain.exception.UserAlreadyExistException;
 import java.util.HashMap;
@@ -107,6 +108,18 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
             new ErrorResponse("userAlreadyExists", HttpStatus.BAD_REQUEST),
             new HttpHeaders(),
             HttpStatus.BAD_REQUEST,
+            request
+        );
+    }
+
+    @ExceptionHandler(CurrencyNotFoundException.class)
+    public ResponseEntity<Object> handleCurrencyNotFoundException(CurrencyNotFoundException exception,
+                                                                  WebRequest request) {
+        return handleExceptionInternal(
+            exception,
+            new ErrorResponse("currencyNotFound", HttpStatus.NOT_FOUND),
+            new HttpHeaders(),
+            HttpStatus.NOT_FOUND,
             request
         );
     }

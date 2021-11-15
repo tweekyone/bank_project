@@ -1,5 +1,6 @@
 package com.epam.clientinterface.service;
 
+import com.epam.clientinterface.domain.exception.CurrencyNotFoundException;
 import com.epam.clientinterface.entity.Currency;
 import com.epam.clientinterface.entity.ExchangeRate;
 import com.epam.clientinterface.repository.ExchangeRateRepository;
@@ -24,7 +25,7 @@ public class ExchangeRateService {
                 return currencyRatesToMap(rateRepository.getExchangeRatesByCurrencyFrom(c));
             }
         }
-        return new HashMap<>();
+        throw new CurrencyNotFoundException(currency);
     }
 
     public Map<String, Double> getRatesFromOneToAnotherCurrency(String currencyFrom, String currencyTo) {
@@ -40,9 +41,10 @@ public class ExchangeRateService {
                 curTo = c;
             }
         }
+
         Optional<ExchangeRate> oneByCurrencies = rateRepository.findOneByCurrencies(curFrom, curTo);
         if (oneByCurrencies.isEmpty()) {
-            return new HashMap<>();
+            throw new CurrencyNotFoundException(currencyFrom, currencyTo);
         }
         double rate = oneByCurrencies.get().getRate();
         Map<String, Double> currenciesRatesMap = new HashMap<>();
@@ -51,7 +53,7 @@ public class ExchangeRateService {
             currenciesRatesMap.put("exchange rate from "
                     + currencyFrom.toUpperCase() + " to "
                     + currencyTo.toUpperCase(), rate);
-        }
+        } //else throw new CurrencyNotFoundException();
         return currenciesRatesMap;
     }
 

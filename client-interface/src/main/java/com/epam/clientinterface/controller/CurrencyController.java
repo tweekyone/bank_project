@@ -42,7 +42,7 @@ public class CurrencyController {
     @GetMapping("{from}/{to}")
     public ResponseEntity<Map<String, Double>> getExchangeRates(
         @PathVariable("from") String currencyFrom,
-        @NotNull @PathVariable("to") String currencyTo
+        @PathVariable("to") String currencyTo
     ) {
         Map<String, Double> rateFromOneToAnotherCurrency
             = rateService.getRatesFromOneToAnotherCurrency(currencyFrom, currencyTo);
