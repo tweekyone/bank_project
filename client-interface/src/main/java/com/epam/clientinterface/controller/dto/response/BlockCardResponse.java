@@ -11,12 +11,12 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BlockCardResponse {
-    private short status;
+    private int status;
     private String description;
     private String number;
 
     public BlockCardResponse(HttpStatus status, String description, String number) {
-        this.status = (short) status.value();
+        this.status = status.value();
         this.description = description;
         this.number = number;
     }

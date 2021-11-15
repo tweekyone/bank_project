@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NewCardResponse {
-    private short status;
+    private int status;
     private String description;
     private String number;
     private CardPlan plan;
@@ -21,7 +21,7 @@ public class NewCardResponse {
 
     public NewCardResponse(HttpStatus status, String description, String number, CardPlan plan,
                            LocalDateTime expirationDate) {
-        this.status = (short) status.value();
+        this.status = status.value();
         this.description = description;
         this.number = number;
         this.plan = plan;
