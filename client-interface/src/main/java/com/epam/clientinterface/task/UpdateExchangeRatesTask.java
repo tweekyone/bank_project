@@ -32,7 +32,7 @@ public class UpdateExchangeRatesTask {
                 var currencyFrom = Currency.valueOf(exchangeRate.getBaseCurrency().getCurrencyCode());
                 var currencyTo = Currency.valueOf(exchangeRate.getCurrency().getCurrencyCode());
 
-                var exchangeRateEntity = this.exchangeRateRepository.findOneByCurrencies(
+                var exchangeRateEntity = this.exchangeRateRepository.findExchangeRateByCurrencyFromAndCurrencyTo(
                     currencyFrom,
                     currencyTo
                 ).orElseGet(() -> new ExchangeRate(currencyFrom, currencyTo, exchangeRate.getFactor().doubleValue()));

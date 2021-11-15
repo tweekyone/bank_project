@@ -1,4 +1,4 @@
-package com.epam.bank.clientinterface.task;
+package com.epam.clientinterface.task;
 
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
@@ -85,7 +85,7 @@ public class UpdateExchangeRatesTest {
                     continue;
                 }
 
-                when(this.exchangeRateRepositoryMock.findOneByCurrencies(currencyA, currencyB))
+                when(this.exchangeRateRepositoryMock.findExchangeRateByCurrencyFromAndCurrencyTo(currencyA, currencyB))
                     .thenReturn(Optional.of(new ExchangeRate(1L, currencyA, currencyB, RandomUtils.nextDouble())));
             }
         }

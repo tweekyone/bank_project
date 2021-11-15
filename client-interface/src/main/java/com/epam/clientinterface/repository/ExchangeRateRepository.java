@@ -7,6 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface ExchangeRateRepository extends JpaRepository<ExchangeRate, Long> {
-    @Query("select er from ExchangeRate er where er.currencyFrom = ?1 and er.currencyTo = ?2")
-    Optional<ExchangeRate> findOneByCurrencies(Currency currencyFrom, Currency currencyTo);
+    Optional<ExchangeRate> findExchangeRateByCurrencyFromAndCurrencyTo(Currency currencyFrom, Currency currencyTo);
 }
