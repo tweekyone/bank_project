@@ -12,6 +12,7 @@ import com.epam.clientinterface.entity.TransactionState;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.TransactionRepository;
 import com.fasterxml.jackson.databind.util.ArrayIterator;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
