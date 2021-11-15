@@ -3,7 +3,7 @@ package com.epam.clientinterface.controller;
 import com.epam.clientinterface.entity.Currency;
 import com.epam.clientinterface.service.ExchangeRateService;
 import java.util.Map;
-import javax.validation.constraints.NotNull;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,16 +23,13 @@ public class CurrencyController {
         this.rateService = rateService;
     }
 
-    // @Autowired
-    // private ExchangeRateRepository rateRepository;
-
     @GetMapping("/get")
     public String testCurrencyRates() {
         return "currency";
     }
 
     @GetMapping("/{from}")
-    public ResponseEntity<Map<Currency, Double>> getCurrencyRates(@PathVariable("from") String currency) {
+    public ResponseEntity<Map<Currency, Double>> getCurrencyRates(@Valid @PathVariable("from") String currency) {
 
         Map<Currency, Double> exchangeRates = rateService.getRatesForOneCurrency(currency);
 
@@ -41,8 +38,8 @@ public class CurrencyController {
 
     @GetMapping("{from}/{to}")
     public ResponseEntity<Map<String, Double>> getExchangeRates(
-        @PathVariable("from") String currencyFrom,
-        @PathVariable("to") String currencyTo
+        @Valid @PathVariable("from") String currencyFrom,
+        @Valid @PathVariable("to") String currencyTo
     ) {
         Map<String, Double> rateFromOneToAnotherCurrency
             = rateService.getRatesFromOneToAnotherCurrency(currencyFrom, currencyTo);
