@@ -23,7 +23,7 @@ public class AuthServiceImpl implements AuthService {
     public User signUp(String name, String surname, String phoneNumber,
                        String username, String email, String rawPassword)
         throws UserAlreadyExistException {
-        if (emailExist(email)) {
+        if (isEmailExist(email)) {
             throw new UserAlreadyExistException(email);
         }
         User newUser = userService.create(name, surname, phoneNumber, username, email, rawPassword);
@@ -37,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
         return newUser;
     }
 
-    private boolean emailExist(String email) {
+    private boolean isEmailExist(String email) {
         return userRepository.existsByEmail(email);
     }
 }
