@@ -1,5 +1,8 @@
 package com.epam.clientinterface.controller;
 
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
+import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,10 +29,22 @@ class SignUpControllerTest {
     @Mock
     private AuthService authService;
 
-    private final String signUpUserData = "{\"name\":\"Ivan\",\"surname\":\"Popov\", "
-        + "\"phoneNumber\":\"+79100000\",\"username\":\"vanok\","
-        + "\"email\":\"vanok@gmail.com\", \"password\":\"1234\"}";
+    private static final String name = randomAlphabetic(2, 30);
+    private static final String surname = randomAlphabetic(2, 30);
+    private static final String phoneNumber = randomNumeric(9, 15);
+    private static final String username = randomAlphanumeric(3, 20);
+    private static final String password = randomAlphanumeric(6, 30);
 
+    // example "vanok@gmail.com";
+    private static final String email = randomAlphanumeric(2, 20) + "@"
+        + randomAlphanumeric(2, 20) + "." + randomAlphabetic(2,5);
+
+    private final String signUpUserData = String.format(
+        "{\"name\":\"%s\",\"surname\":\"%s\", "
+            + "\"phoneNumber\":\"+%s\",\"username\":\"%s\","
+            + "\"email\":\"%s\", \"password\":\"%s\"}",
+        name, surname, phoneNumber, username, email, password
+    );
 
     @BeforeEach
     public void beforeEach() {
