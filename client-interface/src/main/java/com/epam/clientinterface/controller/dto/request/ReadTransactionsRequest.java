@@ -11,5 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ReadTransactionsRequest {
     Long userId;
-    String sourceAccountNumber;
+    String accountNumber;
 }

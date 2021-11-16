@@ -13,7 +13,7 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
 
-    public List<Transaction> readTransactions(Long userId, String sourceAccountNumber) {
-        return transactionRepository.getTransactionsByNumber(sourceAccountNumber);
+    public List<Transaction> readTransactions(Long userId, String accountNumber) {
+        return transactionRepository.getTransactionsByNumber(accountNumber);
     }
 }

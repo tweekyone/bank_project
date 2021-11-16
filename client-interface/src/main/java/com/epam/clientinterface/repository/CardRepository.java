@@ -12,6 +12,6 @@ public interface CardRepository extends JpaRepository<Card, Long> {
     Optional<Card> findCardByNumber(String number);
 
     @Modifying
-    @Query("update Card set pinCounter = 0")
+    @Query("UPDATE Card SET pinCounter = 0")
     int dropPinCounter();
 }
