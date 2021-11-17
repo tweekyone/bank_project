@@ -5,7 +5,7 @@ import com.epam.clientinterface.dto.UserDto;
 import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.service.AuthService;
 import javax.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -17,14 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/")
+@RequiredArgsConstructor
 public class SignUpController {
 
     private final AuthService authService;
-
-    @Autowired
-    public SignUpController(AuthService authService) {
-        this.authService = authService;
-    }
 
     @GetMapping("/user/registration")
     public String testRegistrationForm(Model model) {

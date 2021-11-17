@@ -13,10 +13,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import javax.validation.ConstraintViolationException;
 
 @ControllerAdvice
 public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
@@ -62,6 +64,24 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
             HttpStatus.BAD_REQUEST,
             request
         );
+    }
+
+    @Override
+    public @NonNull ResponseEntity<Object> handleMissingPathVariable(
+        @NonNull MissingPathVariableException ex,
+        @NonNull HttpHeaders headers,
+        @NonNull HttpStatus status,
+        @NonNull WebRequest request
+    ) {
+
+        ErrorResponse body = new ErrorResponse("badPath", HttpStatus.BAD_REQUEST);
+        return handleExceptionInternal(ex, body, headers, HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> handleConstraintViolationException(Exception ex, WebRequest request) {
+        ErrorResponse body = new ErrorResponse("invalidPath", HttpStatus.BAD_REQUEST);
+        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(AccountNotFoundException.class)
