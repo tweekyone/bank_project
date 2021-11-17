@@ -7,6 +7,7 @@ import com.epam.clientinterface.domain.exception.CurrencyNotFoundException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
 import com.epam.clientinterface.domain.exception.UserAlreadyExistException;
 import java.util.HashMap;
+import javax.validation.ConstraintViolationException;
 import lombok.NonNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import javax.validation.ConstraintViolationException;
 
 @ControllerAdvice
 public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {

@@ -8,14 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ExchangeRateService {
 
-    @Autowired
-    private ExchangeRateRepository rateRepository;
+    private final ExchangeRateRepository rateRepository;
 
     public Map<Currency, Double> getRatesForOneCurrency(String currency) {
         List<Currency> currencies = Currency.getCurrencies();
@@ -53,14 +53,14 @@ public class ExchangeRateService {
             currenciesRatesMap.put("exchange rate from "
                     + currencyFrom.toUpperCase() + " to "
                     + currencyTo.toUpperCase(), rate);
-        } //else throw new CurrencyNotFoundException();
+        }
         return currenciesRatesMap;
     }
 
     private Map<Currency, Double> currencyRatesToMap(List<ExchangeRate> exchangeRates) {
         Map<Currency, Double> currencyMap = new HashMap<>();
-        for (ExchangeRate ex : exchangeRates) {
-            currencyMap.put(ex.getCurrencyTo(), ex.getRate());
+        for (ExchangeRate rate : exchangeRates) {
+            currencyMap.put(rate.getCurrencyTo(), rate.getRate());
         }
         return currencyMap;
     }

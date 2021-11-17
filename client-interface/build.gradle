@@ -52,9 +52,6 @@ dependencies {
   implementation 'org.slf4j:slf4j-api'
   implementation 'org.slf4j:slf4j-log4j12'
 
-  // Currency util
-  implementation 'org.javamoney:moneta:1.4.2'
-
   // Test
   testImplementation "org.junit.jupiter:junit-jupiter-api"
   testImplementation "org.junit.jupiter:junit-jupiter-engine"
