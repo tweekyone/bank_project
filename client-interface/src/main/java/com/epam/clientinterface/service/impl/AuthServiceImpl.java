@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class AuthServiceImpl implements AuthService {
 
-    // TODO - create Bean of user service implementation
+    @Autowired
     private UserService userService;
 
     @Autowired
@@ -27,12 +27,6 @@ public class AuthServiceImpl implements AuthService {
             throw new UserAlreadyExistException(email);
         }
         User newUser = userService.create(name, surname, phoneNumber, username, email, rawPassword);
-
-        // !Attention - solution below is a temporary. While User service is not implemented!
-        // Uncomment lines to use direct save in User repo instead of User service.
-        // List<Account> accounts = new ArrayList<>();
-        // User newUser = new User(name, surname, phoneNumber, username, email, rawPassword, accounts);
-        // userRepository.save(newUser);
 
         return newUser;
     }
