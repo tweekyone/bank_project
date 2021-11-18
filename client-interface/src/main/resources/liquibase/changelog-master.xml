@@ -223,7 +223,13 @@
     </addColumn>
   </changeSet>
 
-  <changeSet id="10" author="Evgenii Ponukhov">
+  <changeSet id="11" author="Tatiana Naumovets">
+    <addColumn tableName="card" >
+      <column name="is_blocked" type="boolean" defaultValue="false" />
+    </addColumn>
+  </changeSet>
+
+  <changeSet id="12" author="Evgenii Ponukhov">
     <addColumn tableName="card">
       <column name="pin_counter" type="INTEGER"/>
     </addColumn>

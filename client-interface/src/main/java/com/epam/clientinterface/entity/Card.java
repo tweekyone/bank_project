@@ -40,9 +40,12 @@ public class Card {
     @Column(name = "pin_code", nullable = false)
     private String pinCode;
 
-    @Column(name = "plan", nullable = false)
     @Enumerated(EnumType.STRING)
+    @Column(name = "plan", nullable = false)
     private CardPlan plan;
+
+    @Column(name = "is_blocked", nullable = false)
+    private boolean isBlocked;
 
     @Column(name = "expiration_date", nullable = false)
     private LocalDateTime expirationDate;
@@ -55,6 +58,7 @@ public class Card {
         @NonNull String number,
         @NonNull String pinCode,
         @NonNull CardPlan plan,
+        boolean isBlocked,
         @NonNull LocalDateTime expirationDate,
         @NonNull Integer pinCounter
     ) {
@@ -62,6 +66,7 @@ public class Card {
         this.number = number;
         this.pinCode = pinCode;
         this.plan = plan;
+        this.isBlocked = isBlocked;
         this.expirationDate = expirationDate;
         this.pinCounter = pinCounter;
     }
