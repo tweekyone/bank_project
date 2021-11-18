@@ -221,4 +221,9 @@
       <column name="closed_at" type="timestamp"/>
     </addColumn>
   </changeSet>
+  <changeSet id="11" author="Tatiana Naumovets">
+    <addColumn tableName="card" >
+      <column name="is_blocked" type="boolean" defaultValue="false" />
+    </addColumn>
+  </changeSet>
 </databaseChangeLog>

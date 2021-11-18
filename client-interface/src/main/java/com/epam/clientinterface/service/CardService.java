@@ -1,6 +1,7 @@
 package com.epam.clientinterface.service;
 
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
+import com.epam.clientinterface.domain.exception.CardNotFoundException;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.entity.CardPlan;
@@ -9,12 +10,15 @@ import com.epam.clientinterface.repository.CardRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
+import javax.transaction.Transactional;
+import javax.validation.constraints.Positive;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CardService {
     private final CardRepository cardRepository;
     private final AccountRepository accountRepository;
@@ -33,8 +37,18 @@ public class CardService {
             number = generateCardNumber();
         } while (cardRepository.findCardByNumber(number).isPresent());
 
-        Card card = new Card(account.get(), number, pinCode, plan, LocalDateTime.now().plusYears(3));
+        Card card = new Card(account.get(), number, pinCode, plan, false, LocalDateTime.now().plusYears(3));
         return cardRepository.save(card);
+    }
+
+    public @NonNull Card blockCard(@Positive Long cardId) {
+        Optional<Card> card = this.cardRepository.findById(cardId);
+        if (card.isEmpty()) {
+            throw new CardNotFoundException(cardId);
+        }
+
+        card.get().setBlocked(true);
+        return cardRepository.save(card.get());
     }
 
     protected String generateCardNumber() {
