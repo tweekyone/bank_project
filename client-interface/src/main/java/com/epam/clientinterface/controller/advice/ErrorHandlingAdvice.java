@@ -3,14 +3,19 @@ package com.epam.clientinterface.controller.advice;
 import com.epam.clientinterface.controller.dto.response.ErrorResponse;
 import com.epam.clientinterface.domain.exception.AccountIsNotSupposedForExternalTransferException;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
+import com.epam.clientinterface.domain.exception.CardNotFoundException;
+import com.epam.clientinterface.domain.exception.ChangePinException;
+import com.epam.clientinterface.domain.exception.IncorrectPinException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
 import java.util.HashMap;
+import javax.validation.ConstraintViolationException;
 import lombok.NonNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -18,7 +23,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
-
     @Override
     protected @NonNull ResponseEntity<Object> handleMethodArgumentNotValid(
         MethodArgumentNotValidException ex,
@@ -123,19 +127,15 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
         );
     }
 
-    @ExceptionHandler({IncorrectPinException.class, ChangePinException.class, CardNotFoundException.class})
+    @ExceptionHandler(IncorrectPinException.class)
+    public ResponseEntity<Object> handleChangePinException(IncorrectPinException ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse("Pin code is not valid", HttpStatus.BAD_REQUEST);
+        return handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(ChangePinException.class)
     public ResponseEntity<Object> handleChangePinException(Exception ex, WebRequest request) {
-        String type;
-
-        if (ex instanceof IncorrectPinException) {
-            type = "Pin code is not valid";
-        } else if (ex instanceof ChangePinException) {
-            type = "Limit of attempts";
-        } else {
-            type = "Card not found";
-        }
-
-        ErrorResponse errorResponse = new ErrorResponse(type, HttpStatus.BAD_REQUEST);
+        ErrorResponse errorResponse = new ErrorResponse("Limit of attempts", HttpStatus.BAD_REQUEST);
         return handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 }
