@@ -29,6 +29,10 @@ public class AccountService {
             () -> new AccountNotFoundException(destinationAccountId)
         );
 
+        if (sourceAccount.isClosed() || destinationAccount.isClosed()) {
+            throw new AccountIsClosedException(sourceAccount.isClosed() ? sourceAccountId : destinationAccountId);
+        }
+
         if (sourceAccount.getAmount() < amount) {
             this.transactionRepository.save(new Transaction(
                 new TransactionAccountData(sourceAccount.getNumber(), false),
@@ -58,6 +62,11 @@ public class AccountService {
         var sourceAccount = this.accountRepository.findById(sourceAccountId).orElseThrow(
             () -> new AccountNotFoundException(sourceAccountId)
         );
+
+        if (sourceAccount.isClosed()) {
+            throw new AccountIsClosedException(sourceAccountId);
+        }
+
         this.accountRepository.findByNumber(destinationAccountNumber).ifPresent(account -> {
             throw new AccountIsNotSupposedForExternalTransferException(account.getId());
         });
