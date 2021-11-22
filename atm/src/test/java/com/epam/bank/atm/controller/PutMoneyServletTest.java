@@ -77,7 +77,7 @@ public class PutMoneyServletTest extends BaseServletTest {
         writer.flush();
         Assertions.assertTrue(stringWriter.toString().contains(
             new Gson().toJson(
-                new ErrorResponse("Wrong JSON format", (short) 400,
+                new ErrorResponse("wrongJSONFormat", (short) 400,
                     "Wrong JSON format", "Wrong JSON format in \"Amount\""))));
     }
 
@@ -103,7 +103,7 @@ public class PutMoneyServletTest extends BaseServletTest {
         writer.flush();
         Assertions.assertTrue(stringWriter.toString().contains(
             new Gson().toJson(
-                new ErrorResponse("Amount is not filled", (short) 400,
+                new ErrorResponse("amountIsEmpty", (short) 400,
                     "Amount is not filled", "Amount is not filled"))));
     }
 
