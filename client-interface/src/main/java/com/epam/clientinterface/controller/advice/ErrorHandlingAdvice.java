@@ -5,6 +5,7 @@ import com.epam.clientinterface.domain.exception.AccountIsNotSupposedForExternal
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
 import com.epam.clientinterface.domain.exception.UserAlreadyExistException;
+import com.epam.clientinterface.domain.exception.UsernameAlreadyTakenException;
 import java.util.HashMap;
 import lombok.NonNull;
 import org.springframework.http.HttpHeaders;
@@ -105,6 +106,18 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(
             exception,
             new ErrorResponse("userAlreadyExists", HttpStatus.BAD_REQUEST),
+            new HttpHeaders(),
+            HttpStatus.BAD_REQUEST,
+            request
+        );
+    }
+
+    @ExceptionHandler(UsernameAlreadyTakenException.class)
+    public ResponseEntity<Object> handleUsernameAlreadyTaken(UsernameAlreadyTakenException exception,
+                                                          WebRequest request) {
+        return handleExceptionInternal(
+            exception,
+            new ErrorResponse("usernameAlreadyTaken", HttpStatus.BAD_REQUEST),
             new HttpHeaders(),
             HttpStatus.BAD_REQUEST,
             request

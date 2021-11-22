@@ -1,7 +1,9 @@
 package com.epam.clientinterface.controller;
 
-import com.epam.clientinterface.domain.exception.UserAlreadyExistException;
-import com.epam.clientinterface.dto.UserDto;
+import com.epam.clientinterface.controller.dto.request.UserDto;
+import com.epam.clientinterface.controller.dto.response.AccountResponse;
+import com.epam.clientinterface.controller.dto.response.UserResponse;
+import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.service.AuthService;
 import javax.validation.Valid;
@@ -34,15 +36,25 @@ public class SignUpController {
     }
 
     @PostMapping("/user/registration")
-    public ResponseEntity<User> registerUserAccount(@RequestBody @Valid UserDto userDto)
-        throws UserAlreadyExistException {
+    public ResponseEntity<UserResponse> registerUserAccount(@RequestBody @Valid UserDto userDto) {
 
         User registered = authService.signUp(
             userDto.getName(), userDto.getSurname(),
             userDto.getPhoneNumber(), userDto.getUsername(),
             userDto.getEmail(), userDto.getPassword());
 
-        return new ResponseEntity<>(registered, HttpStatus.CREATED);
+        Account newAccount = registered.getAccounts().get(0);
+
+        AccountResponse accountResponse = new AccountResponse(newAccount.getNumber(),
+            newAccount.isDefault(), newAccount.getPlan(), newAccount.getAmount());
+
+        UserResponse userResponse = new UserResponse(
+            userDto.getName(), userDto.getSurname(),
+            userDto.getPhoneNumber(), userDto.getUsername(),
+            userDto.getEmail(), accountResponse
+        );
+
+        return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
     }
 
 }

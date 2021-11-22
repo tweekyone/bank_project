@@ -1,23 +1,23 @@
 package com.epam.clientinterface.service.impl;
 
 import com.epam.clientinterface.domain.exception.UserAlreadyExistException;
+import com.epam.clientinterface.domain.exception.UsernameAlreadyTakenException;
 import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.repository.UserRepository;
 import com.epam.clientinterface.service.AuthService;
 import com.epam.clientinterface.service.UserService;
 import javax.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
+@AllArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public User signUp(String name, String surname, String phoneNumber,
@@ -26,12 +26,18 @@ public class AuthServiceImpl implements AuthService {
         if (isEmailExist(email)) {
             throw new UserAlreadyExistException(email);
         }
-        User newUser = userService.create(name, surname, phoneNumber, username, email, rawPassword);
+        if (isUsernameExist(username)) {
+            throw new UsernameAlreadyTakenException(username);
+        }
 
-        return newUser;
+        return userService.create(name, surname, phoneNumber, username, email, rawPassword);
     }
 
     private boolean isEmailExist(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    private boolean isUsernameExist(String username) {
+        return userRepository.existsByUsername(username);
     }
 }

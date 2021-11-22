@@ -39,7 +39,8 @@ class AuthServiceImplTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private final AuthService authService = new AuthServiceImpl();
+    private final AuthService authService =
+        new AuthServiceImpl(userService, userRepository);
 
     @Test
     void shouldSignUpWithNewEmail() {

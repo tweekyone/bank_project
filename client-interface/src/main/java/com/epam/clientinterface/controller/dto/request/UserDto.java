@@ -1,4 +1,4 @@
-package com.epam.clientinterface.dto;
+package com.epam.clientinterface.controller.dto.request;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;

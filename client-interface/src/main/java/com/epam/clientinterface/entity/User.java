@@ -68,17 +68,4 @@ public class User {
         this.password = password;
         this.accounts.add(accountFactory.createFor(this));
     }
-
-    public User(@NonNull String name, @NonNull String surname,
-                @NonNull String phoneNumber, @NonNull String username,
-                @NonNull String email, @NonNull String password,
-                List<Account> accounts) {
-        this.name = name;
-        this.surname = surname;
-        this.phoneNumber = phoneNumber;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.accounts = accounts;
-    }
 }
