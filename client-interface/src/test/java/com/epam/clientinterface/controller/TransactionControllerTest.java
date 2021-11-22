@@ -6,6 +6,8 @@ import com.epam.clientinterface.controller.util.JsonHelper;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.service.TransactionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +41,7 @@ class TransactionControllerTest {
     @Test
     void shouldReturnOkStatus() throws Exception {
         ReadTransactionsRequest transactionsRequest = new ReadTransactionsRequest(
-            1L, "40702810123456789125");
+            RandomUtils.nextLong(), RandomStringUtils.random(10));
 
         mockMvc.perform(MockMvcRequestBuilders.post(READTRANSACTIONS)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -50,7 +52,7 @@ class TransactionControllerTest {
     @Test
     void shouldReturnNotFoundIfServiceThrowsAccountNotFoundException() throws Exception {
         ReadTransactionsRequest transactionsRequest = new ReadTransactionsRequest(
-            1L, "123456");
+            RandomUtils.nextLong(), RandomStringUtils.random(10));
 
         Mockito.doThrow(new AccountNotFoundException(1L))
             .when(transactionServiceMock)
@@ -78,5 +80,13 @@ class TransactionControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{incorrect}"))
             .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    void shouldReturnUnsupportedMediaTypeIfMediaTypeIsIncorrect() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post(READTRANSACTIONS)
+                .contentType(MediaType.TEXT_HTML)
+                .content("request"))
+            .andExpect(MockMvcResultMatchers.status().isUnsupportedMediaType());
     }
 }
