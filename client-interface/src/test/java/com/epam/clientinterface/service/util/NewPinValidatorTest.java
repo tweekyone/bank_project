@@ -6,6 +6,8 @@ import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.entity.CardPlan;
 import java.time.LocalDateTime;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,8 +21,8 @@ public class NewPinValidatorTest {
 
     @BeforeEach
     public void beforeEach() {
-        testChangePinRequest = new ChangePinRequest(1L, "1111", "2222");
-        testCard = new Card(new Account(), "1234567887654321", "1111",
+        testChangePinRequest = new ChangePinRequest(RandomUtils.nextLong(), "1111", "2222");
+        testCard = new Card(new Account(), RandomStringUtils.random(10), "1111",
             CardPlan.BASE, false, LocalDateTime.now(), 0);
     }
 

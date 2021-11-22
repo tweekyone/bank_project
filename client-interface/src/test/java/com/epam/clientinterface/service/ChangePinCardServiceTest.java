@@ -11,6 +11,8 @@ import com.epam.clientinterface.repository.CardRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,13 +36,13 @@ class ChangePinCardServiceTest {
 
     @BeforeEach
     public void setUp() {
-        changePinRequest = new ChangePinRequest(1L, "1111", "1234");
-        testAccount = new Account(1L, "", true, Account.Plan.BASE,
-            1000, new User(), new ArrayList<>(), LocalDateTime.now());
+        changePinRequest = new ChangePinRequest(RandomUtils.nextLong(), "1111", "1234");
+        testAccount = new Account(RandomUtils.nextLong(), RandomStringUtils.random(10), true,
+            Account.Plan.BASE, RandomUtils.nextDouble(), new User(), new ArrayList<>(), LocalDateTime.now());
     }
 
     @Test
-    public void throwsCardNotFoundException() {
+    public void shouldThrowsCardNotFoundException() {
         Mockito.when(cardRepositoryMock.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
         CardNotFoundException thrownException = Assertions.assertThrows(CardNotFoundException.class,
@@ -51,8 +53,8 @@ class ChangePinCardServiceTest {
     }
 
     @Test
-    public void throwsChangePinException() {
-        Card testCard = new Card(testAccount, "1234567887654321", "1111",
+    public void shouldThrowsChangePinException() {
+        Card testCard = new Card(testAccount, RandomStringUtils.random(10), "1111",
             CardPlan.BASE, false, LocalDateTime.now(), 3);
 
         Mockito.when(cardRepositoryMock.findById(Mockito.anyLong())).thenReturn(Optional.of(testCard));
@@ -65,8 +67,8 @@ class ChangePinCardServiceTest {
     }
 
     @Test
-    public void changePinIfHaveAttempts() {
-        Card testCard = new Card(testAccount, "1234567887654321", "1111",
+    public void shouldChangePinIfHaveAttempts() {
+        Card testCard = new Card(testAccount, RandomStringUtils.random(10), "1111",
             CardPlan.BASE, false, LocalDateTime.now(), 2);
         ArgumentCaptor<Card> cardArgumentCaptor = ArgumentCaptor.forClass(Card.class);
 
