@@ -62,14 +62,14 @@ public class CardControllerNewCardTest {
         mockMvc.perform(post("/account/1/releaseCard")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(jsonPath("$.type", is("validation")))
-                .andExpect(jsonPath("$.status", is(422)))
-                .andExpect(jsonPath(
-                    "$.errors[?(@.field=='plan')].error",
-                    containsInAnyOrder("must not be null")
-                ));
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isUnprocessableEntity())
+            .andExpect(jsonPath("$.type", is("validation")))
+            .andExpect(jsonPath("$.status", is(422)))
+            .andExpect(jsonPath(
+                "$.errors[?(@.field=='plan')].error",
+                containsInAnyOrder("must not be null")
+            ));
     }
 
     @ParameterizedTest
