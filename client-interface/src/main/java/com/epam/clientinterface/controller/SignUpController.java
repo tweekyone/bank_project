@@ -37,14 +37,13 @@ public class SignUpController {
 
     @PostMapping("/user/registration")
     public ResponseEntity<UserResponse> registerUserAccount(@RequestBody @Valid UserDto userDto) {
-
         User registered = authService.signUp(
             userDto.getName(), userDto.getSurname(),
             userDto.getPhoneNumber(), userDto.getUsername(),
-            userDto.getEmail(), userDto.getPassword());
+            userDto.getEmail(), userDto.getPassword()
+        );
 
         Account newAccount = registered.getAccounts().get(0);
-
         AccountResponse accountResponse = new AccountResponse(newAccount.getNumber(),
             newAccount.isDefault(), newAccount.getPlan(), newAccount.getAmount());
 
@@ -53,7 +52,6 @@ public class SignUpController {
             userDto.getPhoneNumber(), userDto.getUsername(),
             userDto.getEmail(), accountResponse
         );
-
         return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
     }
 
