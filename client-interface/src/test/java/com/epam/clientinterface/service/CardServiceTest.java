@@ -1,10 +1,12 @@
 package com.epam.clientinterface.service;
 
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
+import com.epam.clientinterface.domain.exception.CardNotFoundException;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.entity.CardPlan;
@@ -27,6 +29,8 @@ public class CardServiceTest {
 
     private final Account account = new Account(1L, "", true, Account.Plan.BASE,
         1000, new User(), new ArrayList<>(), null);
+    private final Card card = new Card(account, "1234567887654321","1111",
+        CardPlan.BASE, false, LocalDateTime.now());
 
     @InjectMocks
     private CardService cardService;
@@ -93,6 +97,28 @@ public class CardServiceTest {
     @Test
     public void shouldReturnPinCode() {
         Assertions.assertEquals(4, cardService.randomGenerateStringOfInt(4).length());
+    }
+
+    @Test
+    public void shouldBlockCardIfCardIsExist() {
+        when(cardRepository.findById(anyLong())).thenReturn(Optional.of(card));
+
+        cardService.blockCard(1L);
+
+        ArgumentCaptor<Card> cardCaptor = ArgumentCaptor.forClass(Card.class);
+        verify(cardRepository).save(cardCaptor.capture());
+
+        Card blockedCard = cardCaptor.getValue();
+        verify(cardRepository).save(card);
+        Assertions.assertTrue(blockedCard.isBlocked());
+    }
+
+    @Test
+    public void shouldThrowCardNotFoundIfCardDoesNotExist() {
+        when(this.cardRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(CardNotFoundException.class,
+            () -> this.cardService.blockCard(1L));
     }
 
 }
