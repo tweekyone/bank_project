@@ -18,8 +18,8 @@ public class UserServiceImpl implements UserService {
     public User create(String name, String surname, String phoneNumber,
                        String username, String email, String rawPassword) {
 
-        // Creating account for new user
-        Account.AsFirstFactory firstFactory = new Account.AsFirstFactory(RandomStringUtils.randomNumeric(19));
+        // Creating bank account for new user with default values and number consists of 20 random integers
+        Account.AsFirstFactory firstFactory = new Account.AsFirstFactory(RandomStringUtils.randomNumeric(20));
 
         // Creating new user with account above
         User newUser = new User(name, surname, phoneNumber, username, email, rawPassword, firstFactory);
