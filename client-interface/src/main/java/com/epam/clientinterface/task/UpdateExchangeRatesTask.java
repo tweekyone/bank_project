@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UpdateExchangeRatesTask {
     private final ExchangeRateRepository exchangeRateRepository;
 
-    @Scheduled(cron = "${app.task.update_exchange_rates.cron}", zone = "${app.task.update_exchange_rates.zone}")
+    @Scheduled(cron = "${app.task.update-exchange-rates.cron}", zone = "${app.task.update-exchange-rates.zone}")
     public void execute() {
         this.updateExchangeRates(this.gatherExchangeRates());
     }
