@@ -48,8 +48,7 @@ public class UpdateExchangeRatesTest {
             when(currencyUnitMock.getCurrencyCode()).thenReturn(currency.name());
             var currencyConversionMock = mockCurrencyConversionMock(currencyUnitMock);
 
-            monetaryConversionsMock
-                .when(() -> MonetaryConversions.getConversion(currency.name()))
+            monetaryConversionsMock.when(() -> MonetaryConversions.getConversion(currency.name()))
                 .thenReturn(currencyConversionMock);
         });
     }
