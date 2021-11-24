@@ -7,10 +7,10 @@ import org.springframework.http.HttpStatus;
 @Getter
 public class ErrorResponse {
     private final String type;
-    private final short status;
+    private final int status;
 
     public ErrorResponse(@NonNull String type, @NonNull HttpStatus status) {
         this.type = type;
-        this.status = (short) status.value();
+        this.status = status.value();
     }
 }
