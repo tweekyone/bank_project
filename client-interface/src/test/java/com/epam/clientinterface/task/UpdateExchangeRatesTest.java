@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 import com.epam.clientinterface.entity.Currency;
 import com.epam.clientinterface.entity.ExchangeRate;
 import com.epam.clientinterface.repository.ExchangeRateRepository;
-import com.epam.clientinterface.task.UpdateExchangeRatesTask;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -72,13 +71,13 @@ public class UpdateExchangeRatesTest {
 
     @Test
     public void shouldCollectAllCombinationsOfCurrenciesAndSaveThemWithEmptyRepository() {
-        this.task.execute();
+        task.execute();
 
-        verify(this.exchangeRateRepositoryMock).saveAllAndFlush(this.exchangeRates.capture());
+        verify(exchangeRateRepositoryMock).saveAllAndFlush(exchangeRates.capture());
 
         Assertions.assertEquals(
             Currency.values().length * (Currency.values().length - 1),
-            this.exchangeRates.getValue().size()
+            exchangeRates.getValue().size()
         );
     }
 
@@ -90,18 +89,18 @@ public class UpdateExchangeRatesTest {
                     continue;
                 }
 
-                when(this.exchangeRateRepositoryMock.findExchangeRateByCurrencyFromAndCurrencyTo(currencyA, currencyB))
+                when(exchangeRateRepositoryMock.findExchangeRateByCurrencyFromAndCurrencyTo(currencyA, currencyB))
                     .thenReturn(Optional.of(new ExchangeRate(1L, currencyA, currencyB, RandomUtils.nextDouble())));
             }
         }
 
-        this.task.execute();
+        task.execute();
 
-        verify(this.exchangeRateRepositoryMock).saveAllAndFlush(this.exchangeRates.capture());
+        verify(exchangeRateRepositoryMock).saveAllAndFlush(exchangeRates.capture());
 
         Assertions.assertEquals(
             Currency.values().length * (Currency.values().length - 1),
-            this.exchangeRates.getValue().size()
+            exchangeRates.getValue().size()
         );
     }
 }
