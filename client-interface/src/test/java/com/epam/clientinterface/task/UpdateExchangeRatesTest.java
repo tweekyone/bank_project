@@ -33,7 +33,7 @@ public class UpdateExchangeRatesTest {
     @Mock
     private ExchangeRateRepository exchangeRateRepositoryMock;
 
-    @InjectMocks()
+    @InjectMocks
     private UpdateExchangeRatesTask task;
 
     @Captor
