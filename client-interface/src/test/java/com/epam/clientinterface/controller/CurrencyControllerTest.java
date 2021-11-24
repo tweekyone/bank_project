@@ -1,6 +1,7 @@
 package com.epam.clientinterface.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -8,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epam.clientinterface.controller.advice.ErrorHandlingAdvice;
+import com.epam.clientinterface.domain.exception.CurrencyNotFoundException;
 import com.epam.clientinterface.entity.Currency;
 import com.epam.clientinterface.service.ExchangeRateService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +25,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -59,6 +63,7 @@ class CurrencyControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().string(mapToJson));
 
+        System.out.println("1 " + mapToJson);
         verify(rateService).getRatesForOneCurrency(currency.name());
     }
 
@@ -71,7 +76,7 @@ class CurrencyControllerTest {
             .getRatesFromOneToAnotherCurrency(currencyFrom, currencyTo))
             .thenReturn(currencyStringMap);
 
-        System.out.println(currencyFrom);
+        System.out.println("2\n" + currencyFrom);
         System.out.println(currencyTo);
 
         currencyStringMap.put(currencyFrom, RandomUtils.nextDouble(0, 999));
@@ -84,7 +89,39 @@ class CurrencyControllerTest {
 
         verify(rateService).getRatesFromOneToAnotherCurrency(any(), any());
     }
-    //TODO 2 tests with exception curr not found
+
+    @Test
+    void shouldReturnNotFoundIfServiceThrowsCurrencyNotFound() throws Exception {
+        String randomInput = RandomStringUtils.randomPrint(2, 5);
+
+        Mockito.doThrow(CurrencyNotFoundException.class)
+            .when(rateService)
+            .getRatesForOneCurrency(randomInput);
+
+        mockMvc.perform(get(url + "/{currency}", randomInput))
+            .andExpect(status().isNotFound());
+
+        System.out.println("3 " + randomInput);
+
+        verify(rateService).getRatesForOneCurrency(anyString());
+    }
+
+    @Test
+    void shouldReturnNotFoundIfServiceThrowsCurrencyNotFoundInExchange() throws Exception {
+        String randomInput1 = RandomStringUtils.randomPrint(2, 5);
+        String randomInput2 = RandomStringUtils.randomPrint(2, 5);
+
+        Mockito.doThrow(CurrencyNotFoundException.class)
+            .when(rateService)
+            .getRatesFromOneToAnotherCurrency(randomInput1, randomInput2);
+
+        mockMvc.perform(get(url + "/{from}/{to}", randomInput1, randomInput2))
+            .andExpect(status().isNotFound());
+
+        System.out.println("4 " + randomInput1);
+
+        verify(rateService).getRatesFromOneToAnotherCurrency(anyString(), anyString());
+    }
 
     private static Currency getRandomCurrency() {
         List<Currency> currencies = Currency.getCurrencies();
