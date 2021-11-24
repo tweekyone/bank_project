@@ -1,6 +1,5 @@
 package com.epam.clientinterface.service;
 
-import com.epam.clientinterface.domain.exception.AccountIsClosedException;
 import com.epam.clientinterface.domain.exception.AccountIsNotSupposedForExternalTransferException;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
@@ -22,19 +21,16 @@ public class AccountService {
     private final TransactionRepository transactionRepository;
 
     public void internalTransfer(long sourceAccountId, long destinationAccountId, double amount) {
-        var sourceAccount = this.accountRepository.findById(sourceAccountId).orElseThrow(
-            () -> new AccountNotFoundException(sourceAccountId)
-        );
-        var destinationAccount = this.accountRepository.findById(destinationAccountId).orElseThrow(
-            () -> new AccountNotFoundException(destinationAccountId)
-        );
+        var sourceAccount = accountRepository.findById(sourceAccountId)
+            .orElseThrow(() -> new AccountNotFoundException(sourceAccountId));
+        var destinationAccount = accountRepository.findById(destinationAccountId)
+            .orElseThrow(() -> new AccountNotFoundException(destinationAccountId));
 
-        if (sourceAccount.isClosed() || destinationAccount.isClosed()) {
-            throw new AccountIsClosedException(sourceAccount.isClosed() ? sourceAccountId : destinationAccountId);
-        }
+        DomainLogicChecker.assertAccountIsNotClosed(sourceAccount);
+        DomainLogicChecker.assertAccountIsNotClosed(destinationAccount);
 
         if (sourceAccount.getAmount() < amount) {
-            this.transactionRepository.save(new Transaction(
+            transactionRepository.save(new Transaction(
                 new TransactionAccountData(sourceAccount.getNumber(), false),
                 new TransactionAccountData(destinationAccount.getNumber(), false),
                 amount,
@@ -48,8 +44,8 @@ public class AccountService {
         sourceAccount.setAmount(sourceAccount.getAmount() - amount);
         destinationAccount.setAmount(destinationAccount.getAmount() + amount);
 
-        this.accountRepository.saveAll(new ArrayIterator<>(new Account[] {sourceAccount, destinationAccount}));
-        this.transactionRepository.save(new Transaction(
+        accountRepository.saveAll(new ArrayIterator<>(new Account[] {sourceAccount, destinationAccount}));
+        transactionRepository.save(new Transaction(
             new TransactionAccountData(sourceAccount.getNumber(), false),
             new TransactionAccountData(destinationAccount.getNumber(), false),
             amount,
@@ -59,20 +55,17 @@ public class AccountService {
     }
 
     public void externalTransfer(long sourceAccountId, String destinationAccountNumber, double amount) {
-        var sourceAccount = this.accountRepository.findById(sourceAccountId).orElseThrow(
-            () -> new AccountNotFoundException(sourceAccountId)
-        );
+        var sourceAccount = accountRepository.findById(sourceAccountId)
+            .orElseThrow(() -> new AccountNotFoundException(sourceAccountId));
 
-        if (sourceAccount.isClosed()) {
-            throw new AccountIsClosedException(sourceAccountId);
-        }
+        DomainLogicChecker.assertAccountIsNotClosed(sourceAccount);
 
-        this.accountRepository.findByNumber(destinationAccountNumber).ifPresent(account -> {
+        accountRepository.findByNumber(destinationAccountNumber).ifPresent(account -> {
             throw new AccountIsNotSupposedForExternalTransferException(account.getId());
         });
 
         if (sourceAccount.getAmount() < amount) {
-            this.transactionRepository.save(new Transaction(
+            transactionRepository.save(new Transaction(
                 new TransactionAccountData(sourceAccount.getNumber(), false),
                 new TransactionAccountData(destinationAccountNumber, true),
                 amount,
@@ -83,7 +76,7 @@ public class AccountService {
             throw new NotEnoughMoneyException(sourceAccountId, amount);
         }
 
-        this.transactionRepository.save(new Transaction(
+        transactionRepository.save(new Transaction(
             new TransactionAccountData(sourceAccount.getNumber(), false),
             new TransactionAccountData(destinationAccountNumber, true),
             amount,
@@ -93,16 +86,13 @@ public class AccountService {
     }
 
     public void closeAccount(long accountId) {
-        var account = this.accountRepository.findById(accountId).orElseThrow(
-            () -> new AccountNotFoundException(accountId)
-        );
+        var account = accountRepository.findById(accountId)
+            .orElseThrow(() -> new AccountNotFoundException(accountId));
 
-        if (account.isClosed()) {
-            throw new AccountIsClosedException(accountId);
-        }
+        DomainLogicChecker.assertAccountIsNotClosed(account);
 
         account.close();
 
-        this.accountRepository.save(account);
+        accountRepository.save(account);
     }
 }

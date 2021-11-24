@@ -1,6 +1,5 @@
 package com.epam.clientinterface.service;
 
-import com.epam.clientinterface.domain.exception.AccountIsClosedException;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.CardNotFoundException;
 import com.epam.clientinterface.entity.Account;
@@ -24,13 +23,10 @@ public class CardService {
     private final AccountRepository accountRepository;
 
     public @NonNull Card releaseCard(@NonNull Long accountId, @NonNull CardPlan plan) {
-        Account account = accountRepository.findById(accountId).orElseThrow(
-            () -> new AccountNotFoundException(accountId)
-        );
+        Account account = accountRepository.findById(accountId)
+            .orElseThrow(() -> new AccountNotFoundException(accountId));
 
-        if (account.isClosed()) {
-            throw new AccountIsClosedException(accountId);
-        }
+        DomainLogicChecker.assertAccountIsNotClosed(account);
 
         String pinCode = generatePinCode();
         String number;
@@ -46,9 +42,7 @@ public class CardService {
     public @NonNull Card blockCard(@Positive Long cardId) {
         Card card = this.cardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException(cardId));
 
-        if (card.getAccount().isClosed()) {
-            throw new AccountIsClosedException(card.getAccount().getId());
-        }
+        DomainLogicChecker.assertAccountIsNotClosed(card.getAccount());
 
         card.setBlocked(true);
         return cardRepository.save(card);
