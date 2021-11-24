@@ -44,25 +44,31 @@ public class UpdateExchangeRatesTest {
         var monetaryConversionsMock = Mockito.mockStatic(MonetaryConversions.class);
 
         Arrays.stream(Currency.values()).forEach(currency -> {
-            var currencyConversionMock = Mockito.mock(CurrencyConversion.class);
             var currencyUnitMock = Mockito.mock(CurrencyUnit.class);
             when(currencyUnitMock.getCurrencyCode()).thenReturn(currency.name());
-            when(currencyConversionMock.getExchangeRate(Mockito.any(MonetaryAmount.class))).then(invocation -> {
-                var monetary = (MonetaryAmount) invocation.getArgument(0);
-                var exchangeRateMock = Mockito.mock(javax.money.convert.ExchangeRate.class);
-                var numberValueMock = Mockito.mock(NumberValue.class);
-                lenient().when(numberValueMock.doubleValue()).thenReturn(RandomUtils.nextDouble());
-                when(exchangeRateMock.getBaseCurrency()).thenReturn(currencyUnitMock);
-                when(exchangeRateMock.getCurrency()).thenReturn(monetary.getCurrency());
-                lenient().when(exchangeRateMock.getFactor()).thenReturn(numberValueMock);
-
-                return exchangeRateMock;
-            });
+            var currencyConversionMock = mockCurrencyConversionMock(currencyUnitMock);
 
             monetaryConversionsMock
                 .when(() -> MonetaryConversions.getConversion(currency.name()))
                 .thenReturn(currencyConversionMock);
         });
+    }
+
+    private static CurrencyConversion mockCurrencyConversionMock(CurrencyUnit currencyUnitMock) {
+        var currencyConversionMock = Mockito.mock(CurrencyConversion.class);
+        when(currencyConversionMock.getExchangeRate(Mockito.any(MonetaryAmount.class))).then(invocation -> {
+            var monetary = (MonetaryAmount) invocation.getArgument(0);
+            var exchangeRateMock = Mockito.mock(javax.money.convert.ExchangeRate.class);
+            var numberValueMock = Mockito.mock(NumberValue.class);
+            lenient().when(numberValueMock.doubleValue()).thenReturn(RandomUtils.nextDouble());
+            when(exchangeRateMock.getBaseCurrency()).thenReturn(currencyUnitMock);
+            when(exchangeRateMock.getCurrency()).thenReturn(monetary.getCurrency());
+            lenient().when(exchangeRateMock.getFactor()).thenReturn(numberValueMock);
+
+            return exchangeRateMock;
+        });
+
+        return currencyConversionMock;
     }
 
     @Test
