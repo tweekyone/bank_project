@@ -15,10 +15,12 @@ import com.epam.clientinterface.domain.exception.UserAlreadyExistException;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.service.AuthService;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,10 +37,28 @@ class SignUpControllerTest {
     @Mock
     private AuthService authService;
 
-    private final String signUpUserData = "{\"name\":\"Ivan\",\"surname\":\"Popov\", "
-        + "\"phoneNumber\":\"+79100000\",\"username\":\"vanok\","
-        + "\"email\":\"vanok@gmail.com\", \"password\":\"1234\"}";
+    private static final String name = randomAlphabetic(2, 30);
+    private static final String surname = randomAlphabetic(2, 30);
+    private static final String phoneNumber = "+" + randomNumeric(9, 15);
+    private static final String username = randomAlphanumeric(3, 20);
+    private static final String password = randomAlphanumeric(6, 30);
 
+    // example "vanok@gmail.com";
+    private static final String email = randomAlphanumeric(2, 20) + "@"
+        + randomAlphanumeric(2, 20) + "." + randomAlphabetic(2, 5);
+
+    private static final Account.AsFirstFactory accountFactory =
+        new Account.AsFirstFactory(RandomStringUtils.randomNumeric(19));
+
+    private static final User newUser =
+        new User(name, surname, phoneNumber, username, email, password, accountFactory);
+
+    private final String signUpUserData = String.format(
+        "{\"name\":\"%s\",\"surname\":\"%s\", "
+            + "\"phoneNumber\":\"%s\",\"username\":\"%s\","
+            + "\"email\":\"%s\", \"password\":\"%s\"}",
+        name, surname, phoneNumber, username, email, password
+    );
 
     @BeforeEach
     public void beforeEach() {
@@ -50,11 +70,30 @@ class SignUpControllerTest {
 
     @Test
     void shouldRegisterNewUserAccount() throws Exception {
+        when(authService.signUp(name, surname, phoneNumber, username, email, password))
+            .thenReturn(newUser);
+
         mockMvc.perform(post(url)
             .contentType(MediaType.APPLICATION_JSON)
             .content(signUpUserData))
             .andExpect(status().isCreated())
             .andReturn();
+
+        verify(authService).signUp(any(), any(), any(), any(), any(), any());
+    }
+
+    @Test
+    public void shouldReturnBadRequestIfUserAlreadyExist() throws Exception {
+        Mockito.doThrow(UserAlreadyExistException.class)
+            .when(authService)
+            .signUp(any(), any(), any(), any(), any(), any());
+
+        mockMvc.perform(post(url)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(signUpUserData))
+            .andExpect(status().isBadRequest());
+
+        verify(authService).signUp(any(), any(), any(), any(), any(), any());
     }
 
     @Test
