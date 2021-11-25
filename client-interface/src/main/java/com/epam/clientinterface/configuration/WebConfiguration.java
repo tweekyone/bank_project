@@ -1,8 +1,6 @@
 package com.epam.clientinterface.configuration;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.util.List;
 import org.hibernate.validator.HibernateValidator;
 import org.springframework.context.annotation.Configuration;
