@@ -1,5 +1,6 @@
 package com.epam.clientinterface.repository;
 
+import com.epam.clientinterface.domain.exception.NotFoundException;
 import com.epam.clientinterface.entity.User;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.EntityGraph;

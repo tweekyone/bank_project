@@ -16,6 +16,7 @@ import com.epam.clientinterface.repository.UserRepository;
 import com.epam.clientinterface.service.impl.AuthServiceImpl;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -38,10 +39,11 @@ class AuthServiceImplTest {
     @Mock
     private UserService userService;
 
-    List<Account> accounts = new ArrayList<>();
+    Account.AsFirstFactory firstFactory =
+        new Account.AsFirstFactory(RandomStringUtils.randomNumeric(20));
 
     private final User mockedUser =
-        new User(id, name, surname, phoneNumber, username, email, password, accounts);
+        new User(name, surname, phoneNumber, username, email, password, firstFactory);
 
     @Mock
     private UserRepository userRepository;
