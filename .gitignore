@@ -16,3 +16,9 @@ db-data/
 
 # Coverage report
 coverege-report/
+
+# Generated
+.jpb/
+atm/out/
+client-interface/out/
+untitled/
