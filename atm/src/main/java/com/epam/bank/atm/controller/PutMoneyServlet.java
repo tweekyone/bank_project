@@ -59,7 +59,7 @@ public class PutMoneyServlet extends HttpServlet {
             Double amount = new Gson().fromJson(jsonObject.get("amount"), Double.class);
 
             if (amount == null || amount == 0) {
-                writer.write(new Gson().toJson(new ErrorResponse("Amount is not filled", (short) 400)));
+                writer.write(new Gson().toJson(new ErrorResponse("amountIsEmpty", (short) 400)));
                 resp.setStatus(400);
             } else {
                 double balance = accountService.putMoney(authDescriptor.getAccount().getId(), amount);
@@ -69,7 +69,7 @@ public class PutMoneyServlet extends HttpServlet {
                 resp.setStatus(200);
             }
         } catch (JsonSyntaxException e) {
-            writer.write(new Gson().toJson(new ErrorResponse("Wrong JSON format", (short) 400)));
+            writer.write(new Gson().toJson(new ErrorResponse("wrongJSONFormat", (short) 400)));
             resp.setStatus(400);
         } catch (IllegalArgumentException e) {
             writer.write(new Gson().toJson(new ErrorResponse("IllegalArgumentException", (short) 400)));

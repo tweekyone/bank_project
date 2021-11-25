@@ -44,7 +44,7 @@ public class WithdrawMoneyServlet extends BaseServlet {
             if (jsonBody.isJsonObject()) {
                 amount = jsonBody.getAsJsonObject().get("amount").getAsDouble();
             } else {
-                this.sendError(resp, "Bad request", (short) 400);
+                this.sendError(resp, "invalidJSON", (short) 400);
                 return;
             }
 
@@ -62,13 +62,13 @@ public class WithdrawMoneyServlet extends BaseServlet {
             | IllegalStateException
             | NumberFormatException
             | NullPointerException e) {
-            this.sendError(resp, "Bad request", (short) 400);
+            this.sendError(resp, "invalidBody", (short) 400);
         } catch (JsonParseException e) {
-            this.sendError(resp, "Bad request", (short) 400);
+            this.sendError(resp, "invalidJSON", (short) 400);
         } catch (IllegalArgumentException e) {
-            this.sendError(resp, "Bad amount", (short) 400);
+            this.sendError(resp, "badAmount", (short) 400);
         } catch (Exception e) {
-            this.sendError(resp, "Error service", (short) 500);
+            this.sendError(resp, "serviceError", (short) 500);
         }
     }
 }
