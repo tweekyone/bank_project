@@ -1,7 +1,6 @@
 package com.epam.clientinterface.service;
 
 import com.epam.clientinterface.domain.UserDetailAuth;
-import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.repository.UserRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +32,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public Optional<UserDetailAuth> findByEmail(String email) {
-         return repository.findByEmailWithRoles(email).map(UserDetailAuth::new);
+        return repository.findByEmailWithRoles(email).map(UserDetailAuth::new);
     }
 
     //TODO add encoding and setAuthorities into create user

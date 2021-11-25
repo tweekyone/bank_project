@@ -1,6 +1,7 @@
 package com.epam.clientinterface.configuration.security;
 
 import com.epam.clientinterface.service.UserService;
+import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -24,8 +25,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import javax.servlet.http.HttpServletResponse;
-
 @EnableWebSecurity(debug = true)
 @EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -47,18 +46,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(username -> service.findByEmail(username)
             .orElseThrow(() -> new UsernameNotFoundException(String.format("User %s not found", username))));
-    }
-
-    // Expose authentication manager bean
-    @Override
-    @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Override
@@ -89,6 +76,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // Add filters before ss
         http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(initialAuthenticationFilter(), JwtTokenFilter.class);
+    }
+
+    // Expose authentication manager bean
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     // Used by spring security if CORS is enabled.

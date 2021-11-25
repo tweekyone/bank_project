@@ -1,8 +1,8 @@
 package com.epam.clientinterface.controller;
 
-import com.epam.bank.clientinterface.controller.util.JsonHelper;
 import com.epam.clientinterface.controller.advice.ErrorHandlingAdvice;
 import com.epam.clientinterface.controller.dto.request.ChangePinRequest;
+import com.epam.clientinterface.controller.util.JsonHelper;
 import com.epam.clientinterface.service.CardService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.RandomUtils;

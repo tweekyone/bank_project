@@ -25,15 +25,15 @@ public class NewPinValidatorTest {
         testCard = new Card(new Account(), RandomStringUtils.random(10), "1111",
             CardPlan.BASE, false, LocalDateTime.now(), 0);
     }
-    //
-    // @Test
-    // public void differentPins() {
-    //     testChangePinRequest.setNewPin("1111");
-    //     IncorrectPinException thrownException = Assertions.assertThrows(IncorrectPinException.class,
-    //         () -> NewPinValidator.validatePinCode(testCard, testChangePinRequest));
-    //
-    //     Assertions.assertEquals("Pin is incorrect: New pin must be different", thrownException.getMessage());
-    // }
+
+    @Test
+    public void differentPins() {
+        testChangePinRequest.setNewPin("1111");
+        IncorrectPinException thrownException = Assertions.assertThrows(IncorrectPinException.class,
+            () -> NewPinValidator.validatePinCode(testCard, testChangePinRequest));
+
+        Assertions.assertEquals("Pin is incorrect: New pin must be different", thrownException.getMessage());
+    }
 
     @Test
     public void pinWithNumbersOnly() {
