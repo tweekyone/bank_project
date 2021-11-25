@@ -9,7 +9,7 @@ import org.apache.commons.lang3.RandomUtils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class FixtureFactory {
+public class TestDataFactory {
     public static Account getAccount() {
         return new Account(
             RandomUtils.nextLong(),

@@ -3,7 +3,7 @@ package com.epam.clientinterface.service;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-import com.epam.clientinterface.FixtureFactory;
+import com.epam.clientinterface.TestDataFactory;
 import com.epam.clientinterface.domain.exception.AccountIsClosedException;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
@@ -35,8 +35,8 @@ class AccountServiceInternalTransferTest {
 
     @Test
     public void shouldReturnNothingIfAccountsExistAndThereIsEnoughMoney() {
-        var sourceAccountFixture = FixtureFactory.getAccount();
-        var destinationAccountFixture = FixtureFactory.getAccount();
+        var sourceAccountFixture = TestDataFactory.getAccount();
+        var destinationAccountFixture = TestDataFactory.getAccount();
 
         when(this.accountRepositoryMock.findById(anyLong()))
             .thenReturn(Optional.of(sourceAccountFixture))
@@ -65,7 +65,7 @@ class AccountServiceInternalTransferTest {
 
     @Test
     public void shouldThrowAccountNotFoundIfTheDestinationAccountDoesNotExist() {
-        var sourceAccountFixture = FixtureFactory.getAccount();
+        var sourceAccountFixture = TestDataFactory.getAccount();
 
         when(this.accountRepositoryMock.findById(anyLong()))
             .thenReturn(Optional.of(sourceAccountFixture))
@@ -83,8 +83,8 @@ class AccountServiceInternalTransferTest {
 
     @Test
     public void shouldThrowNotEnoughMoneyIfSourceAccountDoesNotHaveEnoughMoney() {
-        var sourceAccountFixture = FixtureFactory.getAccount();
-        var destinationAccountFixture = FixtureFactory.getAccount();
+        var sourceAccountFixture = TestDataFactory.getAccount();
+        var destinationAccountFixture = TestDataFactory.getAccount();
 
         when(this.accountRepositoryMock.findById(anyLong()))
             .thenReturn(Optional.of(sourceAccountFixture))
@@ -102,8 +102,8 @@ class AccountServiceInternalTransferTest {
 
     @Test
     public void shouldThrowAccountIsClosedIfSourceAccountIsClosed() {
-        var sourceAccountFixture = FixtureFactory.getClosedAccount();
-        var destinationAccountFixture = FixtureFactory.getAccount();
+        var sourceAccountFixture = TestDataFactory.getClosedAccount();
+        var destinationAccountFixture = TestDataFactory.getAccount();
 
         when(this.accountRepositoryMock.findById(anyLong()))
             .thenReturn(Optional.of(sourceAccountFixture))
@@ -121,8 +121,8 @@ class AccountServiceInternalTransferTest {
 
     @Test
     public void shouldThrowAccountIsClosedIfDestinationAccountIsClosed() {
-        var sourceAccountFixture = FixtureFactory.getAccount();
-        var destinationAccountFixture = FixtureFactory.getClosedAccount();
+        var sourceAccountFixture = TestDataFactory.getAccount();
+        var destinationAccountFixture = TestDataFactory.getClosedAccount();
 
         when(this.accountRepositoryMock.findById(anyLong()))
             .thenReturn(Optional.of(sourceAccountFixture))

@@ -4,7 +4,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.epam.clientinterface.FixtureFactory;
+import com.epam.clientinterface.TestDataFactory;
 import com.epam.clientinterface.domain.exception.AccountIsClosedException;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.entity.Account;
@@ -33,7 +33,7 @@ class AccountServiceCloseAccountTest {
 
     @Test
     public void shouldReturnNothingIfAccountExists() {
-        var accountFixture = FixtureFactory.getAccount();
+        var accountFixture = TestDataFactory.getAccount();
 
         when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(accountFixture));
 
@@ -55,7 +55,7 @@ class AccountServiceCloseAccountTest {
 
     @Test
     public void shouldThrowAccountIsClosedIfAccountIsClosed() {
-        var accountFixture = FixtureFactory.getClosedAccount();
+        var accountFixture = TestDataFactory.getClosedAccount();
 
         when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(accountFixture));
 
