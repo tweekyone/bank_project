@@ -2,26 +2,34 @@ package com.epam.clientinterface.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
+@ToString
 @Table(name = "user", schema = "public")
 public class User {
+
     @Id
     @Column(name = "id")
     @SequenceGenerator(name = "user_id_seq", sequenceName = "user_id_seq", allocationSize = 1)
@@ -47,7 +55,24 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<Account> accounts = new ArrayList<>();
+
+    @Column(name = "enabled", nullable = false, columnDefinition = "bool default true")
+    private boolean enabled;
+
+    @Column(name = "failed_login_attempts")
+    private int failedLoginAttempts;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "user_role",
+        joinColumns = @JoinColumn(
+            name = "user_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(
+            name = "role_id", referencedColumnName = "id"))
+    @ToString.Exclude
+    private Set<Role> roles;
 
     public User(
         @NonNull String name,
@@ -65,5 +90,19 @@ public class User {
         this.email = email;
         this.password = password;
         this.accounts.add(accountFactory.createFor(this));
+    }
+
+    public User(Long id, String name, String surname, String phoneNumber, String email,
+                String password, boolean enabled, int failedLoginAttempts,
+                Set<Role> roles) {
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.password = password;
+        this.enabled = enabled;
+        this.failedLoginAttempts = failedLoginAttempts;
+        this.roles = roles;
     }
 }

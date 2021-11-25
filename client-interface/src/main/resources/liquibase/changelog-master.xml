@@ -1,7 +1,8 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
 
   <changeSet author="Nikita Golubev" id="1">
     <createTable tableName="user">
@@ -187,6 +188,7 @@
 
     <addAutoIncrement tableName="role" columnName="id" incrementBy="1" startWith="1"/>
   </changeSet>
+
   <changeSet id="6" author="Dmitrii Korolev">
     <addColumn tableName="user">
       <column name="username" type="varchar">
@@ -200,6 +202,7 @@
   <changeSet id="8" author="Dmitrii Korolev">
     <renameColumn tableName="card" oldColumnName="explication_date" newColumnName="expiration_date"/>
   </changeSet>
+
   <changeSet id="9" author="Dmitrii Korolev">
     <dropColumn tableName="transaction" columnName="source_account_id"/>
     <dropColumn tableName="transaction" columnName="destination_account_id"/>
@@ -216,17 +219,32 @@
       <column name="destination_is_external" type="boolean"/>
     </addColumn>
   </changeSet>
+
   <changeSet id="10" author="Dmitrii Korolev">
     <addColumn tableName="account">
       <column name="closed_at" type="timestamp"/>
     </addColumn>
   </changeSet>
+
   <changeSet id="11" author="Tatiana Naumovets">
     <addColumn tableName="card" >
       <column name="is_blocked" type="boolean" defaultValue="false" />
     </addColumn>
   </changeSet>
-  <changeSet id="11" author="Dmitrii Korolev">
+
+  <changeSet id="1635408597089-1" author="mbuiakova">
+    <addColumn tableName="user">
+      <column name="enabled" type="BOOL" value="true"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet id="1635513500296-1" author="mbuiakova">
+    <addColumn tableName="user">
+      <column name="failed_login_attempts" type="int"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet id="12" author="Dmitrii Korolev">
     <createTable tableName="exchange_rate">
       <column name="id" type="BIGINT">
         <constraints primaryKey="true" primaryKeyName="exchange_rate_pkey"/>
