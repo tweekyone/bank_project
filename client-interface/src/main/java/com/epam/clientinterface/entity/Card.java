@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -23,12 +24,14 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Table(name = "card", schema = "public")
 public class Card {
     @Id
     @Column(name = "id")
     @SequenceGenerator(name = "card_id_seq", sequenceName = "card_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "card_id_seq")
+    @EqualsAndHashCode.Exclude
     private Long id;
 
     @Column(name = "number", nullable = false)
@@ -69,23 +72,5 @@ public class Card {
         this.isBlocked = isBlocked;
         this.expirationDate = expirationDate;
         this.pinCounter = pinCounter;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Card card = (Card) o;
-        return number.equals(card.number) && account.equals(card.account) && pinCode.equals(
-            card.pinCode) && plan == card.plan && expirationDate.equals(card.expirationDate);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(number, account, pinCode, plan, expirationDate);
     }
 }

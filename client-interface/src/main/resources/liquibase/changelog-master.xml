@@ -231,7 +231,9 @@
 
   <changeSet id="12" author="Evgenii Ponukhov">
     <addColumn tableName="card">
-      <column name="pin_counter" type="INTEGER"/>
+      <column name="pin_counter" type="INTEGER" defaultValue="0">
+        <constraints nullable="false"/>
+      </column>
     </addColumn>
   </changeSet>
 </databaseChangeLog>

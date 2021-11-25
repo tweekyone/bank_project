@@ -36,7 +36,7 @@ class ChangePinCardServiceTest {
 
     @BeforeEach
     public void setUp() {
-        changePinRequest = new ChangePinRequest(RandomUtils.nextLong(), "1111", "1234");
+        changePinRequest = new ChangePinRequest(RandomUtils.nextLong(), "1234");
         testAccount = new Account(RandomUtils.nextLong(), RandomStringUtils.random(10), true,
             Account.Plan.BASE, RandomUtils.nextDouble(), new User(), new ArrayList<>(), LocalDateTime.now());
     }

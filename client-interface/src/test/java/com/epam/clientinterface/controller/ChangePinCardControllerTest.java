@@ -34,7 +34,7 @@ class ChangePinCardControllerTest {
             .setControllerAdvice(ErrorHandlingAdvice.class)
             .build();
         objectMapper = new ObjectMapper();
-        testChangePinRequest = new ChangePinRequest(RandomUtils.nextLong(), "1234", "1235");
+        testChangePinRequest = new ChangePinRequest(RandomUtils.nextLong(), "1235");
     }
 
     @Test
