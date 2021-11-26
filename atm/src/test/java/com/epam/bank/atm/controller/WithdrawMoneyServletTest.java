@@ -84,8 +84,7 @@ public class WithdrawMoneyServletTest extends BaseServletTest {
             .withdrawMoney(accountId, amount);
 
         withdrawMoneyServlet.doPut(request, response);
-        this.assertErrorResponse(stringWriter, "Bad amount", (short) 400, "Bad amount",
-            "Amount is 0, Nan, -Inf/Inf, > account");
+        this.assertErrorResponse(stringWriter, "badAmount", (short) 400);
         verify(response).setContentType("text/json");
         verify(response).setCharacterEncoding("UTF-8");
         verify(response).setStatus(400);
@@ -104,8 +103,7 @@ public class WithdrawMoneyServletTest extends BaseServletTest {
             .withdrawMoney(accountId, arg);
 
         withdrawMoneyServlet.doPut(request, response);
-        this.assertErrorResponse(stringWriter, "Bad amount", (short) 400, "Bad amount",
-            "Amount is 0, Nan, -Inf/Inf, > account");
+        this.assertErrorResponse(stringWriter, "badAmount", (short) 400);
         verify(response).setContentType("text/json");
         verify(response).setCharacterEncoding("UTF-8");
         verify(response).setStatus(400);
@@ -122,7 +120,7 @@ public class WithdrawMoneyServletTest extends BaseServletTest {
         when(tokenSessionService.curSession()).thenReturn(authDescriptor);
 
         withdrawMoneyServlet.doPut(request, response);
-        this.assertErrorResponse(stringWriter, "Bad request", (short) 400, "Invalid Json", "Invalid Json");
+        this.assertErrorResponse(stringWriter, "invalidJSON", (short) 400);
         verify(response).setContentType("text/json");
         verify(response).setCharacterEncoding("UTF-8");
         verify(response).setStatus(400);
@@ -140,7 +138,7 @@ public class WithdrawMoneyServletTest extends BaseServletTest {
         when(tokenSessionService.curSession()).thenReturn(authDescriptor);
 
         withdrawMoneyServlet.doPut(request, response);
-        this.assertErrorResponse(stringWriter, "Bad request", (short) 400, "Invalid Json", "Invalid Json");
+        this.assertErrorResponse(stringWriter, "invalidJSON", (short) 400);
         verify(response).setContentType("text/json");
         verify(response).setCharacterEncoding("UTF-8");
         verify(response).setStatus(400);
@@ -157,7 +155,7 @@ public class WithdrawMoneyServletTest extends BaseServletTest {
         when(tokenSessionService.curSession()).thenReturn(authDescriptor);
 
         withdrawMoneyServlet.doPut(request, response);
-        this.assertErrorResponse(stringWriter, "Bad request", (short) 400, "Invalid body", "Invalid body");
+        this.assertErrorResponse(stringWriter, "invalidBody", (short) 400);
         verify(response).setContentType("text/json");
         verify(response).setCharacterEncoding("UTF-8");
         verify(response).setStatus(400);

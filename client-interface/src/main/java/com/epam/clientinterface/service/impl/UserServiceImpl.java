@@ -1,18 +1,43 @@
 package com.epam.clientinterface.service.impl;
 
+import com.epam.clientinterface.domain.UserDetailAuth;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.repository.UserRepository;
 import com.epam.clientinterface.service.UserService;
-import lombok.AllArgsConstructor;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+    private final UserRepository repository;
+
+    @Override
+    @Transactional
+    public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
+        UserDetailAuth userDetailAuth = findByEmail(userEmail)
+            .orElseThrow(
+                () -> new UsernameNotFoundException(String.format("User with userEmail - %s not found", userEmail)));
+
+        UserDetails userDetails = org.springframework.security.core.userdetails.User.withUsername(userEmail)
+            .password(userDetailAuth.getPassword())
+            .disabled(!userDetailAuth.isEnabled())
+            .authorities(userDetailAuth.getAuthorities())
+            .build();
+        return userDetails;
+    }
+
+    @Transactional
+    public Optional<UserDetailAuth> findByEmail(String email) {
+        return repository.findByEmailWithRoles(email).map(UserDetailAuth::new);
+    }
 
     @Override
     public User create(String name, String surname, String phoneNumber,
@@ -25,8 +50,10 @@ public class UserServiceImpl implements UserService {
         User newUser = new User(name, surname, phoneNumber, username, email, rawPassword, firstFactory);
 
         // saving user and account to database
-        userRepository.save(newUser);
+        repository.save(newUser);
 
         return newUser;
     }
+
+    //TODO add encoding and setAuthorities into create user
 }
