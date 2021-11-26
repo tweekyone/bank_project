@@ -153,7 +153,6 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
             request
         );
     }
-}
 
     @ExceptionHandler(IncorrectPinException.class)
     public ResponseEntity<Object> handleChangePinException(IncorrectPinException ex, WebRequest request) {
