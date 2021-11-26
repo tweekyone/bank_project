@@ -10,6 +10,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+    User save(User user);
+
+    Optional<User> getByUsername(String username);
+
+    boolean existsByEmail(String email);
+
+    boolean existsByUsername(String username);
 
     default User getById(Long id) {
         return findById(id).orElseThrow(() -> new NotFoundException(User.class, id));
