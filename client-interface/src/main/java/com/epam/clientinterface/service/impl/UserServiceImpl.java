@@ -1,10 +1,13 @@
-package com.epam.clientinterface.service;
+package com.epam.clientinterface.service.impl;
 
 import com.epam.clientinterface.domain.UserDetailAuth;
+import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.repository.UserRepository;
+import com.epam.clientinterface.service.UserService;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
