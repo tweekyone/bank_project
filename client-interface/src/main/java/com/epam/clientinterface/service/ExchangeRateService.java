@@ -50,9 +50,7 @@ public class ExchangeRateService {
         Map<String, Double> currenciesRatesMap = new HashMap<>();
 
         if (rate != 0) {
-            currenciesRatesMap.put("exchange rate from "
-                    + currencyFrom.toUpperCase() + " to "
-                    + currencyTo.toUpperCase(), rate);
+            currenciesRatesMap.put("rate", rate);
         }
         return currenciesRatesMap;
     }
