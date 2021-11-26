@@ -74,7 +74,7 @@ public class AuthServletTest extends BaseServletTest {
 
         this.authServlet.doPost(this.requestMock, this.responseMock);
 
-        this.assertErrorResponse(stringWriter, "invalidRequest", (short) 400, "Invalid request", "Invalid request");
+        this.assertErrorResponse(stringWriter, "invalidRequest", (short) 400);
 
         verify(this.responseMock).setContentType("text/json");
         verify(this.responseMock).setStatus(400);
@@ -92,13 +92,7 @@ public class AuthServletTest extends BaseServletTest {
 
         this.authServlet.doPost(this.requestMock, this.responseMock);
 
-        this.assertErrorResponse(
-            stringWriter,
-            "cardNumberIsEmpty",
-            (short) 400,
-            "Number is empty",
-            "Number is empty"
-        );
+        this.assertErrorResponse(stringWriter, "cardNumberIsEmpty", (short) 400);
 
         verify(this.responseMock).setContentType("text/json");
         verify(this.responseMock).setStatus(400);
@@ -116,7 +110,7 @@ public class AuthServletTest extends BaseServletTest {
 
         this.authServlet.doPost(this.requestMock, this.responseMock);
 
-        this.assertErrorResponse(stringWriter, "cardPinIsEmpty", (short) 400, "Pin is empty", "Pin is empty");
+        this.assertErrorResponse(stringWriter, "cardPinIsEmpty", (short) 400);
 
         verify(this.responseMock).setContentType("text/json");
         verify(this.responseMock).setStatus(400);

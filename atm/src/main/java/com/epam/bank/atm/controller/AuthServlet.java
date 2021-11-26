@@ -31,12 +31,12 @@ public class AuthServlet extends BaseServlet {
             var loginRequest = new Gson().fromJson(req.getReader(), LoginRequest.class);
 
             if (loginRequest.getCardNumber() == null || loginRequest.getCardNumber().isBlank()) {
-                this.sendError(resp, "cardNumberIsEmpty", (short) 400, "Number is empty", "Number is empty");
+                this.sendError(resp, "cardNumberIsEmpty", (short) 400);
                 return;
             }
 
             if (loginRequest.getPin() == null || loginRequest.getPin().isBlank()) {
-                this.sendError(resp, "cardPinIsEmpty", (short) 400, "Pin is empty", "Pin is empty");
+                this.sendError(resp, "cardPinIsEmpty", (short) 400);
                 return;
             }
 
@@ -48,9 +48,9 @@ public class AuthServlet extends BaseServlet {
             resp.setStatus(204);
             resp.setHeader("Authorization", String.format("Bearer %s", token));
         } catch (JsonSyntaxException | JsonIOException e) {
-            this.sendError(resp, "invalidRequest", (short) 400, "Invalid request", "Invalid request");
+            this.sendError(resp, "invalidRequest", (short) 400);
         } catch (RuntimeException e) {
-            this.sendError(resp, "unauthorized", (short) 401, "Unauthorized", "Number or pin is incorrect");
+            this.sendError(resp, "unauthorized", (short) 401);
         }
     }
 }

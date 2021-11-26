@@ -7,11 +7,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
 
 public class BaseServlet extends HttpServlet {
-    protected void sendError(HttpServletResponse resp, String type, short status, String title, String detail)
+    protected void sendError(HttpServletResponse resp, String type, short status)
         throws IOException {
         resp.setContentType("text/json");
         resp.setCharacterEncoding("UTF-8");
         resp.setStatus(status);
-        resp.getWriter().write(new Gson().toJson(new ErrorResponse(type, status, title, detail)));
+        resp.getWriter().write(new Gson().toJson(new ErrorResponse(type, status)));
     }
 }

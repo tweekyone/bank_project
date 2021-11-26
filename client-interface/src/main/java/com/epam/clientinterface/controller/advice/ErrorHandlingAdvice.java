@@ -7,6 +7,8 @@ import com.epam.clientinterface.domain.exception.CardNotFoundException;
 import com.epam.clientinterface.domain.exception.ChangePinException;
 import com.epam.clientinterface.domain.exception.IncorrectPinException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
+import com.epam.clientinterface.domain.exception.UserAlreadyExistException;
+import com.epam.clientinterface.domain.exception.UsernameAlreadyTakenException;
 import java.util.HashMap;
 import javax.validation.ConstraintViolationException;
 import lombok.NonNull;
@@ -23,6 +25,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
+
     @Override
     protected @NonNull ResponseEntity<Object> handleMethodArgumentNotValid(
         MethodArgumentNotValidException ex,
@@ -126,6 +129,31 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
             request
         );
     }
+
+    @ExceptionHandler(UserAlreadyExistException.class)
+    public ResponseEntity<Object> handleUserAlreadyExists(UserAlreadyExistException ex,
+                                                          WebRequest request) {
+        return handleExceptionInternal(
+            ex,
+            new ErrorResponse("userAlreadyExists", HttpStatus.BAD_REQUEST),
+            new HttpHeaders(),
+            HttpStatus.BAD_REQUEST,
+            request
+        );
+    }
+
+    @ExceptionHandler(UsernameAlreadyTakenException.class)
+    public ResponseEntity<Object> handleUsernameAlreadyTaken(UsernameAlreadyTakenException ex,
+                                                          WebRequest request) {
+        return handleExceptionInternal(
+            ex,
+            new ErrorResponse("usernameAlreadyTaken", HttpStatus.BAD_REQUEST),
+            new HttpHeaders(),
+            HttpStatus.BAD_REQUEST,
+            request
+        );
+    }
+}
 
     @ExceptionHandler(IncorrectPinException.class)
     public ResponseEntity<Object> handleChangePinException(IncorrectPinException ex, WebRequest request) {
