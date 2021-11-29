@@ -63,7 +63,6 @@ class CurrencyControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().string(mapToJson));
 
-        System.out.println("1 " + mapToJson);
         verify(rateService).getRatesForOneCurrency(currency.name());
     }
 
@@ -75,9 +74,6 @@ class CurrencyControllerTest {
         when(rateService
             .getRatesFromOneToAnotherCurrency(currencyFrom, currencyTo))
             .thenReturn(currencyStringMap);
-
-        System.out.println("2\n" + currencyFrom);
-        System.out.println(currencyTo);
 
         currencyStringMap.put(currencyFrom, RandomUtils.nextDouble(0, 999));
         currencyStringMap.put(currencyTo, RandomUtils.nextDouble(0, 999));
@@ -101,8 +97,6 @@ class CurrencyControllerTest {
         mockMvc.perform(get(url + "/{currency}", randomInput))
             .andExpect(status().isNotFound());
 
-        System.out.println("3 " + randomInput);
-
         verify(rateService).getRatesForOneCurrency(anyString());
     }
 
@@ -117,8 +111,6 @@ class CurrencyControllerTest {
 
         mockMvc.perform(get(url + "/{from}/{to}", randomInput1, randomInput2))
             .andExpect(status().isNotFound());
-
-        System.out.println("4 " + randomInput1);
 
         verify(rateService).getRatesFromOneToAnotherCurrency(anyString(), anyString());
     }
