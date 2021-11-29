@@ -14,10 +14,7 @@ import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.repository.UserRepository;
 import com.epam.clientinterface.service.impl.AuthServiceImpl;
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +25,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class AuthServiceImplTest {
 
-    private static final Long id = RandomUtils.nextLong();
     private static final String name = randomAlphabetic(2, 30);
     private static final String surname = randomAlphabetic(2, 30);
     private static final String phoneNumber = randomNumeric(9, 15);
