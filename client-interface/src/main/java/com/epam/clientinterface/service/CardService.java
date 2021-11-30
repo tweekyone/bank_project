@@ -37,12 +37,8 @@ public class CardService {
 
         Integer pinCounter = card.getPinCounter();
 
-        if (pinCounter == null) {
-            card.setPinCounter(1);
-            card.setPinCode(pinRequest.getNewPin());
-            return cardRepository.save(card);
-        } else if (pinCounter < 3) {
-            card.setPinCounter(card.getPinCounter() + 1);
+        if (pinCounter < 3) {
+            card.setPinCounter(pinCounter + 1);
             card.setPinCode(pinRequest.getNewPin());
             return cardRepository.save(card);
         } else {
