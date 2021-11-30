@@ -46,7 +46,7 @@ public class CardService {
         }
     }
 
-    @Scheduled(cron = "${cron.expression}")
+    @Scheduled(cron = "${droppincounter.cron.expression}")
     public void dropPinCounter() {
         cardRepository.dropPinCounter();
     }
