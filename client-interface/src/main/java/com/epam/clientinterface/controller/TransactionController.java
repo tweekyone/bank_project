@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TransactionController {
     private final TransactionService transactionService;
 
-    @PostMapping("/read-transactions")
+    @PostMapping("/transactions")
     public ResponseEntity<List<Transaction>> readTransactions(@Valid @RequestBody ReadTransactionsRequest request) {
         List<Transaction> transactionList = this.transactionService.readTransactions(
             request.getUserId(),

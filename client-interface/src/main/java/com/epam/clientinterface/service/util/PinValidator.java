@@ -4,17 +4,19 @@ import com.epam.clientinterface.controller.dto.request.ChangePinRequest;
 import com.epam.clientinterface.domain.exception.IncorrectPinException;
 import com.epam.clientinterface.entity.Card;
 
-public class NewPinValidator {
+public class PinValidator {
 
     public static void validatePinCode(Card card, ChangePinRequest pinRequest) {
+        String message;
         if (!card.getPinCode().equals(pinRequest.getOldPin())) {
-            throw new IncorrectPinException("Old pin is incorrect");
+            message = "Old pin is incorrect";
         } else if (pinRequest.getNewPin().equals(pinRequest.getOldPin())) {
-            throw new IncorrectPinException("New pin must be different");
-        } else if (!pinRequest.getNewPin().matches("[0-9]+")) {
-            throw new IncorrectPinException("Pin must contains numbers only");
-        } else if (pinRequest.getNewPin().length() != 4) {
-            throw new IncorrectPinException("Pin must contains 4 numbers only");
+            message = "New pin must be different";
+        } else if (!pinRequest.getNewPin().matches("[0-9]{4}")) {
+            message = "Pin must contains numbers only";
+        } else {
+            return;
         }
+        throw new IncorrectPinException(message);
     }
 }

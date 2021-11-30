@@ -9,7 +9,7 @@ import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.entity.CardPlan;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.CardRepository;
-import com.epam.clientinterface.service.util.NewPinValidator;
+import com.epam.clientinterface.service.util.PinValidator;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
@@ -33,7 +33,7 @@ public class CardService {
             throw new CardNotFoundException(pinRequest.getCardId());
         }
 
-        NewPinValidator.validatePinCode(card, pinRequest);
+        PinValidator.validatePinCode(card, pinRequest);
 
         Integer pinCounter = card.getPinCounter();
 
@@ -50,7 +50,7 @@ public class CardService {
         }
     }
 
-    @Scheduled(cron = "${cron.expression}")
+    @Scheduled(cron = "${droppincounter.cron.expression}")
     public void dropPinCounter() {
         cardRepository.dropPinCounter();
     }
