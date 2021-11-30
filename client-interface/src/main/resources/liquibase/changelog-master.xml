@@ -241,4 +241,21 @@
     </addColumn>
   </changeSet>
 
+  <changeSet id="12" author="Dmitrii Korolev">
+    <createTable tableName="exchange_rate">
+      <column name="id" type="BIGINT">
+        <constraints primaryKey="true" primaryKeyName="exchange_rate_pkey"/>
+      </column>
+      <column name="currency_from" type="text">
+        <constraints nullable="false"/>
+      </column>
+      <column name="currency_to" type="text">
+        <constraints nullable="false"/>
+      </column>
+      <column name="rate" type="double">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <addUniqueConstraint tableName="exchange_rate" columnNames="currency_from, currency_to"/>
+  </changeSet>
 </databaseChangeLog>
