@@ -1,5 +1,6 @@
 package com.epam.clientinterface.controller;
 
+import com.epam.clientinterface.configuration.security.SecurityUtil;
 import com.epam.clientinterface.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,8 @@ public class AccountController {
 
     @DeleteMapping("/{accountId}")
     public ResponseEntity<?> closeAccount(@PathVariable long accountId) {
-        this.accountService.closeAccount(accountId);
+        long userId = SecurityUtil.authUserId();
+        this.accountService.closeAccount(accountId, userId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
