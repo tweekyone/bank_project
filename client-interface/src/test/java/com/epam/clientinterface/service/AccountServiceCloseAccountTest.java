@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.epam.clientinterface.controller.util.UserTestData;
 import com.epam.clientinterface.domain.exception.AccountIsClosedException;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.entity.Account;
@@ -67,7 +68,7 @@ public class AccountServiceCloseAccountTest {
             RandomUtils.nextBoolean(),
             Account.Plan.values()[RandomUtils.nextInt(0, Account.Plan.values().length)],
             RandomUtils.nextDouble(0, 10000.00),
-            new User(),
+            UserTestData.USER,
             new ArrayList<>(),
             null
         );
