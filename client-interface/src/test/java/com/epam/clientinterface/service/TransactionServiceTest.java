@@ -14,9 +14,9 @@ import java.util.List;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -29,8 +29,12 @@ class TransactionServiceTest {
     @Mock
     private AccountRepository accountRepositoryMock;
 
-    @InjectMocks
-    private TransactionService transactionServiceMock;
+    private TransactionService transactionService;
+
+    @BeforeEach
+    public void setUp() {
+        transactionService = new TransactionService(transactionRepositoryMock, accountRepositoryMock);
+    }
 
     @Test
     public void shouldThrowsAccountNotFoundException() {
@@ -41,7 +45,7 @@ class TransactionServiceTest {
         String accountNumber = RandomStringUtils.random(10);
 
         Exception exception = Assertions.assertThrows(AccountNotFoundException.class,
-            () -> transactionServiceMock.readTransactions(userId, accountNumber));
+            () -> transactionService.readTransactions(userId, accountNumber));
 
         Assertions.assertEquals(String.format("User with id=%d don't have account with number=%s",
                 userId,
@@ -67,7 +71,7 @@ class TransactionServiceTest {
         Mockito.when(transactionRepositoryMock.getTransactionsByNumber(accountNumber))
             .thenReturn(Arrays.asList(transaction));
 
-        List<Transaction> result = transactionServiceMock.readTransactions(userId, accountNumber);
+        List<Transaction> result = transactionService.readTransactions(userId, accountNumber);
 
         Assertions.assertEquals(Arrays.asList(transaction), result);
     }
