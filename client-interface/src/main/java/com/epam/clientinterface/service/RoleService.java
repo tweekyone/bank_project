@@ -1,6 +1,5 @@
 package com.epam.clientinterface.service;
 
-import com.epam.clientinterface.domain.RoleAuth;
 import com.epam.clientinterface.entity.Role;
 import com.epam.clientinterface.repository.RoleRepository;
 import javax.transaction.Transactional;
