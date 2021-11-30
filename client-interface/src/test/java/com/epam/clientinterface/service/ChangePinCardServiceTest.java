@@ -7,6 +7,7 @@ import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.entity.CardPlan;
 import com.epam.clientinterface.entity.User;
+import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.CardRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,7 +19,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -28,17 +28,20 @@ class ChangePinCardServiceTest {
     private ChangePinRequest changePinRequest;
     private Account testAccount;
 
-    @InjectMocks
     private CardService cardService;
 
     @Mock
     private CardRepository cardRepositoryMock;
+
+    @Mock
+    private AccountRepository accountRepositoryMock;
 
     @BeforeEach
     public void setUp() {
         changePinRequest = new ChangePinRequest(RandomUtils.nextLong(), "1234");
         testAccount = new Account(RandomUtils.nextLong(), RandomStringUtils.random(10), true,
             Account.Plan.BASE, RandomUtils.nextDouble(), new User(), new ArrayList<>(), LocalDateTime.now());
+        cardService = new CardService(cardRepositoryMock, accountRepositoryMock);
     }
 
     @Test
