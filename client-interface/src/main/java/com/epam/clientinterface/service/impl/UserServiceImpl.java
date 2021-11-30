@@ -2,14 +2,17 @@ package com.epam.clientinterface.service.impl;
 
 import com.epam.clientinterface.domain.UserDetailAuth;
 import com.epam.clientinterface.entity.Account;
+import com.epam.clientinterface.entity.Role;
 import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.repository.UserRepository;
 import com.epam.clientinterface.service.UserService;
 import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -46,14 +50,13 @@ public class UserServiceImpl implements UserService {
         // Creating bank account for new user with default values and number consists of 20 random integers
         Account.AsFirstFactory firstFactory = new Account.AsFirstFactory(RandomStringUtils.randomNumeric(20));
 
-        // Creating new user with account above
         User newUser = new User(name, surname, phoneNumber, username, email, rawPassword, firstFactory);
+        newUser.setPassword(passwordEncoder.encode(rawPassword));
+        newUser.setRoles(Set.of(new Role(1L, "USER")));
 
         // saving user and account to database
         repository.save(newUser);
 
         return newUser;
     }
-
-    //TODO add encoding and setAuthorities into create user
 }
