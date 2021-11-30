@@ -22,23 +22,23 @@ import org.springframework.stereotype.Component;
 public class JwtTokenUtil {
 
     @Value("${app.token.secretkey}")
-    private String JWT_SECRET;
-    private final String JWT_ISSUER = "epam.com";
+    private String jwtSecret;
+    private final String jwtIssuer = "epam.com";
 
 
     public String generateAccessToken(User user) {
         return Jwts.builder()
             .setSubject(format("%s,%s", user.getId(), user.getUsername()))
-            .setIssuer(JWT_ISSUER)
+            .setIssuer(jwtIssuer)
             .setIssuedAt(new Date())
             .setExpiration(new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000)) // 1 week
-            .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
+            .signWith(SignatureAlgorithm.HS512, jwtSecret)
             .compact();
     }
 
     public String getUsername(String token) {
         Claims claims = Jwts.parser()
-            .setSigningKey(JWT_SECRET)
+            .setSigningKey(jwtSecret)
             .parseClaimsJws(token)
             .getBody();
 
@@ -47,7 +47,7 @@ public class JwtTokenUtil {
 
     public boolean validate(String token) {
         try {
-            Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token);
+            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
             return true;
         } catch (SignatureException ex) {
             log.error("Invalid JWT signature - {}", ex.getMessage());
