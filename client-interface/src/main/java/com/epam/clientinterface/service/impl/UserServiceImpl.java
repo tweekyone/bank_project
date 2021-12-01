@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository repository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public Optional<UserDetailAuth> findByEmail(String email) {
-        return repository.findByEmailWithRoles(email).map(UserDetailAuth::new);
+        return userRepository.findByEmailWithRoles(email).map(UserDetailAuth::new);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
         newUser.setRoles(Set.of(new Role(1L, "USER")));
 
         // saving user and account to database
-        repository.save(newUser);
+        userRepository.save(newUser);
 
         return newUser;
     }
