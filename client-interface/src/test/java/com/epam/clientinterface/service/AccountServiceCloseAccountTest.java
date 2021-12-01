@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.epam.clientinterface.controller.util.UserTestData;
 import com.epam.clientinterface.domain.exception.AccountIsClosedException;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.entity.Account;
@@ -37,7 +38,7 @@ public class AccountServiceCloseAccountTest {
     public void shouldReturnNothingIfAccountExists() {
         when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(this.getAccountFixture(1L)));
 
-        this.accountService.closeAccount(1L);
+        this.accountService.closeAccount(1L, 1L);
 
         verify(this.accountRepositoryMock).save(this.accountCaptor.capture());
         Assertions.assertNotNull(this.accountCaptor.getValue().getClosedAt());
@@ -47,7 +48,7 @@ public class AccountServiceCloseAccountTest {
     public void shouldThrowAccountNotFoundIfAccountDoesNotExist() {
         when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(AccountNotFoundException.class, () -> this.accountService.closeAccount(1L));
+        Assertions.assertThrows(AccountNotFoundException.class, () -> this.accountService.closeAccount(1L, 1L));
     }
 
     @Test
@@ -57,7 +58,7 @@ public class AccountServiceCloseAccountTest {
 
         when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(accountMock));
 
-        Assertions.assertThrows(AccountIsClosedException.class, () -> this.accountService.closeAccount(1L));
+        Assertions.assertThrows(AccountIsClosedException.class, () -> this.accountService.closeAccount(1L, 1L));
     }
 
     private Account getAccountFixture(long id) {
@@ -67,7 +68,7 @@ public class AccountServiceCloseAccountTest {
             RandomUtils.nextBoolean(),
             Account.Plan.values()[RandomUtils.nextInt(0, Account.Plan.values().length)],
             RandomUtils.nextDouble(0, 10000.00),
-            new User(),
+            UserTestData.USER,
             new ArrayList<>(),
             null
         );

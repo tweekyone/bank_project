@@ -16,6 +16,9 @@ services :
     ports :
       - 8080:8080
       - 8100:8100
+    depends_on :
+      - database
+      - emp-lstr-client-module-postgres
 
   database :
     image : postgres

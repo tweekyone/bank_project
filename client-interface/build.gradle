@@ -42,6 +42,7 @@ dependencies {
   implementation 'javax.validation:validation-api'
   implementation 'io.jsonwebtoken:jjwt'
   implementation 'javax.annotation:javax.annotation-api'
+  implementation 'org.javamoney:moneta'
 
   runtimeOnly 'org.postgresql:postgresql'
 
@@ -66,13 +67,13 @@ dependencies {
   testImplementation 'org.hamcrest:hamcrest-all'
   testImplementation 'com.jayway.jsonpath:json-path'
   testImplementation 'org.springframework.security:spring-security-test'
+  testImplementation 'org.mockito:mockito-inline'
 
   // Logging tests
   testImplementation 'org.apache.logging.log4j:log4j-api'
   testImplementation 'org.apache.logging.log4j:log4j-core'
   testImplementation 'org.slf4j:slf4j-api'
   testImplementation 'org.slf4j:slf4j-log4j12'
-
 
   // Annotation processors
   compileOnly "org.projectlombok:lombok"
