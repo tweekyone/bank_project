@@ -1,0 +1,45 @@
+plugins {
+  id "org.springframework.boot" version "2.6.0"
+  id "java"
+  id "checkstyle"
+}
+
+group 'com.epam.bank'
+version '0.0.1'
+sourceCompatibility = '11'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  // Importing BOM
+  implementation(platform(project(":bom")))
+  annotationProcessor(platform(project(":bom"))) // importing bom for annotation processors
+  testAnnotationProcessor(platform(project(":bom"))) // importing bom for annotation processors
+  implementation platform("org.springframework.boot:spring-boot-dependencies")
+  // From Spring BOM
+  implementation "org.springframework.boot:spring-boot-starter-web"
+
+  // Other
+  compileOnly "org.projectlombok:lombok"
+  implementation "org.apache.commons:commons-lang3"
+
+  // Test
+  testImplementation "org.springframework.boot:spring-boot-starter-test"
+  testImplementation "org.junit.jupiter:junit-jupiter-api"
+  testImplementation "org.junit.jupiter:junit-jupiter-engine"
+  testImplementation "org.assertj:assertj-core"
+  testCompileOnly "org.projectlombok:lombok"
+
+  // Integration tests only
+  integrationTestImplementation "io.rest-assured:spring-mock-mvc"
+
+  // Annotation processors
+  annotationProcessor "org.projectlombok:lombok"
+  testAnnotationProcessor "org.projectlombok:lombok"
+}
+
+test {
+  useJUnitPlatform()
+}
