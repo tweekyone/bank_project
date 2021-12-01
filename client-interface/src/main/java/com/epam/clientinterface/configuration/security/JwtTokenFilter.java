@@ -1,7 +1,7 @@
 package com.epam.clientinterface.configuration.security;
 
 import com.epam.clientinterface.domain.UserDetailAuth;
-import com.epam.clientinterface.service.UserService;
+import com.epam.clientinterface.repository.UserRepository;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +27,7 @@ import org.springframework.util.StringUtils;
 
 public class JwtTokenFilter extends AbstractAuthenticationProcessingFilter {
 
-    private final UserService service;
+    private final UserRepository repository;
 
     @Autowired
     private AuthenticationManager manager;
@@ -35,9 +35,9 @@ public class JwtTokenFilter extends AbstractAuthenticationProcessingFilter {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    protected JwtTokenFilter(UserService service, RequestMatcher matcher) {
+    protected JwtTokenFilter(UserRepository repository, RequestMatcher matcher) {
         super(matcher);
-        this.service = service;
+        this.repository = repository;
         this.setAuthenticationManager(manager);
     }
 
@@ -58,7 +58,7 @@ public class JwtTokenFilter extends AbstractAuthenticationProcessingFilter {
         }
 
         // Get user identity and set it on the spring security context
-        UserDetailAuth userDetails = service.findByEmail(jwtTokenUtil.getUsername(token))
+        UserDetailAuth userDetails = repository.findByEmailWithRoles(jwtTokenUtil.getUsername(token)).map(UserDetailAuth::new)
             .orElse(null);
 
         UsernamePasswordAuthenticationToken authenticationToken =
