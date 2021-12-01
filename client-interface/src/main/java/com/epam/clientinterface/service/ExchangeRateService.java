@@ -33,12 +33,12 @@ public class ExchangeRateService {
         Currency curFrom = null;
         Currency curTo = null;
 
-        for (Currency c : currencies) {
-            if (c.toString().equalsIgnoreCase(currencyFrom)) {
-                curFrom = c;
+        for (Currency currency : currencies) {
+            if (currency.toString().equalsIgnoreCase(currencyFrom)) {
+                curFrom = currency;
             }
-            if (c.toString().equalsIgnoreCase(currencyTo)) {
-                curTo = c;
+            if (currency.toString().equalsIgnoreCase(currencyTo)) {
+                curTo = currency;
             }
         }
 
