@@ -1,41 +1,27 @@
 package com.epam.clientinterface.controller;
 
 
+import static com.epam.clientinterface.controller.util.UserTestData.USER;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.epam.clientinterface.controller.advice.ErrorHandlingAdvice;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
-import com.epam.clientinterface.service.AccountService;
-import org.junit.jupiter.api.BeforeEach;
+
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-@ExtendWith(MockitoExtension.class)
-public class AccountControllerCloseAccountTest {
-    private MockMvc mockMvc;
-
-    @Mock
-    private AccountService accountServiceMock;
-
-    @BeforeEach
-    public void beforeEach() {
-        this.mockMvc = MockMvcBuilders
-            .standaloneSetup(new AccountController(this.accountServiceMock))
-            .setControllerAdvice(ErrorHandlingAdvice.class)
-            .build();
-    }
+public class AccountControllerCloseAccountTest extends AbstractControllerTest {
 
     @Test
     public void shouldReturnNoContentIfAccountExists() throws Exception {
@@ -44,7 +30,7 @@ public class AccountControllerCloseAccountTest {
 
     @Test
     public void shouldReturnNotFoundIfAccountDoesNotExist() throws Exception {
-        doThrow(AccountNotFoundException.class).when(this.accountServiceMock).closeAccount(anyLong());
+        doThrow(AccountNotFoundException.class).when(super.accountServiceMock).closeAccount(anyLong(), anyLong());
 
         this.send(1L)
             .andExpect(status().isNotFound())
@@ -57,6 +43,15 @@ public class AccountControllerCloseAccountTest {
     }
 
     private ResultActions send(long accountId, MediaType mediaType) throws Exception {
-        return this.mockMvc.perform(delete(String.format("/accounts/%d", accountId)).contentType(mediaType));
+        when(super.userServiceMock.findByEmail(USER.getEmail())).thenReturn(Optional.of(USER));
+
+        MvcResult result1 = mockMvc.perform(get(LOGIN).servletPath(LOGIN)
+                .header("Authorization", "Basic YWFAZW1haWwuY29tOnBhc3M="))
+            .andExpect(status().isOk()).andReturn();
+        String token = result1.getResponse().getHeader("Authorization");
+
+        return this.mockMvc.perform(delete(String.format("/accounts/%d", accountId))
+            .header("Authorization", String.format("Bearer %s", token))
+            .contentType(mediaType));
     }
 }

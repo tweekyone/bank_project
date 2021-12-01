@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ExchangeRateRepository extends JpaRepository<ExchangeRate, Short> {
 
+    Optional<ExchangeRate> findExchangeRateByCurrencyFromAndCurrencyTo(Currency currencyFrom, Currency currencyTo);
+
     @Query("select er from ExchangeRate er where er.currencyFrom = ?1 and er.currencyTo = ?2")
     Optional<ExchangeRate> findOneByCurrencies(Currency currencyFrom, Currency currencyTo);
 
