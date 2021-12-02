@@ -4,8 +4,8 @@ import com.epam.clientinterface.controller.dto.response.ErrorResponse;
 import com.epam.clientinterface.domain.exception.AccountIsNotSupposedForExternalTransferException;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.CardNotFoundException;
-import com.epam.clientinterface.domain.exception.CurrencyNotFoundException;
 import com.epam.clientinterface.domain.exception.ChangePinException;
+import com.epam.clientinterface.domain.exception.CurrencyNotFoundException;
 import com.epam.clientinterface.domain.exception.IncorrectPinException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
 import com.epam.clientinterface.domain.exception.UserAlreadyExistException;
@@ -145,7 +145,7 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UsernameAlreadyTakenException.class)
     public ResponseEntity<Object> handleUsernameAlreadyTaken(UsernameAlreadyTakenException ex,
-                                                          WebRequest request) {
+                                                             WebRequest request) {
         return handleExceptionInternal(
             ex,
             new ErrorResponse("usernameAlreadyTaken", HttpStatus.BAD_REQUEST),
