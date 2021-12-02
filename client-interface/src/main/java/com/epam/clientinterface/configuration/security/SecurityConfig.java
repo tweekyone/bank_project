@@ -76,7 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
             .antMatchers("/").permitAll()
-            .antMatchers("/bank/public**").permitAll()
+            .antMatchers("/user/registration").permitAll()
             .antMatchers(HttpMethod.POST, "/bank/public/login").permitAll()
             .antMatchers(HttpMethod.GET, "/bank/secured/**").authenticated()
             .anyRequest().authenticated();
@@ -113,7 +113,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     JwtTokenFilter jwtTokenFilter() throws Exception {
         JwtTokenFilter jwtTokenFilterBean =
             new JwtTokenFilter(userRepository, new AndRequestMatcher(new AntPathRequestMatcher("/**"),
-                new NegatedRequestMatcher(new AntPathRequestMatcher("/login"))));
+                new NegatedRequestMatcher(new AntPathRequestMatcher("/login")),
+                new NegatedRequestMatcher(new AntPathRequestMatcher("/user/registration"))));
         jwtTokenFilterBean.setAuthenticationManager(authenticationManagerBean());
         return jwtTokenFilterBean;
     }
