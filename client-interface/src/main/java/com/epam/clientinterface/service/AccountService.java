@@ -89,7 +89,9 @@ public class AccountService {
             () -> new AccountNotFoundException(accountId)
         );
 
-        if(account.getUser().getId() != userId) throw new AccountNotFoundException(accountId);
+        if (account.getUser().getId() != userId) {
+            throw new AccountNotFoundException(accountId);
+        }
 
         if (account.isClosed()) {
             throw new AccountIsClosedException(accountId);

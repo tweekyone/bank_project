@@ -4,6 +4,7 @@ import com.epam.clientinterface.controller.dto.response.ErrorResponse;
 import com.epam.clientinterface.domain.exception.AccountIsNotSupposedForExternalTransferException;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.CardNotFoundException;
+import com.epam.clientinterface.domain.exception.CurrencyNotFoundException;
 import com.epam.clientinterface.domain.exception.ChangePinException;
 import com.epam.clientinterface.domain.exception.IncorrectPinException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
@@ -144,7 +145,7 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UsernameAlreadyTakenException.class)
     public ResponseEntity<Object> handleUsernameAlreadyTaken(UsernameAlreadyTakenException ex,
-                                                          WebRequest request) {
+                                                             WebRequest request) {
         return handleExceptionInternal(
             ex,
             new ErrorResponse("usernameAlreadyTaken", HttpStatus.BAD_REQUEST),
@@ -154,15 +155,21 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
         );
     }
 
+    @ExceptionHandler(CurrencyNotFoundException.class)
+    public ResponseEntity<Object> handleCurrencyNotFoundException(CurrencyNotFoundException ex,
+                                                                  WebRequest request) {
+        return handleExceptionInternal(
+            ex,
+            new ErrorResponse("currencyNotFound", HttpStatus.NOT_FOUND),
+            new HttpHeaders(),
+            HttpStatus.NOT_FOUND,
+            request
+        );
+    }
+
     @ExceptionHandler(IncorrectPinException.class)
     public ResponseEntity<Object> handleChangePinException(IncorrectPinException ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse("Pin code is not valid", HttpStatus.BAD_REQUEST);
-        return handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
-    }
-
-    @ExceptionHandler(ChangePinException.class)
-    public ResponseEntity<Object> handleChangePinException(Exception ex, WebRequest request) {
-        ErrorResponse errorResponse = new ErrorResponse("Limit of attempts", HttpStatus.BAD_REQUEST);
         return handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 }
