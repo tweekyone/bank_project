@@ -1,7 +1,7 @@
 package com.epam.clientinterface.controller;
 
 import com.epam.clientinterface.controller.util.AuthRequest;
-import com.epam.clientinterface.domain.dto.UserDTO;
+import com.epam.clientinterface.domain.dto.UserDto;
 import com.epam.clientinterface.entity.User;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -20,9 +20,9 @@ class AuthSecurityTest extends AbstractControllerTest {
 
     private static final String HELLO = "/bank/secured/hello";
 
-    private AuthRequest getAuthRequest(UserDTO userDTO, String password) {
+    private AuthRequest getAuthRequest(UserDto userDto, String password) {
         AuthRequest request = new AuthRequest();
-        request.setEmail(userDTO.getEmail());
+        request.setEmail(userDto.getEmail());
         request.setPassword(password);
         return request;
     }
@@ -39,8 +39,8 @@ class AuthSecurityTest extends AbstractControllerTest {
 
     @Test
     void testLogin5TimesFail() throws Exception {
-        UserDTO userDTO = getUserView(USER_TO_BLOCK);
-        AuthRequest request = getAuthRequest(userDTO, "PASSWORD");
+        UserDto userDto = getUserView(USER_TO_BLOCK);
+        AuthRequest request = getAuthRequest(userDto, "PASSWORD");
 
         when(super.userRepositoryMock.findByEmail(request.getEmail())).thenReturn(Optional.of(USER_TO_BLOCK));
         when(super.userServiceMock.findByEmail(USER.getEmail())).thenReturn(Optional.of(USER_TO_BLOCK));

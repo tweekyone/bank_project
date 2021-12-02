@@ -1,6 +1,7 @@
 package com.epam.clientinterface.entity;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -22,12 +24,14 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Table(name = "card", schema = "public")
 public class Card {
     @Id
     @Column(name = "id")
     @SequenceGenerator(name = "card_id_seq", sequenceName = "card_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "card_id_seq")
+    @EqualsAndHashCode.Exclude
     private Long id;
 
     @Column(name = "number", nullable = false)
@@ -49,13 +53,17 @@ public class Card {
     @Column(name = "expiration_date", nullable = false)
     private LocalDateTime expirationDate;
 
+    @Column(name = "pin_counter", nullable = false)
+    private Integer pinCounter;
+
     public Card(
         @NonNull Account account,
         @NonNull String number,
         @NonNull String pinCode,
         @NonNull CardPlan plan,
         boolean isBlocked,
-        @NonNull LocalDateTime expirationDate
+        @NonNull LocalDateTime expirationDate,
+        @NonNull Integer pinCounter
     ) {
         this.account = account;
         this.number = number;
@@ -63,5 +71,6 @@ public class Card {
         this.plan = plan;
         this.isBlocked = isBlocked;
         this.expirationDate = expirationDate;
+        this.pinCounter = pinCounter;
     }
 }

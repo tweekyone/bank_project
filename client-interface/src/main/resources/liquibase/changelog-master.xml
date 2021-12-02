@@ -283,4 +283,12 @@
     </createTable>
     <addUniqueConstraint tableName="exchange_rate" columnNames="currency_from, currency_to"/>
   </changeSet>
+
+  <changeSet id="13" author="Evgenii Ponukhov">
+    <addColumn tableName="card">
+      <column name="pin_counter" type="INTEGER" defaultValue="0">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+  </changeSet>
 </databaseChangeLog>

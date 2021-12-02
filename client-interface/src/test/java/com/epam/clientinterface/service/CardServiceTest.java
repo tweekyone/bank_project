@@ -30,7 +30,7 @@ public class CardServiceTest {
     private final Account account = new Account(1L, "", true, Account.Plan.BASE,
         1000, new User(), new ArrayList<>(), null);
     private final Card card = new Card(account, "1234567887654321","1111",
-        CardPlan.BASE, false, LocalDateTime.now());
+        CardPlan.BASE, false, LocalDateTime.now(), 0);
 
     @InjectMocks
     private CardService cardService;
