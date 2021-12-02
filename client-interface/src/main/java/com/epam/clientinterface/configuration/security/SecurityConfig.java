@@ -1,7 +1,8 @@
 package com.epam.clientinterface.configuration.security;
 
-import com.epam.clientinterface.service.UserService;
 import javax.servlet.http.HttpServletResponse;
+import com.epam.clientinterface.domain.UserDetailAuth;
+import com.epam.clientinterface.repository.UserRepository;
 import org.slf4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -30,12 +31,12 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final Logger logger;
-    private final UserService service;
+    private final UserRepository userRepository;
 
-    public SecurityConfig(Logger logger, UserService service) {
+    public SecurityConfig(Logger logger, UserRepository userRepository) {
         super();
         this.logger = logger;
-        this.service = service;
+        this.userRepository = userRepository;
 
         // Inherit security context in async function calls
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
@@ -44,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     //Configure the authentication manager with the correct provider
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(username -> service.findByEmail(username)
+        auth.userDetailsService(username -> userRepository.findByEmailWithRoles(username).map(UserDetailAuth::new)
             .orElseThrow(() -> new UsernameNotFoundException(String.format("User %s not found", username))));
     }
 
@@ -111,7 +112,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     JwtTokenFilter jwtTokenFilter() throws Exception {
         JwtTokenFilter jwtTokenFilterBean =
-            new JwtTokenFilter(service, new AndRequestMatcher(new AntPathRequestMatcher("/**"),
+            new JwtTokenFilter(userRepository, new AndRequestMatcher(new AntPathRequestMatcher("/**"),
                 new NegatedRequestMatcher(new AntPathRequestMatcher("/login"))));
         jwtTokenFilterBean.setAuthenticationManager(authenticationManagerBean());
         return jwtTokenFilterBean;

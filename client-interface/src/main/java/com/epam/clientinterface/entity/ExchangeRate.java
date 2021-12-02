@@ -24,7 +24,7 @@ public class ExchangeRate {
     @Column(name = "id", nullable = false)
     @SequenceGenerator(name = "transaction_id_seq", sequenceName = "transaction_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_id_seq")
-    private Long id;
+    private Short id;
 
     @Column(name = "currency_from", nullable = false)
     @Enumerated(EnumType.STRING)
