@@ -20,9 +20,9 @@ public class ExchangeRateService {
     public Map<Currency, Double> getRatesForOneCurrency(String currency) {
         List<Currency> currencies = Currency.getCurrencies();
 
-        for (Currency c : currencies) {
-            if (c.toString().equalsIgnoreCase(currency)) {
-                return currencyRatesToMap(rateRepository.getExchangeRatesByCurrencyFrom(c));
+        for (Currency currencyInList : currencies) {
+            if (currencyInList.toString().equalsIgnoreCase(currency)) {
+                return currencyRatesToMap(rateRepository.getExchangeRatesByCurrencyFrom(currencyInList));
             }
         }
         throw new CurrencyNotFoundException(currency);

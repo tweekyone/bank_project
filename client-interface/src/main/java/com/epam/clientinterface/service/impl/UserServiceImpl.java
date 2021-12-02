@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
         // Creating bank account for new user with default values and number consists of 20 random integers
         Account.AsFirstFactory firstFactory = new Account.AsFirstFactory(RandomStringUtils.randomNumeric(20));
 
-        // Creating new user with account above
+        // Creating new user with account above, generate password, set role
         User newUser = new User(name, surname, phoneNumber, username, email, rawPassword, firstFactory);
         newUser.setPassword(passwordEncoder.encode(rawPassword));
         newUser.setRoles(Set.of(new Role(1L, "USER")));
