@@ -44,6 +44,7 @@ public class AccountControllerCloseAccountTest extends AbstractControllerTest {
 
     private ResultActions send(long accountId, MediaType mediaType) throws Exception {
         when(super.userServiceMock.findByEmail(USER.getEmail())).thenReturn(Optional.of(USER));
+        when(super.userRepositoryMock.findByEmailWithRoles(USER.getEmail())).thenReturn(Optional.of(USER));
 
         MvcResult result1 = mockMvc.perform(get(LOGIN).servletPath(LOGIN)
                 .header("Authorization", "Basic YWFAZW1haWwuY29tOnBhc3M="))

@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository repository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public Optional<UserDetailAuth> findByEmail(String email) {
-        return repository.findByEmailWithRoles(email).map(UserDetailAuth::new);
+        return userRepository.findByEmailWithRoles(email).map(UserDetailAuth::new);
     }
 
     @Override
@@ -50,12 +50,13 @@ public class UserServiceImpl implements UserService {
         // Creating bank account for new user with default values and number consists of 20 random integers
         Account.AsFirstFactory firstFactory = new Account.AsFirstFactory(RandomStringUtils.randomNumeric(20));
 
+        // Creating new user with account above, generate password, set role
         User newUser = new User(name, surname, phoneNumber, username, email, rawPassword, firstFactory);
         newUser.setPassword(passwordEncoder.encode(rawPassword));
         newUser.setRoles(Set.of(new Role(1L, "USER")));
 
         // saving user and account to database
-        repository.save(newUser);
+        userRepository.save(newUser);
 
         return newUser;
     }

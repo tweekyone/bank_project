@@ -30,6 +30,7 @@ class AuthSecurityTest extends AbstractControllerTest {
     @Test
     void testLoginSuccess() throws Exception {
         when(super.userServiceMock.findByEmail(USER.getEmail())).thenReturn(Optional.of(USER));
+        when(super.userRepositoryMock.findByEmailWithRoles(USER.getEmail())).thenReturn(Optional.of(USER));
 
         mockMvc.perform(get(LOGIN).servletPath(LOGIN)
                 .header("Authorization", "Basic YWFAZW1haWwuY29tOnBhc3M="))
@@ -72,7 +73,7 @@ class AuthSecurityTest extends AbstractControllerTest {
     @Test
     void testHelloSuccess() throws Exception {
         when(super.userServiceMock.findByEmail(USER.getEmail())).thenReturn(Optional.of(USER));
-
+        when(super.userRepositoryMock.findByEmailWithRoles(USER.getEmail())).thenReturn(Optional.of(USER));
         MvcResult result1 = mockMvc.perform(get(LOGIN).servletPath(LOGIN)
                 .header("Authorization", "Basic YWFAZW1haWwuY29tOnBhc3M="))
             .andExpect(status().isOk()).andReturn();
