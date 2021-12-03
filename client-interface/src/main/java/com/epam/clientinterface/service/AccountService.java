@@ -85,9 +85,13 @@ public class AccountService {
         ));
     }
 
-    public void closeAccount(long accountId) {
+    public void closeAccount(long accountId, long userId) {
         var account = accountRepository.findById(accountId)
             .orElseThrow(() -> new AccountNotFoundException(accountId));
+
+        if (account.getUser().getId() != userId) {
+            throw new AccountNotFoundException(accountId);
+        }
 
         DomainLogicChecker.assertAccountIsNotClosed(account);
 

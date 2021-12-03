@@ -1,5 +1,6 @@
 package com.epam.clientinterface.controller;
 
+import com.epam.clientinterface.controller.dto.request.ChangePinRequest;
 import com.epam.clientinterface.controller.dto.request.NewCardRequest;
 import com.epam.clientinterface.controller.dto.response.BlockCardResponse;
 import com.epam.clientinterface.controller.dto.response.NewCardResponse;
@@ -42,5 +43,10 @@ public class CardController {
             card.getNumber());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-}
 
+    @PatchMapping(path = "/cards/change-password")
+    public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePinRequest request) {
+        cardService.changePinCode(request);
+        return ResponseEntity.ok("Pin code successfully changed!");
+    }
+}

@@ -1,18 +1,22 @@
 package com.epam.clientinterface.service;
 
+import com.epam.clientinterface.controller.dto.request.ChangePinRequest;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.CardNotFoundException;
+import com.epam.clientinterface.domain.exception.ChangePinException;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.entity.CardPlan;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.CardRepository;
+import com.epam.clientinterface.service.util.NewPinValidator;
 import java.time.LocalDateTime;
 import java.util.Random;
 import javax.transaction.Transactional;
 import javax.validation.constraints.Positive;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,6 +25,30 @@ import org.springframework.stereotype.Service;
 public class CardService {
     private final CardRepository cardRepository;
     private final AccountRepository accountRepository;
+
+    public Card changePinCode(ChangePinRequest pinRequest) {
+        Card card = cardRepository.findById(pinRequest.getCardId()).orElse(null);
+        if (card == null) {
+            throw new CardNotFoundException(pinRequest.getCardId());
+        }
+
+        NewPinValidator.validatePinCode(card, pinRequest);
+
+        Integer pinCounter = card.getPinCounter();
+
+        if (pinCounter < 3) {
+            card.setPinCounter(pinCounter + 1);
+            card.setPinCode(pinRequest.getNewPin());
+            return cardRepository.save(card);
+        } else {
+            throw new ChangePinException();
+        }
+    }
+
+    @Scheduled(cron = "${droppincounter.cron.expression}")
+    public void dropPinCounter() {
+        cardRepository.dropPinCounter();
+    }
 
     public @NonNull Card releaseCard(@NonNull Long accountId, @NonNull CardPlan plan) {
         Account account = accountRepository.findById(accountId)
