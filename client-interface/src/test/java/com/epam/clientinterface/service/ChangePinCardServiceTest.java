@@ -57,7 +57,7 @@ class ChangePinCardServiceTest {
 
     @Test
     public void shouldThrowsChangePinException() {
-        Card testCard = new Card(testAccount, RandomStringUtils.random(10), "1111",
+        Card testCard = new Card(1L, RandomStringUtils.random(10), testAccount, "1111",
             CardPlan.BASE, false, LocalDateTime.now(), 3);
 
         Mockito.when(cardRepositoryMock.findById(Mockito.anyLong())).thenReturn(Optional.of(testCard));
@@ -71,7 +71,7 @@ class ChangePinCardServiceTest {
 
     @Test
     public void shouldChangePinIfHaveAttempts() {
-        Card testCard = new Card(testAccount, RandomStringUtils.random(10), "1111",
+        Card testCard = new Card(1L, RandomStringUtils.random(10), testAccount, "1111",
             CardPlan.BASE, false, LocalDateTime.now(), 2);
         ArgumentCaptor<Card> cardArgumentCaptor = ArgumentCaptor.forClass(Card.class);
 

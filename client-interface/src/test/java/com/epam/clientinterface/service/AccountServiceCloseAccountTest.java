@@ -37,7 +37,7 @@ class AccountServiceCloseAccountTest {
 
         when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(accountFixture));
 
-        this.accountService.closeAccount(accountFixture.getId(), 1L);
+        this.accountService.closeAccount(accountFixture.getId(), accountFixture.getUser().getId());
 
         verify(this.accountRepositoryMock).save(this.accountCaptor.capture());
         Assertions.assertNotNull(this.accountCaptor.getValue().getClosedAt());
@@ -61,7 +61,7 @@ class AccountServiceCloseAccountTest {
 
         Assertions.assertThrows(
             AccountIsClosedException.class,
-            () -> this.accountService.closeAccount(accountFixture.getId(), 1L)
+            () -> this.accountService.closeAccount(accountFixture.getId(), accountFixture.getUser().getId())
         );
     }
 }

@@ -1,7 +1,6 @@
 package com.epam.clientinterface.entity;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -62,8 +61,7 @@ public class Card {
         @NonNull String pinCode,
         @NonNull CardPlan plan,
         boolean isBlocked,
-        @NonNull LocalDateTime expirationDate,
-        @NonNull Integer pinCounter
+        @NonNull LocalDateTime expirationDate
     ) {
         this.account = account;
         this.number = number;
@@ -71,6 +69,6 @@ public class Card {
         this.plan = plan;
         this.isBlocked = isBlocked;
         this.expirationDate = expirationDate;
-        this.pinCounter = pinCounter;
+        this.pinCounter = 0;
     }
 }

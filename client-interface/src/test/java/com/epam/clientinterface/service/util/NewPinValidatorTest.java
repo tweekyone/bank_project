@@ -23,7 +23,7 @@ public class NewPinValidatorTest {
     public void beforeEach() {
         testChangePinRequest = new ChangePinRequest(RandomUtils.nextLong(), "2222");
         testCard = new Card(new Account(), RandomStringUtils.random(10), "1111",
-            CardPlan.BASE, false, LocalDateTime.now(), 0);
+            CardPlan.BASE, false, LocalDateTime.now());
     }
 
     @Test
