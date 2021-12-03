@@ -1,5 +1,5 @@
 package com.epam.clientinterface.entity;
 
 public enum TransactionState {
-    SUCCESS, DECLINE
+    SUCCESS, DECLINE, IN_PROCESS, DONE, CANCELLED, CLOSED
 }

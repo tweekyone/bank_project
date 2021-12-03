@@ -1,7 +1,8 @@
 package com.epam.bank.atm.entity;
 
-import java.util.Objects;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,38 +11,13 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
+@EqualsAndHashCode
 public class Account {
-
     private long id;
-    private double number;
+    private String number;
     private boolean isDefault;
     private String plan;
     private double amount;
-    private final long userId;
-
-    public Account(double number, boolean isDefault, String plan, double amount, long userId) {
-        this.number = number;
-        this.isDefault = isDefault;
-        this.plan = plan;
-        this.amount = amount;
-        this.userId = userId;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Account account = (Account) o;
-        return id == account.id && userId == account.userId && Double.compare(account.amount, amount) == 0;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, userId, amount);
-    }
-
+    private long userId;
+    private LocalDateTime closedAt;
 }

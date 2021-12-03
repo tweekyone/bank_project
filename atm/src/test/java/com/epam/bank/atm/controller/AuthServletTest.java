@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.Test;
@@ -50,8 +50,8 @@ public class AuthServletTest extends BaseServletTest {
             .thenReturn(
                 new AuthDescriptor(
                     new User(1L),
-                    new Account(1L, 1L, true, "plan", 10000, 1L),
-                    new Card(1L, cardNumber, 1L, pin, Card.Plan.TESTPLAN, LocalDateTime.now())
+                    new Account(1L, "123", true, "plan", 10000D, 1L, null),
+                    new Card(1L, cardNumber, 1L, pin, Card.Plan.BASE, ZonedDateTime.now(), false, 0)
                 )
             );
         when(this.tokenSessionServiceMock.start(any(AuthDescriptor.class))).thenReturn("token");

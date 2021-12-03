@@ -30,7 +30,10 @@ public class JdbcUserRepository implements UserRepository {
                     resultSet.getString("surname"),
                     resultSet.getString("email"),
                     resultSet.getString("password"),
-                    resultSet.getString("phone_number")
+                    resultSet.getString("phone_number"),
+                    resultSet.getString("username"),
+                    resultSet.getBoolean("enabled"),
+                    resultSet.getInt("failed_login_attempts")
                 );
             } else {
                 return null; // Optional

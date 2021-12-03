@@ -123,16 +123,16 @@ public class DiContainer {
 
     private Connection createConnection() {
         var dataSource = new PGSimpleDataSource();
-        dataSource.setUser("postgres");
-        dataSource.setPassword("123qwe");
-        dataSource.setUrl("jdbc:postgresql://postgres:5432/postgres");
+        dataSource.setUser("user");
+        dataSource.setPassword("user");
+        dataSource.setUrl("jdbc:postgresql://epm-lstr-postgres:5432/bank");
 
         // ToDo: make container for building app in order to work with one url
         try {
             return dataSource.getConnection();
         } catch (SQLException e) {
             try {
-                dataSource.setUrl("jdbc:postgresql://localhost:5432/postgres");
+                dataSource.setUrl("jdbc:postgresql://localhost:5432/bank");
                 return dataSource.getConnection();
             } catch (SQLException exception) {
                 throw new RuntimeException(e);

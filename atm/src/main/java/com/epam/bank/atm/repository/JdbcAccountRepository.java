@@ -17,19 +17,22 @@ public class JdbcAccountRepository implements AccountRepository {
     }
 
     public Account getById(long accountId) {
-        String sql = "SELECT number, is_default, plan, amount, user_id FROM account WHERE id = ?;";
+        String sql = "SELECT number, is_default, plan, amount, user_id, closed_at FROM account WHERE id = ?;";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setLong(1, accountId);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
+                var closedAt = resultSet.getTimestamp("closed_at");
+
                 return new Account(
                     accountId,
-                    resultSet.getDouble("number"),
+                    resultSet.getString("number"),
                     resultSet.getBoolean("is_default"),
                     resultSet.getString("plan"),
                     resultSet.getDouble("amount"),
-                    resultSet.getLong("user_id")
+                    resultSet.getLong("user_id"),
+                    closedAt != null ? closedAt.toLocalDateTime() : null
                 );
             } else {
                 return null;
