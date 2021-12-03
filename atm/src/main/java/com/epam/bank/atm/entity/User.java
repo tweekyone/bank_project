@@ -1,13 +1,14 @@
 package com.epam.bank.atm.entity;
 
-import java.util.Objects;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@EqualsAndHashCode
 public class User {
     private Long id;
     private String name;
@@ -15,6 +16,9 @@ public class User {
     private String email;
     private String password;
     private String phoneNumber;
+    private String username;
+    private boolean enabled = true;
+    private int failedLoginAttempts = 0;
 
     public User(Long id) {
         this.id = id;
@@ -23,27 +27,5 @@ public class User {
     public enum Role {
         admin,
         client
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        User user = (User) o;
-        return id.equals(user.id)
-            && name.equals(user.name)
-            && surname.equals(user.surname)
-            && email.equals(user.email)
-            && password.equals(user.password)
-            && phoneNumber.equals(user.phoneNumber);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, surname, email, password, phoneNumber);
     }
 }

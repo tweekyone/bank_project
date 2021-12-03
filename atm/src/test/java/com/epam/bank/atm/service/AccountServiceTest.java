@@ -3,6 +3,7 @@ package com.epam.bank.atm.service;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
+import com.epam.bank.atm.entity.Account;
 import com.epam.bank.atm.repository.AccountRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -11,7 +12,6 @@ import org.mockito.Mockito;
 
 public class AccountServiceTest {
 
-    private final double currentAmount = 5678.58;
     private final double positiveAmount = 578.58;
     private final double negativeAmount = -578.58;
     private final double zeroAmount = 0.00;
@@ -27,9 +27,14 @@ public class AccountServiceTest {
 
     @Test
     void putMoney() {
-        when(mockRepo.getCurrentAmount(accountId)).thenReturn(currentAmount);
-        when(mockRepo.putMoney(accountId, positiveAmount)).thenReturn(currentAmount + positiveAmount);
-        Assertions.assertEquals(currentAmount + positiveAmount, service.putMoney(accountId, positiveAmount));
+        var accountFixture = this.getTestingAccount();
+
+        when(mockRepo.getById(accountId)).thenReturn(accountFixture);
+        when(mockRepo.putMoney(accountId, positiveAmount)).thenReturn(accountFixture.getAmount() + positiveAmount);
+        Assertions.assertEquals(
+            accountFixture.getAmount() + positiveAmount,
+            service.putMoney(accountId, positiveAmount)
+        );
     }
 
     @Test
@@ -44,41 +49,58 @@ public class AccountServiceTest {
 
     @Test
     void putFails() {
-        when(mockRepo.getCurrentAmount(accountId)).thenReturn(currentAmount);
-        when(mockRepo.putMoney(accountId, positiveAmount)).thenReturn(currentAmount);
+        var accountFixture = this.getTestingAccount();
+
+        when(mockRepo.getById(accountId)).thenReturn(accountFixture);
+        when(mockRepo.putMoney(accountId, positiveAmount)).thenReturn(accountFixture.getAmount());
         Assertions.assertThrows(IllegalStateException.class,
             () -> service.putMoney(accountId, positiveAmount));
     }
 
     @Test
     void withdrawMoney() {
-        when(mockRepo.getCurrentAmount(accountId)).thenReturn(currentAmount);
-        when(mockRepo.withdrawMoney(accountId, positiveAmount)).thenReturn(currentAmount - positiveAmount);
-        Assertions.assertEquals(currentAmount - positiveAmount, service.withdrawMoney(accountId, positiveAmount));
+        var accountFixture = this.getTestingAccount();
+
+        when(mockRepo.getById(accountId)).thenReturn(accountFixture);
+        when(mockRepo.withdrawMoney(accountId, positiveAmount)).thenReturn(accountFixture.getAmount() - positiveAmount);
+        Assertions.assertEquals(
+            accountFixture.getAmount() - positiveAmount,
+            service.withdrawMoney(accountId, positiveAmount)
+        );
     }
 
     @Test
     void withdrawMoneyIncorrectAmount() {
+        when(mockRepo.getById(accountId)).thenReturn(this.getTestingAccount());
         Assertions.assertThrows(IllegalArgumentException.class, () -> service.withdrawMoney(accountId, negativeAmount));
     }
 
     @Test
     void withdrawMoneyMoneyZero() {
+        when(mockRepo.getById(accountId)).thenReturn(this.getTestingAccount());
         Assertions.assertThrows(IllegalArgumentException.class, () -> service.withdrawMoney(accountId, zeroAmount));
     }
 
     @Test
     void withdrawMoreThanWeHave() {
+        var accountFixture = this.getTestingAccount();
+        when(mockRepo.getById(accountId)).thenReturn(accountFixture);
         Assertions.assertThrows(IllegalArgumentException.class,
-            () -> service.withdrawMoney(accountId, currentAmount + 100));
+            () -> service.withdrawMoney(accountId, accountFixture.getAmount() + 100));
     }
 
     @Test
     void withdrawFails() {
-        when(mockRepo.getCurrentAmount(accountId)).thenReturn(currentAmount);
-        when(mockRepo.withdrawMoney(accountId, positiveAmount)).thenReturn(currentAmount);
+        var accountFixture = this.getTestingAccount();
+
+        when(mockRepo.getById(accountId)).thenReturn(accountFixture);
+        when(mockRepo.withdrawMoney(accountId, positiveAmount)).thenReturn(accountFixture.getAmount());
         Assertions.assertThrows(IllegalStateException.class,
             () -> service.withdrawMoney(accountId, positiveAmount));
+    }
+
+    private Account getTestingAccount() {
+        return new Account(1L, "123", true, "plan", 10000D, 1L, null);
     }
 
 }

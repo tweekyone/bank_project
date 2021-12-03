@@ -18,7 +18,7 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.Assertions;
@@ -63,8 +63,8 @@ public class PutMoneyServletTest extends BaseServletTest {
 
         AuthDescriptor authDescriptor = new AuthDescriptor(
             new User(123L),
-            new Account(1L, 1L, true, "plan", 10000, 1L),
-            new Card(1L, "1234567890123456", 1L, "1234", Card.Plan.TESTPLAN, LocalDateTime.now())
+            new Account(1L, "123", true, "plan", 10000D, 1L, null),
+            new Card(1L, "1234567890123456", 1L, "1234", Card.Plan.BASE, ZonedDateTime.now(), false, 0)
         );
 
         when(req.getReader()).thenReturn(new BufferedReader(new StringReader(json)));
@@ -88,8 +88,8 @@ public class PutMoneyServletTest extends BaseServletTest {
 
         AuthDescriptor authDescriptor = new AuthDescriptor(
             new User(123L),
-            new Account(1L, 1L, true, "plan", 10000, 1L),
-            new Card(1L, "1234567890123456", 1L, "1234", Card.Plan.TESTPLAN, LocalDateTime.now())
+            new Account(1L, "123", true, "plan", 10000D, 1L, null),
+            new Card(1L, "1234567890123456", 1L, "1234", Card.Plan.BASE, ZonedDateTime.now(), false, 0)
         );
 
         when(req.getReader()).thenReturn(new BufferedReader(new StringReader(json)));
@@ -114,8 +114,8 @@ public class PutMoneyServletTest extends BaseServletTest {
         double balance = 2000000;
         AuthDescriptor authDescriptor = new AuthDescriptor(
             new User(123L),
-            new Account(1L, 1L, true, "plan", 10000, 1L),
-            new Card(1L, "1234567890123456", 1L, "1234", Card.Plan.TESTPLAN, LocalDateTime.now())
+            new Account(1L, "123", true, "plan", 10000D, 1L, null),
+            new Card(1L, "1234567890123456", 1L, "1234", Card.Plan.BASE, ZonedDateTime.now(), false, 0)
         );
 
         when(req.getReader()).thenReturn(new BufferedReader(new StringReader(json)));

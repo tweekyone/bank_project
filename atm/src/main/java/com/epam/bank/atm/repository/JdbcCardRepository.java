@@ -4,6 +4,7 @@ import com.epam.bank.atm.entity.Card;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.ZoneId;
 import java.util.Optional;
 
 public class JdbcCardRepository implements CardRepository {
@@ -46,7 +47,9 @@ public class JdbcCardRepository implements CardRepository {
             resultSet.getLong("account_id"),
             resultSet.getString("pin_code"),
             Card.Plan.valueOf(resultSet.getString("plan")),
-            resultSet.getTimestamp("explication_date").toLocalDateTime()
+            resultSet.getTimestamp("expiration_date").toLocalDateTime().atZone(ZoneId.systemDefault()),
+            resultSet.getBoolean("is_blocked"),
+            resultSet.getInt("pin_counter")
         );
     }
 }

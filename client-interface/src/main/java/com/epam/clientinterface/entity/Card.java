@@ -58,8 +58,7 @@ public class Card {
         @NonNull String pinCode,
         @NonNull CardPlan plan,
         boolean isBlocked,
-        @NonNull ZonedDateTime expirationDate,
-        @NonNull Integer pinCounter
+        @NonNull ZonedDateTime expirationDate
     ) {
         this.account = account;
         this.number = number;
@@ -67,6 +66,6 @@ public class Card {
         this.plan = plan;
         this.isBlocked = isBlocked;
         this.expirationDate = expirationDate;
-        this.pinCounter = pinCounter;
+        this.pinCounter = 0;
     }
 }
