@@ -17,28 +17,16 @@ services :
       - 8080:8080
       - 8100:8100
     depends_on :
-      - database
-      - emp-lstr-client-module-postgres
+      - epm-lstr-postgres
 
-  database :
+  epm-lstr-postgres :
     image : postgres
-    container_name : postgres
-    restart : always
-    volumes :
-      - ../atm/src/main/resources/db/initDB.sql:/docker-entrypoint-initdb.d/initDB.sql:ro
-      - ../atm/src/main/resources/db/populateDB.sql:/docker-entrypoint-initdb.d/populateDB.sql:ro
-    environment :
-      POSTGRES_PASSWORD : ${ATM_POSTGRES_PASSWORD}
-    ports :
-      - 5332:5432
-
-  emp-lstr-client-module-postgres :
-    image : postgres
-    container_name : emp-lstr-client-module-postgres
+    container_name : epm-lstr-postgres
     restart : on-failure
     environment :
-      POSTGRES_USER : ${CLIENT_INTERFACE_POSTGRES_USER}
-      POSTGRES_PASSWORD : ${CLIENT_INTERFACE_POSTGRES_PASSWORD}
-      POSTGRES_DB : ${CLIENT_INTERFACE_POSTGRES_DB}
+      POSTGRES_USER : ${POSTGRES_USER}
+      POSTGRES_PASSWORD : ${POSTGRES_PASSWORD}
+      POSTGRES_DB : ${POSTGRES_DB}
     ports :
-      - 5333:5432
+      - 5432:5432
+

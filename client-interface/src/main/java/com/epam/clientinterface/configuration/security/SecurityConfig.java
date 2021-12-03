@@ -1,8 +1,8 @@
 package com.epam.clientinterface.configuration.security;
 
-import javax.servlet.http.HttpServletResponse;
 import com.epam.clientinterface.domain.UserDetailAuth;
 import com.epam.clientinterface.repository.UserRepository;
+import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -49,13 +49,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .orElseThrow(() -> new UsernameNotFoundException(String.format("User %s not found", username))));
     }
 
-    // Expose authentication manager bean
-    @Override
-    @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-
     @Override
     //Configure web security (public URLs, private URLs, authorization, etc.)
     protected void configure(HttpSecurity http) throws Exception {
@@ -84,6 +77,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // Add filters before ss
         http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(initialAuthenticationFilter(), JwtTokenFilter.class);
+    }
+
+    // Expose authentication manager bean
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Bean

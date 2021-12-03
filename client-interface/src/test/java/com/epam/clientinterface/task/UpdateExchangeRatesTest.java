@@ -90,7 +90,8 @@ public class UpdateExchangeRatesTest {
                 }
 
                 when(exchangeRateRepositoryMock.findExchangeRateByCurrencyFromAndCurrencyTo(currencyA, currencyB))
-                    .thenReturn(Optional.of(new ExchangeRate((short) 1L, currencyA, currencyB, RandomUtils.nextDouble())));
+                    .thenReturn(Optional.of(new ExchangeRate((short) 1L, currencyA, currencyB,
+                        RandomUtils.nextDouble())));
             }
         }
 

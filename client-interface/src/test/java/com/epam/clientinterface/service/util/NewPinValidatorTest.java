@@ -5,7 +5,7 @@ import com.epam.clientinterface.domain.exception.IncorrectPinException;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.entity.CardPlan;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Assertions;
@@ -23,7 +23,7 @@ public class NewPinValidatorTest {
     public void beforeEach() {
         testChangePinRequest = new ChangePinRequest(RandomUtils.nextLong(), "2222");
         testCard = new Card(new Account(), RandomStringUtils.random(10), "1111",
-            CardPlan.BASE, false, LocalDateTime.now());
+            CardPlan.BASE, false, ZonedDateTime.now());
     }
 
     @Test

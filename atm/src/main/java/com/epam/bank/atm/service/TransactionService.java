@@ -1,6 +1,7 @@
 package com.epam.bank.atm.service;
 
 import com.epam.bank.atm.entity.Transaction;
+import com.epam.bank.atm.entity.TransactionAccountData;
 import com.epam.bank.atm.repository.TransactionRepository;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,20 +19,20 @@ public class TransactionService implements TransactionalService {
         return transactionRepo.getById(transactionId);
     }
 
-    public List<Transaction> getTransactionsByAccountId(long accountId) {
-        return transactionRepo.getByAccountId(accountId);
+    public List<Transaction> getTransactionsByAccountNumber(String accountNumber) {
+        return transactionRepo.getByAccountNumber(accountNumber);
     }
 
     public Transaction createTransaction(
-        Long sourceAccountId,
-        Long destinationAccountId,
+        TransactionAccountData sourceAccount,
+        TransactionAccountData destinationAccount,
         double amount,
         Transaction.OperationType operationType,
         Transaction.State state
     ) {
-
-        Transaction transaction = new Transaction(sourceAccountId, destinationAccountId,
-            amount, LocalDateTime.now(), operationType, state);
+        Transaction transaction = new Transaction(
+            sourceAccount, destinationAccount, amount, LocalDateTime.now(), operationType, state
+        );
         transactionRepo.save(transaction);
         return transaction;
     }

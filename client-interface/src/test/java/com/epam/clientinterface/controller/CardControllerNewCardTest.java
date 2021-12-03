@@ -1,5 +1,6 @@
 package com.epam.clientinterface.controller;
 
+import static com.epam.clientinterface.controller.util.CardTestData.getTestCard;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
@@ -12,7 +13,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.epam.clientinterface.controller.advice.ErrorHandlingAdvice;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
-import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.entity.CardPlan;
 import com.epam.clientinterface.service.CardService;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,7 +45,7 @@ public class CardControllerNewCardTest {
 
     @Test
     void shouldReturnIsCreatedIfRequestIsValid() throws Exception {
-        when(cardService.releaseCard(anyLong(), any(CardPlan.class))).thenReturn(new Card());
+        when(cardService.releaseCard(anyLong(), any(CardPlan.class))).thenReturn(getTestCard(1));
 
         mockMvc.perform(post("/account/1/releaseCard")
             .contentType(MediaType.APPLICATION_JSON)
@@ -101,4 +101,5 @@ public class CardControllerNewCardTest {
             .contentType(MediaType.TEXT_HTML)
             .content("")).andExpect(status().isUnsupportedMediaType());
     }
+
 }

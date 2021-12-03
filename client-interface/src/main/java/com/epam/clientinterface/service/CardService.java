@@ -10,7 +10,7 @@ import com.epam.clientinterface.entity.CardPlan;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.CardRepository;
 import com.epam.clientinterface.service.util.NewPinValidator;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Random;
 import javax.transaction.Transactional;
 import javax.validation.constraints.Positive;
@@ -20,8 +20,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class CardService {
     private final CardRepository cardRepository;
     private final AccountRepository accountRepository;
@@ -63,7 +63,7 @@ public class CardService {
             number = generateCardNumber();
         } while (cardRepository.findCardByNumber(number).isPresent());
 
-        Card card = new Card(account, number, pinCode, plan, false, LocalDateTime.now().plusYears(3));
+        Card card = new Card(account.get(), number, pinCode, plan, false, ZonedDateTime.now().plusYears(3));
         return cardRepository.save(card);
     }
 

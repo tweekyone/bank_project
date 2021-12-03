@@ -13,7 +13,7 @@ import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.entity.CardPlan;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.CardRepository;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Assertions;
@@ -39,9 +39,9 @@ class CardServiceTest {
     public void shouldReturnNewCardIfAccountIsExist() {
         when(accountRepository.findById(1L)).thenReturn(Optional.of(TestDataFactory.getAccount()));
 
-        LocalDateTime dateTimeBefore = LocalDateTime.now().plusYears(3);
+        ZonedDateTime dateTimeBefore = ZonedDateTime.now().plusYears(3);
         cardService.releaseCard(1L, CardPlan.BASE);
-        LocalDateTime dateTimeAfter = LocalDateTime.now().plusYears(3);
+        ZonedDateTime dateTimeAfter = ZonedDateTime.now().plusYears(3);
 
         ArgumentCaptor<Card> cardCaptor = ArgumentCaptor.forClass(Card.class);
         verify(cardRepository).save(cardCaptor.capture());

@@ -1,5 +1,8 @@
 package com.epam.clientinterface.controller;
 
+import static org.mockito.Mockito.reset;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+
 import com.epam.clientinterface.configuration.ApplicationConfiguration;
 import com.epam.clientinterface.repository.UserRepository;
 import com.epam.clientinterface.service.AccountService;
@@ -22,9 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
-
-import static org.mockito.Mockito.reset;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 @SpringJUnitWebConfig(ApplicationConfiguration.class)
 @ActiveProfiles("local")
