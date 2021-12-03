@@ -4,12 +4,13 @@ import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.entity.CardPlan;
 import com.epam.clientinterface.entity.User;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.RandomUtils;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 
 public class TestDataFactory {
     public static Account getAccount() {
@@ -54,7 +55,7 @@ public class TestDataFactory {
             RandomStringUtils.randomNumeric(4),
             CardPlan.values()[RandomUtils.nextInt(0, CardPlan.values().length)],
             false,
-            LocalDateTime.now().plusYears(3),
+            ZonedDateTime.now().plusYears(3),
             0
         );
     }
@@ -67,7 +68,7 @@ public class TestDataFactory {
             RandomStringUtils.randomNumeric(4),
             CardPlan.values()[RandomUtils.nextInt(0, CardPlan.values().length)],
             false,
-            LocalDateTime.now().plusYears(3),
+            ZonedDateTime.now().plusYears(3),
             0
         );
     }

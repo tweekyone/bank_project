@@ -63,7 +63,7 @@ public class CardService {
             number = generateCardNumber();
         } while (cardRepository.findCardByNumber(number).isPresent());
 
-        Card card = new Card(account.get(), number, pinCode, plan, false, ZonedDateTime.now().plusYears(3));
+        Card card = new Card(account, number, pinCode, plan, false, ZonedDateTime.now().plusYears(3));
         return cardRepository.save(card);
     }
 
