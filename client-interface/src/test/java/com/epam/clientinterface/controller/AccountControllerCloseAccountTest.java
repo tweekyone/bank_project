@@ -1,7 +1,7 @@
 package com.epam.clientinterface.controller;
 
 
-import static com.epam.clientinterface.controller.util.UserTestData.USER;
+import static com.epam.clientinterface.controller.util.UserTestData.user;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.doThrow;
@@ -12,9 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
-
 import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -43,8 +41,8 @@ public class AccountControllerCloseAccountTest extends AbstractControllerTest {
     }
 
     private ResultActions send(long accountId, MediaType mediaType) throws Exception {
-        when(super.userServiceMock.findByEmail(USER.getEmail())).thenReturn(Optional.of(USER));
-        when(super.userRepositoryMock.findByEmailWithRoles(USER.getEmail())).thenReturn(Optional.of(USER));
+        when(super.userServiceMock.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(super.userRepositoryMock.findByEmailWithRoles(user.getEmail())).thenReturn(Optional.of(user));
 
         MvcResult result1 = mockMvc.perform(get(LOGIN).servletPath(LOGIN)
                 .header("Authorization", "Basic YWFAZW1haWwuY29tOnBhc3M="))
