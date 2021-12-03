@@ -1,7 +1,6 @@
 package com.epam.clientinterface.entity;
 
-import java.time.LocalDateTime;
-import java.util.Objects;
+import java.time.ZonedDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -13,7 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -24,14 +22,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 @Table(name = "card", schema = "public")
 public class Card {
     @Id
     @Column(name = "id")
     @SequenceGenerator(name = "card_id_seq", sequenceName = "card_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "card_id_seq")
-    @EqualsAndHashCode.Exclude
     private Long id;
 
     @Column(name = "number", nullable = false)
@@ -51,7 +47,7 @@ public class Card {
     private boolean isBlocked;
 
     @Column(name = "expiration_date", nullable = false)
-    private LocalDateTime expirationDate;
+    private ZonedDateTime expirationDate;
 
     @Column(name = "pin_counter", nullable = false)
     private Integer pinCounter;
@@ -62,7 +58,7 @@ public class Card {
         @NonNull String pinCode,
         @NonNull CardPlan plan,
         boolean isBlocked,
-        @NonNull LocalDateTime expirationDate,
+        @NonNull ZonedDateTime expirationDate,
         @NonNull Integer pinCounter
     ) {
         this.account = account;

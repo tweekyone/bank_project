@@ -1,10 +1,10 @@
 package com.epam.clientinterface.configuration.security;
 
+import static java.util.Objects.requireNonNull;
+
 import com.epam.clientinterface.domain.UserDetailAuth;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import static java.util.Objects.requireNonNull;
 
 public class SecurityUtil {
 

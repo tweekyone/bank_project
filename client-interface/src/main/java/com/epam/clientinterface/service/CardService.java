@@ -10,7 +10,7 @@ import com.epam.clientinterface.entity.CardPlan;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.CardRepository;
 import com.epam.clientinterface.service.util.NewPinValidator;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 import java.util.Random;
 import javax.transaction.Transactional;
@@ -65,7 +65,7 @@ public class CardService {
             number = generateCardNumber();
         } while (cardRepository.findCardByNumber(number).isPresent());
 
-        Card card = new Card(account.get(), number, pinCode, plan, false, LocalDateTime.now().plusYears(3), 0);
+        Card card = new Card(account.get(), number, pinCode, plan, false, ZonedDateTime.now().plusYears(3), 0);
         return cardRepository.save(card);
     }
 

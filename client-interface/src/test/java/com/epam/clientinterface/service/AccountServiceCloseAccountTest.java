@@ -68,7 +68,7 @@ public class AccountServiceCloseAccountTest {
             RandomUtils.nextBoolean(),
             Account.Plan.values()[RandomUtils.nextInt(0, Account.Plan.values().length)],
             RandomUtils.nextDouble(0, 10000.00),
-            UserTestData.USER,
+            UserTestData.user,
             new ArrayList<>(),
             null
         );
