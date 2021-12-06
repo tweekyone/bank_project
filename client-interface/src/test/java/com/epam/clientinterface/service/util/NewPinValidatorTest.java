@@ -5,7 +5,6 @@ import com.epam.clientinterface.domain.exception.IncorrectPinException;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.entity.CardPlan;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;

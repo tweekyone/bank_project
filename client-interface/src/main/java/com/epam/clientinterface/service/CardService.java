@@ -11,7 +11,6 @@ import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.CardRepository;
 import com.epam.clientinterface.service.util.NewPinValidator;
 import java.time.ZonedDateTime;
-import java.util.Optional;
 import java.util.Random;
 import javax.transaction.Transactional;
 import javax.validation.constraints.Positive;
@@ -52,11 +51,10 @@ public class CardService {
     }
 
     public @NonNull Card releaseCard(@NonNull Long accountId, @NonNull CardPlan plan) {
+        Account account = accountRepository.findById(accountId)
+            .orElseThrow(() -> new AccountNotFoundException(accountId));
 
-        Optional<Account> account = accountRepository.findById(accountId);
-        if (account.isEmpty()) {
-            throw new AccountNotFoundException(accountId);
-        }
+        DomainLogicChecker.assertAccountIsNotClosed(account);
 
         String pinCode = generatePinCode();
         String number;
@@ -65,18 +63,17 @@ public class CardService {
             number = generateCardNumber();
         } while (cardRepository.findCardByNumber(number).isPresent());
 
-        Card card = new Card(account.get(), number, pinCode, plan, false, ZonedDateTime.now().plusYears(3));
+        Card card = new Card(account, number, pinCode, plan, false, ZonedDateTime.now().plusYears(3));
         return cardRepository.save(card);
     }
 
     public @NonNull Card blockCard(@Positive Long cardId) {
-        Optional<Card> card = this.cardRepository.findById(cardId);
-        if (card.isEmpty()) {
-            throw new CardNotFoundException(cardId);
-        }
+        Card card = this.cardRepository.findById(cardId).orElseThrow(() -> new CardNotFoundException(cardId));
 
-        card.get().setBlocked(true);
-        return cardRepository.save(card.get());
+        DomainLogicChecker.assertAccountIsNotClosed(card.getAccount());
+
+        card.setBlocked(true);
+        return cardRepository.save(card);
     }
 
     protected String generateCardNumber() {
