@@ -9,7 +9,7 @@ import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.entity.CardPlan;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.CardRepository;
-import com.epam.clientinterface.service.util.NewPinValidator;
+import com.epam.clientinterface.service.util.PinValidator;
 import java.time.ZonedDateTime;
 import java.util.Random;
 import javax.transaction.Transactional;

@@ -1,4 +1,4 @@
-package com.epam.bank.clientinterface.service.util;
+package com.epam.clientinterface.service.util;
 
 import com.epam.clientinterface.controller.dto.request.ChangePinRequest;
 import com.epam.clientinterface.domain.exception.IncorrectPinException;
@@ -57,7 +57,7 @@ public class PinValidatorTest {
     public void pinWith5Numbers() {
         testChangePinRequest.setNewPin("11111");
         IncorrectPinException thrownException = Assertions.assertThrows(IncorrectPinException.class,
-            () -> NewPinValidator.validatePinCode(testCard, testChangePinRequest));
+            () -> PinValidator.validatePinCode(testCard, testChangePinRequest));
 
         Assertions.assertEquals("Pin is incorrect: Pin must contains four numbers only", thrownException.getMessage());
     }
