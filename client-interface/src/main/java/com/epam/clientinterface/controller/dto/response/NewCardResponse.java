@@ -1,7 +1,8 @@
 package com.epam.clientinterface.controller.dto.response;
 
 import com.epam.clientinterface.entity.CardPlan;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,14 +18,14 @@ public class NewCardResponse {
     private String description;
     private String number;
     private CardPlan plan;
-    private LocalDateTime expirationDate;
+    private String expirationDate;
 
     public NewCardResponse(HttpStatus status, String description, String number, CardPlan plan,
-                           LocalDateTime expirationDate) {
+                           ZonedDateTime expirationDate) {
         this.status = status.value();
         this.description = description;
         this.number = number;
         this.plan = plan;
-        this.expirationDate = expirationDate;
+        this.expirationDate = DateTimeFormatter.ISO_DATE_TIME.format(expirationDate);
     }
 }

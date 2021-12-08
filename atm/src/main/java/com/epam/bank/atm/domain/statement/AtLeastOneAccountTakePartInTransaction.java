@@ -1,17 +1,21 @@
 package com.epam.bank.atm.domain.statement;
 
-public class AtLeastOneAccountTakePartInTransaction implements Statement {
-    private final Long sourceAccountId;
-    private final Long destinationAccountId;
+import com.epam.bank.atm.entity.TransactionAccountData;
 
-    public AtLeastOneAccountTakePartInTransaction(Long sourceAccountId, Long destinationAccountId) {
-        this.sourceAccountId = sourceAccountId;
-        this.destinationAccountId = destinationAccountId;
+public class AtLeastOneAccountTakePartInTransaction implements Statement {
+    private final TransactionAccountData sourceAccount;
+    private final TransactionAccountData destinationAccount;
+
+    public AtLeastOneAccountTakePartInTransaction(
+        TransactionAccountData sourceAccount, TransactionAccountData destinationAccount
+    ) {
+        this.sourceAccount = sourceAccount;
+        this.destinationAccount = destinationAccount;
     }
 
     @Override
     public boolean check() {
-        return this.sourceAccountId != null || this.destinationAccountId != null;
+        return this.sourceAccount != null || this.destinationAccount != null;
     }
 
     @Override

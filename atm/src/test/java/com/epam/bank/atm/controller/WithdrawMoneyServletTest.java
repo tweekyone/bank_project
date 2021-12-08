@@ -16,7 +16,7 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,8 +46,8 @@ public class WithdrawMoneyServletTest extends BaseServletTest {
         withdrawMoneyServlet = new WithdrawMoneyServlet(accountService, tokenSessionService);
         authDescriptor = new AuthDescriptor(
             new User(1L),
-            new Account(1L, 1L, true, "plan", 10000, 1L),
-            new Card(1L, "1234567890123456", 1L, "5555", Card.Plan.TESTPLAN, LocalDateTime.now())
+            new Account(1L, "123", true, "plan", 10000D, 1L, null),
+            new Card(1L, "1234567890123456", 1L, "5555", Card.Plan.BASE, ZonedDateTime.now(), false, 0)
         );
     }
 

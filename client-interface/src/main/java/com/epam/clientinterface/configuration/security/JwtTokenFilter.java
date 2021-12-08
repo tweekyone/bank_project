@@ -58,7 +58,8 @@ public class JwtTokenFilter extends AbstractAuthenticationProcessingFilter {
         }
 
         // Get user identity and set it on the spring security context
-        UserDetailAuth userDetails = repository.findByEmailWithRoles(jwtTokenUtil.getUsername(token)).map(UserDetailAuth::new)
+        UserDetailAuth userDetails = repository.findByEmailWithRoles(jwtTokenUtil.getUsername(token))
+            .map(UserDetailAuth::new)
             .orElse(null);
 
         UsernamePasswordAuthenticationToken authenticationToken =

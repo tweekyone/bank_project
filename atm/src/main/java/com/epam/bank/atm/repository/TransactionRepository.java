@@ -9,5 +9,5 @@ public interface TransactionRepository {
 
     Optional<Transaction> getById(long id);
 
-    List<Transaction> getByAccountId(long accountId);
+    List<Transaction> getByAccountNumber(String accountNumber);
 }

@@ -1,16 +1,15 @@
 package com.epam.clientinterface.service;
 
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
+import com.epam.clientinterface.TestDataFactory;
+import com.epam.clientinterface.domain.exception.AccountIsClosedException;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
-import com.epam.clientinterface.entity.Account;
-import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.TransactionRepository;
-import java.util.ArrayList;
 import java.util.Optional;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class AccountServiceInternalTransferTest {
+class AccountServiceInternalTransferTest {
     private AccountService accountService;
 
     @Mock
@@ -36,54 +35,106 @@ public class AccountServiceInternalTransferTest {
 
     @Test
     public void shouldReturnNothingIfAccountsExistAndThereIsEnoughMoney() {
-        when(this.accountRepositoryMock.findById(1L)).thenReturn(Optional.of(this.getAccountFixture(1L)));
-        when(this.accountRepositoryMock.findById(2L)).thenReturn(Optional.of(this.getAccountFixture(2L)));
+        var sourceAccountFixture = TestDataFactory.getAccount();
+        var destinationAccountFixture = TestDataFactory.getAccount();
 
-        this.accountService.internalTransfer(1L, 2L, 1000.00);
+        when(this.accountRepositoryMock.findById(anyLong()))
+            .thenReturn(Optional.of(sourceAccountFixture))
+            .thenReturn(Optional.of(destinationAccountFixture));
+
+        this.accountService.internalTransfer(
+            sourceAccountFixture.getId(),
+            destinationAccountFixture.getId(),
+            RandomUtils.nextDouble(1000.0, 10000.0)
+        );
     }
 
     @Test
     public void shouldThrowAccountNotFoundIfTheSourceAccountDoesNotExist() {
-        when(this.accountRepositoryMock.findById(1L)).thenReturn(Optional.empty());
+        when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.empty());
 
         Assertions.assertThrows(
             AccountNotFoundException.class,
-            () -> this.accountService.internalTransfer(1L, 2L, 1000.00)
+            () -> this.accountService.internalTransfer(
+                RandomUtils.nextLong(),
+                RandomUtils.nextLong(),
+                RandomUtils.nextDouble(1000.0, 10000.0)
+            )
         );
     }
 
     @Test
     public void shouldThrowAccountNotFoundIfTheDestinationAccountDoesNotExist() {
-        when(this.accountRepositoryMock.findById(1L)).thenReturn(Optional.of(this.getAccountFixture(1L)));
-        when(this.accountRepositoryMock.findById(2L)).thenReturn(Optional.empty());
+        var sourceAccountFixture = TestDataFactory.getAccount();
+
+        when(this.accountRepositoryMock.findById(anyLong()))
+            .thenReturn(Optional.of(sourceAccountFixture))
+            .thenReturn(Optional.empty());
 
         Assertions.assertThrows(
             AccountNotFoundException.class,
-            () -> this.accountService.internalTransfer(1L, 2L, 1000.00)
+            () -> this.accountService.internalTransfer(
+                sourceAccountFixture.getId(),
+                RandomUtils.nextLong(),
+                RandomUtils.nextDouble(1000.0, 10000.0)
+            )
         );
     }
 
     @Test
     public void shouldThrowNotEnoughMoneyIfSourceAccountDoesNotHaveEnoughMoney() {
-        when(this.accountRepositoryMock.findById(1L)).thenReturn(Optional.of(this.getAccountFixture(1L)));
-        when(this.accountRepositoryMock.findById(2L)).thenReturn(Optional.of(this.getAccountFixture(2L)));
+        var sourceAccountFixture = TestDataFactory.getAccount();
+        var destinationAccountFixture = TestDataFactory.getAccount();
+
+        when(this.accountRepositoryMock.findById(anyLong()))
+            .thenReturn(Optional.of(sourceAccountFixture))
+            .thenReturn(Optional.of(destinationAccountFixture));
 
         Assertions.assertThrows(
             NotEnoughMoneyException.class,
-            () -> this.accountService.internalTransfer(1L, 2L, 100000.00)
+            () -> this.accountService.internalTransfer(
+                sourceAccountFixture.getId(),
+                destinationAccountFixture.getId(),
+                RandomUtils.nextDouble(100000.0, 1000000.0)
+            )
         );
     }
 
-    private Account getAccountFixture(long id) {
-        return new Account(
-            id,
-            RandomStringUtils.randomNumeric(20),
-            RandomUtils.nextBoolean(),
-            Account.Plan.values()[RandomUtils.nextInt(0, Account.Plan.values().length)],
-            RandomUtils.nextDouble(10000.0, 100000.0),
-            new User(),
-            new ArrayList<>(),
-            null
+    @Test
+    public void shouldThrowAccountIsClosedIfSourceAccountIsClosed() {
+        var sourceAccountFixture = TestDataFactory.getClosedAccount();
+        var destinationAccountFixture = TestDataFactory.getAccount();
+
+        when(this.accountRepositoryMock.findById(anyLong()))
+            .thenReturn(Optional.of(sourceAccountFixture))
+            .thenReturn(Optional.of(destinationAccountFixture));
+
+        Assertions.assertThrows(
+            AccountIsClosedException.class,
+            () -> this.accountService.internalTransfer(
+                sourceAccountFixture.getId(),
+                destinationAccountFixture.getId(),
+                RandomUtils.nextDouble(1000.0, 10000.0)
+            )
+        );
+    }
+
+    @Test
+    public void shouldThrowAccountIsClosedIfDestinationAccountIsClosed() {
+        var sourceAccountFixture = TestDataFactory.getAccount();
+        var destinationAccountFixture = TestDataFactory.getClosedAccount();
+
+        when(this.accountRepositoryMock.findById(anyLong()))
+            .thenReturn(Optional.of(sourceAccountFixture))
+            .thenReturn(Optional.of(destinationAccountFixture));
+
+        Assertions.assertThrows(
+            AccountIsClosedException.class,
+            () -> this.accountService.internalTransfer(
+                sourceAccountFixture.getId(),
+                destinationAccountFixture.getId(),
+                RandomUtils.nextDouble(1000.0, 10000.0)
+            )
         );
     }
 }

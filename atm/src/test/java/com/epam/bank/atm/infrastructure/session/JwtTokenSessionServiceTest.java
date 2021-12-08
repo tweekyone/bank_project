@@ -15,7 +15,7 @@ import com.epam.bank.atm.entity.User;
 import com.epam.bank.atm.repository.AccountRepository;
 import com.epam.bank.atm.repository.CardRepository;
 import com.epam.bank.atm.repository.UserRepository;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
@@ -125,14 +125,14 @@ public class JwtTokenSessionServiceTest {
     }
 
     private User getTestUser() {
-        return new User(1L, "name", "surname", "email@mail.com", "username", "phone number");
+        return new User(1L, "name", "surname", "email@mail.com", "username", "phone number", "username", true, 0);
     }
 
     private Account getTestAccount() {
-        return new Account(1L, 1L, true, "plan", 10000, 1L);
+        return new Account(1L, "123", true, "plan", 10000D, 1L, null);
     }
 
     private Card getTestCard() {
-        return new Card(1L, "123456", 1L, "1234", Card.Plan.TESTPLAN, LocalDateTime.now());
+        return new Card(1L, "123456", 1L, "1234", Card.Plan.BASE, ZonedDateTime.now(), false, 0);
     }
 }

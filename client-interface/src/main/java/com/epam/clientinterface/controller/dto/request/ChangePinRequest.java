@@ -16,8 +16,5 @@ public class ChangePinRequest {
     private Long cardId;
 
     @NotNull
-    private String oldPin;
-
-    @NotNull
     private String newPin;
 }

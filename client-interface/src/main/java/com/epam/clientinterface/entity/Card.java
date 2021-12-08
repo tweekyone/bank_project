@@ -1,7 +1,6 @@
 package com.epam.clientinterface.entity;
 
-import java.time.LocalDateTime;
-import java.util.Objects;
+import java.time.ZonedDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -48,7 +47,7 @@ public class Card {
     private boolean isBlocked;
 
     @Column(name = "expiration_date", nullable = false)
-    private LocalDateTime expirationDate;
+    private ZonedDateTime expirationDate;
 
     @Column(name = "pin_counter", nullable = false)
     private Integer pinCounter;
@@ -59,7 +58,7 @@ public class Card {
         @NonNull String pinCode,
         @NonNull CardPlan plan,
         boolean isBlocked,
-        @NonNull LocalDateTime expirationDate,
+        @NonNull ZonedDateTime expirationDate,
         @NonNull Integer pinCounter
     ) {
         this.account = account;
@@ -68,24 +67,6 @@ public class Card {
         this.plan = plan;
         this.isBlocked = isBlocked;
         this.expirationDate = expirationDate;
-        this.pinCounter = pinCounter;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Card card = (Card) o;
-        return number.equals(card.number) && account.equals(card.account) && pinCode.equals(
-            card.pinCode) && plan == card.plan && expirationDate.equals(card.expirationDate);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(number, account, pinCode, plan, expirationDate);
+        this.pinCounter = 0;
     }
 }

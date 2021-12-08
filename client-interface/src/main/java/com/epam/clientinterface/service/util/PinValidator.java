@@ -7,16 +7,10 @@ import com.epam.clientinterface.entity.Card;
 public class PinValidator {
 
     public static void validatePinCode(Card card, ChangePinRequest pinRequest) {
-        String message;
-        if (!card.getPinCode().equals(pinRequest.getOldPin())) {
-            message = "Old pin is incorrect";
-        } else if (pinRequest.getNewPin().equals(pinRequest.getOldPin())) {
-            message = "New pin must be different";
+        if (pinRequest.getNewPin().equals(card.getPinCode())) {
+            throw new IncorrectPinException("New pin must be different");
         } else if (!pinRequest.getNewPin().matches("[0-9]{4}")) {
-            message = "Pin must contains numbers only";
-        } else {
-            return;
+            throw new IncorrectPinException("Pin must contains four numbers only");
         }
-        throw new IncorrectPinException(message);
     }
 }

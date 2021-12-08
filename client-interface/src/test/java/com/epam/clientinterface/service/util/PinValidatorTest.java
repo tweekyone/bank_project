@@ -1,11 +1,13 @@
-package com.epam.clientinterface.service.util;
+package com.epam.bank.clientinterface.service.util;
 
 import com.epam.clientinterface.controller.dto.request.ChangePinRequest;
 import com.epam.clientinterface.domain.exception.IncorrectPinException;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.entity.CardPlan;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,18 +21,9 @@ public class PinValidatorTest {
 
     @BeforeEach
     public void beforeEach() {
-        testChangePinRequest = new ChangePinRequest(1L, "1111", "2222");
-        testCard = new Card(new Account(), "1234567887654321", "1111",
-            CardPlan.BASE, false, LocalDateTime.now(), 0);
-    }
-
-    @Test
-    public void oldPinIsIncorrect() {
-        testChangePinRequest.setOldPin("2222");
-        IncorrectPinException thrownException = Assertions.assertThrows(IncorrectPinException.class,
-            () -> PinValidator.validatePinCode(testCard, testChangePinRequest));
-
-        Assertions.assertEquals("Pin is incorrect: Old pin is incorrect", thrownException.getMessage());
+        testChangePinRequest = new ChangePinRequest(RandomUtils.nextLong(), "2222");
+        testCard = new Card(new Account(), RandomStringUtils.random(10), "1111",
+            CardPlan.BASE, false, ZonedDateTime.now());
     }
 
     @Test
@@ -48,7 +41,7 @@ public class PinValidatorTest {
         IncorrectPinException thrownException = Assertions.assertThrows(IncorrectPinException.class,
             () -> PinValidator.validatePinCode(testCard, testChangePinRequest));
 
-        Assertions.assertEquals("Pin is incorrect: Pin must contains numbers only", thrownException.getMessage());
+        Assertions.assertEquals("Pin is incorrect: Pin must contains four numbers only", thrownException.getMessage());
     }
 
     @Test
@@ -57,6 +50,15 @@ public class PinValidatorTest {
         IncorrectPinException thrownException = Assertions.assertThrows(IncorrectPinException.class,
             () -> PinValidator.validatePinCode(testCard, testChangePinRequest));
 
-        Assertions.assertEquals("Pin is incorrect: Pin must contains 4 numbers only", thrownException.getMessage());
+        Assertions.assertEquals("Pin is incorrect: Pin must contains four numbers only", thrownException.getMessage());
+    }
+
+    @Test
+    public void pinWith5Numbers() {
+        testChangePinRequest.setNewPin("11111");
+        IncorrectPinException thrownException = Assertions.assertThrows(IncorrectPinException.class,
+            () -> NewPinValidator.validatePinCode(testCard, testChangePinRequest));
+
+        Assertions.assertEquals("Pin is incorrect: Pin must contains four numbers only", thrownException.getMessage());
     }
 }

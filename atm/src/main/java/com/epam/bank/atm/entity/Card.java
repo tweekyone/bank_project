@@ -5,23 +5,27 @@ import com.epam.bank.atm.domain.statement.CardAccountExists;
 import com.epam.bank.atm.domain.statement.CardNumberFormatIsValid;
 import com.epam.bank.atm.domain.statement.CardPinCodeFormatIsValid;
 import com.epam.bank.atm.domain.statement.CardWithSuchNumberDoesNotExist;
-import java.time.LocalDateTime;
-import java.util.Objects;
+import java.time.ZonedDateTime;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
+@AllArgsConstructor
+@EqualsAndHashCode
 public class Card {
     private Long id;
-    private final String number;
-    private final long accountId;
-    private final String pinCode;
-    private final Plan plan;
-    // ToDo: is the field exactly supposed to be named "explication_date"
-    private final LocalDateTime explicationDate;
+    private String number;
+    private long accountId;
+    private String pinCode;
+    private Plan plan;
+    private ZonedDateTime expirationDate;
+    private boolean isBlocked;
+    private int pinCounter;
 
     public enum Plan {
-        TESTPLAN
+        BASE
     }
 
     public Card(
@@ -29,7 +33,7 @@ public class Card {
         long accountId,
         @NonNull String pinCode,
         @NonNull Plan plan,
-        @NonNull LocalDateTime explicationDate
+        @NonNull ZonedDateTime expirationDate
     ) {
         Assertion.assertA(new CardNumberFormatIsValid(number));
         Assertion.assertA(new CardWithSuchNumberDoesNotExist(number));
@@ -39,44 +43,9 @@ public class Card {
         this.number = number;
         this.pinCode = pinCode;
         this.plan = plan;
-        this.explicationDate = explicationDate;
+        this.expirationDate = expirationDate;
         this.accountId = accountId;
-    }
-
-    // Hydration constructor
-    public Card(
-        long id,
-        @NonNull String number,
-        long accountId,
-        @NonNull String pinCode,
-        @NonNull Plan plan,
-        @NonNull LocalDateTime explicationDate
-    ) {
-        this.id = id;
-        this.number = number;
-        this.pinCode = pinCode;
-        this.plan = plan;
-        this.explicationDate = explicationDate;
-        this.accountId = accountId;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Card card = (Card) o;
-        return Objects.equals(id, card.id)
-            && Objects.equals(number, card.number)
-            && accountId == card.accountId
-            && Objects.equals(pinCode, card.pinCode);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, number, accountId, pinCode);
+        this.isBlocked = false;
+        this.pinCounter = 0;
     }
 }

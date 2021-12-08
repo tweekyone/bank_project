@@ -4,14 +4,13 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+import com.epam.clientinterface.TestDataFactory;
+import com.epam.clientinterface.domain.exception.AccountIsClosedException;
 import com.epam.clientinterface.domain.exception.AccountIsNotSupposedForExternalTransferException;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.NotEnoughMoneyException;
-import com.epam.clientinterface.entity.Account;
-import com.epam.clientinterface.entity.User;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.TransactionRepository;
-import java.util.ArrayList;
 import java.util.Optional;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
@@ -23,7 +22,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class AccountServiceExternalTransferTest {
+class AccountServiceExternalTransferTest {
     @InjectMocks
     private AccountService accountService;
 
@@ -35,11 +34,13 @@ public class AccountServiceExternalTransferTest {
 
     @Test
     public void shouldReturnNothingIfAccountsExistAndThereIsEnoughMoney() {
-        when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(this.getAccountFixture(1L)));
+        var sourceAccountFixture = TestDataFactory.getAccount();
+
+        when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(sourceAccountFixture));
         when(this.accountRepositoryMock.findByNumber(anyString())).thenReturn(Optional.empty());
 
         this.accountService.externalTransfer(
-            1L, RandomStringUtils.randomNumeric(20), RandomUtils.nextDouble(1000.0, 10000.0)
+            sourceAccountFixture.getId(), RandomStringUtils.randomNumeric(20), RandomUtils.nextDouble(1000.0, 10000.0)
         );
     }
 
@@ -50,47 +51,59 @@ public class AccountServiceExternalTransferTest {
         Assertions.assertThrows(
             AccountNotFoundException.class,
             () -> this.accountService.externalTransfer(
-                1L, RandomStringUtils.randomNumeric(20), RandomUtils.nextDouble(1000.0, 10000.0)
+                RandomUtils.nextLong(), RandomStringUtils.randomNumeric(20), RandomUtils.nextDouble(1000.0, 10000.0)
             )
         );
     }
 
     @Test
     public void shouldThrowAccountIsNotSupposedForExternalTransferDestinationAccountExists() {
-        when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(this.getAccountFixture(1L)));
-        when(this.accountRepositoryMock.findByNumber(anyString())).thenReturn(Optional.of(this.getAccountFixture(2L)));
+        var sourceAccountFixture = TestDataFactory.getAccount();
+        var destinationAccountFixture = TestDataFactory.getAccount();
+
+        when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(sourceAccountFixture));
+        when(this.accountRepositoryMock.findByNumber(anyString())).thenReturn(Optional.of(destinationAccountFixture));
 
         Assertions.assertThrows(
             AccountIsNotSupposedForExternalTransferException.class,
             () -> this.accountService.externalTransfer(
-                1L, RandomStringUtils.randomNumeric(20), RandomUtils.nextDouble(1000.0, 10000.0)
+                sourceAccountFixture.getId(),
+                destinationAccountFixture.getNumber(),
+                RandomUtils.nextDouble(1000.0, 10000.0)
             )
         );
     }
 
     @Test
     public void shouldThrowNotEnoughMoneyIfSourceAccountDoesNotHaveEnoughMoney() {
-        when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(this.getAccountFixture(1L)));
+        var sourceAccountFixture = TestDataFactory.getAccount();
+
+        when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(sourceAccountFixture));
         when(this.accountRepositoryMock.findByNumber(anyString())).thenReturn(Optional.empty());
 
         Assertions.assertThrows(
             NotEnoughMoneyException.class,
             () -> this.accountService.externalTransfer(
-                1L, RandomStringUtils.randomNumeric(20), RandomUtils.nextDouble(100000.0, 1000000.0)
+                sourceAccountFixture.getId(),
+                RandomStringUtils.randomNumeric(20),
+                RandomUtils.nextDouble(100000.0, 1000000.0)
             )
         );
     }
 
-    private Account getAccountFixture(long id) {
-        return new Account(
-            id,
-            RandomStringUtils.randomNumeric(20),
-            RandomUtils.nextBoolean(),
-            Account.Plan.values()[RandomUtils.nextInt(0, Account.Plan.values().length)],
-            RandomUtils.nextDouble(10000.0, 100000.0),
-            new User(),
-            new ArrayList<>(),
-            null
+    @Test
+    public void shouldThrowAccountIsClosedIfAccountIsClosed() {
+        var sourceAccountFixture = TestDataFactory.getClosedAccount();
+
+        when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(sourceAccountFixture));
+
+        Assertions.assertThrows(
+            AccountIsClosedException.class,
+            () -> this.accountService.externalTransfer(
+                sourceAccountFixture.getId(),
+                RandomStringUtils.randomNumeric(20),
+                RandomUtils.nextDouble(1000.0, 10000.0)
+            )
         );
     }
 }

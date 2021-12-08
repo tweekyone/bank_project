@@ -1,6 +1,8 @@
 package com.epam.bank.atm.service;
 
+import com.epam.bank.atm.entity.Account;
 import com.epam.bank.atm.entity.Transaction;
+import com.epam.bank.atm.entity.TransactionAccountData;
 import com.epam.bank.atm.repository.AccountRepository;
 
 public class AccountService {
@@ -15,35 +17,52 @@ public class AccountService {
 
     public double putMoney(long id, double amount) {
         checkMinimumAmountForOperation(amount);
-        double currentAmount = repository.getCurrentAmount(id);
+        Account account = repository.getById(id);
         double result = repository.putMoney(id, amount);
-        if (result <= currentAmount) {
-            service.createTransaction(null, id, amount,
+        if (result <= account.getAmount()) {
+            service.createTransaction(
+                null,
+                TransactionAccountData.internal(account.getNumber()),
+                amount,
                 Transaction.OperationType.CASH,
-                Transaction.State.CANCELLED);
+                Transaction.State.CANCELLED
+            );
             throw new IllegalStateException("Funds have not been credited to the account");
         }
-        service.createTransaction(null, id, amount,
+        service.createTransaction(
+            null,
+            TransactionAccountData.internal(account.getNumber()),
+            amount,
             Transaction.OperationType.CASH,
-            Transaction.State.DONE);
+            Transaction.State.DONE
+        );
         return result;
     }
 
     public double withdrawMoney(long id, double amount) {
-        double currentAmount = repository.getCurrentAmount(id);
-        if (currentAmount < amount) {
+        Account account = repository.getById(id);
+        if (account.getAmount() < amount) {
             throw new IllegalArgumentException("More than the current balance");
         }
         checkMinimumAmountForOperation(amount);
         double result = repository.withdrawMoney(id, amount);
-        if (result >= currentAmount) {
-            service.createTransaction(id, null, amount,
+        if (result >= account.getAmount()) {
+            service.createTransaction(
+                TransactionAccountData.internal(account.getNumber()),
+                null,
+                amount,
                 Transaction.OperationType.WITHDRAWAL,
-                Transaction.State.CANCELLED);
+                Transaction.State.CANCELLED
+            );
             throw new IllegalStateException("Funds have not been withdrawn from the account");
         }
-        service.createTransaction(id, null, amount,
-            Transaction.OperationType.CASH, Transaction.State.DONE);
+        service.createTransaction(
+            TransactionAccountData.internal(account.getNumber()),
+            null,
+            amount,
+            Transaction.OperationType.CASH,
+            Transaction.State.DONE
+        );
 
         return result;
     }

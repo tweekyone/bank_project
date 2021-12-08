@@ -27,6 +27,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @Table(name = "user", schema = "public")
 public class User {

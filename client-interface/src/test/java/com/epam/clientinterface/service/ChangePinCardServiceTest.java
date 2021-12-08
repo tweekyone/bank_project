@@ -7,16 +7,19 @@ import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.entity.CardPlan;
 import com.epam.clientinterface.entity.User;
+import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.CardRepository;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -26,21 +29,24 @@ class ChangePinCardServiceTest {
     private ChangePinRequest changePinRequest;
     private Account testAccount;
 
-    @InjectMocks
     private CardService cardService;
 
     @Mock
     private CardRepository cardRepositoryMock;
 
+    @Mock
+    private AccountRepository accountRepositoryMock;
+
     @BeforeEach
     public void setUp() {
-        changePinRequest = new ChangePinRequest(1L, "1111", "1234");
-        testAccount = new Account(1L, "", true, Account.Plan.BASE,
-            1000, new User(), new ArrayList<>(), LocalDateTime.now());
+        changePinRequest = new ChangePinRequest(RandomUtils.nextLong(), "1234");
+        testAccount = new Account(RandomUtils.nextLong(), RandomStringUtils.random(10), true,
+            Account.Plan.BASE, RandomUtils.nextDouble(), new User(), new ArrayList<>(), LocalDateTime.now());
+        cardService = new CardService(cardRepositoryMock, accountRepositoryMock);
     }
 
     @Test
-    public void throwsCardNotFoundException() {
+    public void shouldThrowsCardNotFoundException() {
         Mockito.when(cardRepositoryMock.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
         CardNotFoundException thrownException = Assertions.assertThrows(CardNotFoundException.class,
@@ -51,9 +57,9 @@ class ChangePinCardServiceTest {
     }
 
     @Test
-    public void throwsChangePinException() {
-        Card testCard = new Card(testAccount, "1234567887654321", "1111",
-            CardPlan.BASE, false, LocalDateTime.now(), 3);
+    public void shouldThrowsChangePinException() {
+        Card testCard = new Card(1L, RandomStringUtils.random(10), testAccount, "1111",
+            CardPlan.BASE, false, ZonedDateTime.now(), 3);
 
         Mockito.when(cardRepositoryMock.findById(Mockito.anyLong())).thenReturn(Optional.of(testCard));
 
@@ -65,9 +71,9 @@ class ChangePinCardServiceTest {
     }
 
     @Test
-    public void changePinIfHaveAttempts() {
-        Card testCard = new Card(testAccount, "1234567887654321", "1111",
-            CardPlan.BASE, false, LocalDateTime.now(), 2);
+    public void shouldChangePinIfHaveAttempts() {
+        Card testCard = new Card(1L, RandomStringUtils.random(10), testAccount, "1111",
+            CardPlan.BASE, false, ZonedDateTime.now(), 2);
         ArgumentCaptor<Card> cardArgumentCaptor = ArgumentCaptor.forClass(Card.class);
 
         Mockito.when(cardRepositoryMock.findById(Mockito.anyLong())).thenReturn(Optional.of(testCard));

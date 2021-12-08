@@ -11,7 +11,7 @@ import com.epam.bank.atm.repository.AccountRepository;
 import com.epam.bank.atm.repository.CardRepository;
 import com.epam.bank.atm.repository.UserRepository;
 import java.lang.reflect.Field;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -112,23 +112,26 @@ public class AuthServiceTest {
         String cardNumber = "1234567890123456";
         String pin = "1234";
 
-        when(mockCardRepository.getByNumber(Mockito.anyString())).thenReturn(Optional.of(getTestingCard()));
-        when(mockAccountRepository.getById(Mockito.anyLong())).thenReturn(getTestingAccount());
-        when(mockUserRepository.getById(Mockito.anyLong())).thenReturn(getTestingUser());
+        Card cardMock = getTestingCard();
+        Account accountMock = getTestingAccount();
+        User userMock = getTestingUser();
+
+        when(mockCardRepository.getByNumber(Mockito.anyString())).thenReturn(Optional.of(cardMock));
+        when(mockAccountRepository.getById(Mockito.anyLong())).thenReturn(accountMock);
+        when(mockUserRepository.getById(Mockito.anyLong())).thenReturn(userMock);
 
         AuthDescriptor testAuthDescriptor = authService.login(cardNumber, pin);
-        AuthDescriptor controlAuthDescriptor =
-            new AuthDescriptor(getTestingUser(), getTestingAccount(), getTestingCard());
+        AuthDescriptor controlAuthDescriptor = new AuthDescriptor(userMock, accountMock, cardMock);
 
         Assertions.assertEquals(controlAuthDescriptor, testAuthDescriptor);
     }
 
     public Card getTestingCard() {
-        return new Card(123456, "1234567890123456", 54321, "1234", Card.Plan.TESTPLAN, LocalDateTime.now());
+        return new Card(123456L, "1234567890123456", 54321, "1234", Card.Plan.BASE, ZonedDateTime.now(), false, 0);
     }
 
     public Account getTestingAccount() {
-        return new Account(1L, 1L, true, "plan", 10000, 1L);
+        return new Account(1L, "123", true, "plan", 10000D, 1L, null);
     }
 
     public User getTestingUser() {
@@ -138,7 +141,10 @@ public class AuthServiceTest {
             "Surname",
             "email@mail.com",
             "password",
-            "phone number"
+            "phone number",
+            "username",
+            true,
+            0
         );
     }
 
