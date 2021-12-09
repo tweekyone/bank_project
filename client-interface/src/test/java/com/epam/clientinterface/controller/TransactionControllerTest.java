@@ -1,7 +1,6 @@
 package com.epam.clientinterface.controller;
 
 import com.epam.clientinterface.controller.advice.ErrorHandlingAdvice;
-import com.epam.clientinterface.controller.dto.request.ReadTransactionsRequest;
 import com.epam.clientinterface.controller.util.JsonHelper;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.service.TransactionService;
@@ -24,7 +23,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 @ExtendWith(MockitoExtension.class)
 class TransactionControllerTest {
-    private static final String READTRANSACTIONS = "/read-transactions";
+    private static final String READTRANSACTIONS = "/transactions";
     private MockMvc mockMvc;
 
     @Mock
