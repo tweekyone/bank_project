@@ -39,53 +39,27 @@ class TransactionControllerTest {
 
     @Test
     void shouldReturnOkStatus() throws Exception {
-        ReadTransactionsRequest transactionsRequest = new ReadTransactionsRequest(
-            RandomUtils.nextLong(), RandomStringUtils.random(10));
+        String userId = RandomStringUtils.random(5, false, true);
+        String accountNumber = RandomStringUtils.random(8, false, true);
 
-        mockMvc.perform(MockMvcRequestBuilders.post(READTRANSACTIONS)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonHelper.toJson(new ObjectMapper(), transactionsRequest)))
+        mockMvc.perform(MockMvcRequestBuilders.get(READTRANSACTIONS
+                    + "/{userId}/{accountNumber}",userId, accountNumber))
             .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     void shouldReturnNotFoundIfServiceThrowsAccountNotFoundException() throws Exception {
-        ReadTransactionsRequest transactionsRequest = new ReadTransactionsRequest(
-            RandomUtils.nextLong(), RandomStringUtils.random(10));
+        String userId = RandomStringUtils.random(5, false, true);
+        String accountNumber = RandomStringUtils.random(8, false, true);
 
         Mockito.doThrow(new AccountNotFoundException(1L))
             .when(transactionServiceMock)
             .readTransactions(Mockito.anyLong(), Mockito.anyString());
 
-        mockMvc.perform(MockMvcRequestBuilders.post(READTRANSACTIONS)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonHelper.toJson(new ObjectMapper(), transactionsRequest)))
+        mockMvc.perform(MockMvcRequestBuilders.get(READTRANSACTIONS
+                + "/{userId}/{accountNumber}",userId, accountNumber))
             .andExpect(MockMvcResultMatchers.status().isNotFound())
             .andExpect(MockMvcResultMatchers.jsonPath("$.type", Is.is("accountNotFound")))
             .andExpect(MockMvcResultMatchers.jsonPath("$.status", Is.is(HttpStatus.NOT_FOUND.value())));
-    }
-
-    @Test
-    void shouldReturnUnprocessableEntityStatusIfRequestIsInvalid() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post(READTRANSACTIONS)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{}"))
-            .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity());
-    }
-
-    @Test
-    void shouldReturnBadRequestIfRequestIsIncorrect() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post(READTRANSACTIONS)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{incorrect}"))
-            .andExpect(MockMvcResultMatchers.status().isBadRequest());
-    }
-
-    @Test
-    void shouldReturnUnsupportedMediaTypeIfMediaTypeIsIncorrect() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post(READTRANSACTIONS)
-                .contentType(MediaType.TEXT_HTML)
-                .content("request"))
-            .andExpect(MockMvcResultMatchers.status().isUnsupportedMediaType());
     }
 }
