@@ -42,7 +42,7 @@ class ChangePinCardServiceTest {
         changePinRequest = new ChangePinRequest(RandomUtils.nextLong(), "1234");
         testAccount = new Account(RandomUtils.nextLong(), RandomStringUtils.random(10), true,
             Account.Plan.BASE, RandomUtils.nextDouble(), new User(), new ArrayList<>(), LocalDateTime.now());
-        cardService = new CardService(cardRepositoryMock, accountRepositoryMock);
+        cardService = new CardServiceImpl(cardRepositoryMock, accountRepositoryMock);
     }
 
     @Test

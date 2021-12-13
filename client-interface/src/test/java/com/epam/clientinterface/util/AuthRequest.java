@@ -1,4 +1,4 @@
-package com.epam.clientinterface.controller.util;
+package com.epam.clientinterface.util;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;

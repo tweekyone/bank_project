@@ -1,4 +1,4 @@
-package com.epam.clientinterface.controller.util;
+package com.epam.clientinterface.util;
 
 import com.epam.clientinterface.domain.UserDetailAuth;
 import com.epam.clientinterface.domain.dto.UserDto;

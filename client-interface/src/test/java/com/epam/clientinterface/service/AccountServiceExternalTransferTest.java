@@ -1,10 +1,12 @@
 package com.epam.clientinterface.service;
 
+import static com.epam.clientinterface.util.TestDataFactory.getAccount;
+import static com.epam.clientinterface.util.TestDataFactory.getAccountBelongsToUser;
+import static com.epam.clientinterface.util.TestDataFactory.getClosedAccountBelongsToUser;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-import com.epam.clientinterface.TestDataFactory;
 import com.epam.clientinterface.domain.exception.AccountIsClosedException;
 import com.epam.clientinterface.domain.exception.AccountIsNotSupposedForExternalTransferException;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
@@ -33,77 +35,85 @@ class AccountServiceExternalTransferTest {
     private TransactionRepository transactionRepositoryMock;
 
     @Test
-    public void shouldReturnNothingIfAccountsExistAndThereIsEnoughMoney() {
-        var sourceAccountFixture = TestDataFactory.getAccount();
+    void shouldReturnNothingIfAccountsExistAndThereIsEnoughMoney() {
+        var sourceAccountFixture = getAccountBelongsToUser();
+        when(accountRepositoryMock.findAccountByIdWithUser(anyLong(), anyLong())).thenReturn(
+            Optional.of(sourceAccountFixture));
+        when(accountRepositoryMock.findByNumber(anyString())).thenReturn(Optional.empty());
 
-        when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(sourceAccountFixture));
-        when(this.accountRepositoryMock.findByNumber(anyString())).thenReturn(Optional.empty());
-
-        this.accountService.externalTransfer(
-            sourceAccountFixture.getId(), RandomStringUtils.randomNumeric(20), RandomUtils.nextDouble(1000.0, 10000.0)
+        accountService.externalTransfer(
+            sourceAccountFixture.getId(), RandomStringUtils.randomNumeric(20), RandomUtils.nextDouble(1000.0, 10000.0),
+            1L
         );
     }
 
     @Test
-    public void shouldThrowAccountNotFoundIfTheSourceAccountDoesNotExist() {
-        when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.empty());
+    void shouldThrowAccountNotFoundIfTheSourceAccountDoesNotExist() {
+        when(this.accountRepositoryMock.findAccountByIdWithUser(anyLong(), anyLong())).thenReturn(Optional.empty());
 
         Assertions.assertThrows(
             AccountNotFoundException.class,
             () -> this.accountService.externalTransfer(
-                RandomUtils.nextLong(), RandomStringUtils.randomNumeric(20), RandomUtils.nextDouble(1000.0, 10000.0)
+                1L, RandomStringUtils.randomNumeric(20), RandomUtils.nextDouble(1000.0, 10000.0), 1
             )
         );
     }
 
     @Test
-    public void shouldThrowAccountIsNotSupposedForExternalTransferDestinationAccountExists() {
-        var sourceAccountFixture = TestDataFactory.getAccount();
-        var destinationAccountFixture = TestDataFactory.getAccount();
-
-        when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(sourceAccountFixture));
-        when(this.accountRepositoryMock.findByNumber(anyString())).thenReturn(Optional.of(destinationAccountFixture));
+    void shouldThrowAccountIsNotSupposedForExternalTransferDestinationAccountExists() {
+        var sourceAccountFixture = getAccountBelongsToUser();
+        var destinationAccountFixture = getAccount();
+        when(accountRepositoryMock.findAccountByIdWithUser(anyLong(), anyLong())).thenReturn(Optional.of(
+            sourceAccountFixture));
+        when(accountRepositoryMock.findByNumber(anyString())).thenReturn(Optional.of(destinationAccountFixture));
 
         Assertions.assertThrows(
             AccountIsNotSupposedForExternalTransferException.class,
-            () -> this.accountService.externalTransfer(
+            () -> accountService.externalTransfer(
                 sourceAccountFixture.getId(),
                 destinationAccountFixture.getNumber(),
-                RandomUtils.nextDouble(1000.0, 10000.0)
+                RandomUtils.nextDouble(1000.0, 10000.0), 1
             )
         );
     }
 
     @Test
-    public void shouldThrowNotEnoughMoneyIfSourceAccountDoesNotHaveEnoughMoney() {
-        var sourceAccountFixture = TestDataFactory.getAccount();
-
-        when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(sourceAccountFixture));
-        when(this.accountRepositoryMock.findByNumber(anyString())).thenReturn(Optional.empty());
+    void shouldThrowNotEnoughMoneyIfSourceAccountDoesNotHaveEnoughMoney() {
+        var sourceAccountFixture = getAccountBelongsToUser();
+        when(accountRepositoryMock.findAccountByIdWithUser(anyLong(), anyLong())).thenReturn(
+            Optional.of(sourceAccountFixture));
+        when(accountRepositoryMock.findByNumber(anyString())).thenReturn(Optional.empty());
 
         Assertions.assertThrows(
             NotEnoughMoneyException.class,
-            () -> this.accountService.externalTransfer(
+            () -> accountService.externalTransfer(
                 sourceAccountFixture.getId(),
                 RandomStringUtils.randomNumeric(20),
-                RandomUtils.nextDouble(100000.0, 1000000.0)
+                RandomUtils.nextDouble(100000.0, 1000000.0), 1
             )
         );
     }
 
     @Test
-    public void shouldThrowAccountIsClosedIfAccountIsClosed() {
-        var sourceAccountFixture = TestDataFactory.getClosedAccount();
+    void shouldThrowAccountIsClosedIfAccountIsClosed() {
+        var sourceAccountFixture = getClosedAccountBelongsToUser();
 
-        when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(sourceAccountFixture));
+        when(accountRepositoryMock.findAccountByIdWithUser(anyLong(), anyLong()))
+            .thenReturn(Optional.of(sourceAccountFixture));
 
         Assertions.assertThrows(
             AccountIsClosedException.class,
-            () -> this.accountService.externalTransfer(
+            () -> accountService.externalTransfer(
                 sourceAccountFixture.getId(),
                 RandomStringUtils.randomNumeric(20),
-                RandomUtils.nextDouble(1000.0, 10000.0)
+                RandomUtils.nextDouble(1000.0, 10000.0), 1
             )
         );
+    }
+
+    @Test
+    void shouldThrowAccountNotFound_IfAccountDoesNotBelongToUsers() {
+        Assertions.assertThrows(AccountNotFoundException.class,
+            () -> accountService.externalTransfer(getAccount().getId(), getAccount().getNumber(), 100, 1));
     }
 }

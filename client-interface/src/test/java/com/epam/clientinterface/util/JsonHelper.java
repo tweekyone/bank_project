@@ -1,4 +1,4 @@
-package com.epam.clientinterface.controller.util;
+package com.epam.clientinterface.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

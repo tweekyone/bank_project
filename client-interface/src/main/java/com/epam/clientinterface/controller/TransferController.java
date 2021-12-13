@@ -1,5 +1,6 @@
 package com.epam.clientinterface.controller;
 
+import com.epam.clientinterface.configuration.security.SecurityUtil;
 import com.epam.clientinterface.controller.dto.request.ExternalTransferRequest;
 import com.epam.clientinterface.controller.dto.request.InternalTransferRequest;
 import com.epam.clientinterface.service.AccountService;
@@ -20,10 +21,11 @@ public class TransferController {
 
     @PostMapping("/internal")
     public ResponseEntity<?> internalTransfer(@Valid @RequestBody InternalTransferRequest request) {
+        long userId = SecurityUtil.authUserId();
         this.accountService.internalTransfer(
             request.getSourceAccountId(),
             request.getDestinationAccountId(),
-            request.getAmount()
+            request.getAmount(), userId
         );
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -31,10 +33,11 @@ public class TransferController {
 
     @PostMapping("/external")
     public ResponseEntity<?> externalTransfer(@Valid @RequestBody ExternalTransferRequest request) {
+        long userId = SecurityUtil.authUserId();
         this.accountService.externalTransfer(
             request.getSourceAccountId(),
             request.getDestinationAccountNumber(),
-            request.getAmount()
+            request.getAmount(), userId
         );
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

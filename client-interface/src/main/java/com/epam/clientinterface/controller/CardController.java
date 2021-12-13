@@ -1,5 +1,6 @@
 package com.epam.clientinterface.controller;
 
+import com.epam.clientinterface.configuration.security.SecurityUtil;
 import com.epam.clientinterface.controller.dto.request.ChangePinRequest;
 import com.epam.clientinterface.controller.dto.request.NewCardRequest;
 import com.epam.clientinterface.controller.dto.response.BlockCardResponse;
@@ -30,7 +31,8 @@ public class CardController {
     @PostMapping(path = "/account/{accountId}/releaseCard")
     public ResponseEntity<NewCardResponse> releaseCard(@PathVariable("accountId") @Positive Long accountId,
                                                        @Valid @RequestBody NewCardRequest request) {
-        Card card = cardService.releaseCard(accountId, request.getPlan());
+        long userId = SecurityUtil.authUserId();
+        Card card = cardService.releaseCard(accountId, request.getPlan(), userId);
         NewCardResponse response = new NewCardResponse(HttpStatus.CREATED, "Card has been created", card.getNumber(),
             card.getPlan(), card.getExpirationDate());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -38,7 +40,8 @@ public class CardController {
 
     @PatchMapping(path = "/card/{cardId}/blockCard")
     public ResponseEntity<?> blockCard(@PathVariable @Positive Long cardId) {
-        Card card = cardService.blockCard(cardId);
+        long userId = SecurityUtil.authUserId();
+        Card card = cardService.blockCard(cardId, userId);
         BlockCardResponse response = new BlockCardResponse(HttpStatus.OK, "Card has been blocked",
             card.getNumber());
         return new ResponseEntity<>(response, HttpStatus.OK);
