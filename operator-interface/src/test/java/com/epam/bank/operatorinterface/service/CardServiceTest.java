@@ -4,9 +4,9 @@ import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.epam.bank.operatorinterface.domain.exceptions.NotFoundException;
 import com.epam.bank.operatorinterface.entity.Card;
 import com.epam.bank.operatorinterface.exception.CardIsBlockedException;
-import com.epam.bank.operatorinterface.exception.CardNotFoundException;
 import com.epam.bank.operatorinterface.exception.InvalidPinCodeFormatException;
 import com.epam.bank.operatorinterface.exception.TooManyPinCodeChangesPerDayException;
 import com.epam.bank.operatorinterface.repository.CardRepository;
@@ -62,7 +62,7 @@ public class CardServiceTest {
         when(cardRepositoryMock.findById(cardId)).thenReturn(Optional.empty());
 
         Assertions.assertThatThrownBy(() -> cardService.changePinCode(cardId, pinCode))
-            .isExactlyInstanceOf(CardNotFoundException.class);
+            .isExactlyInstanceOf(NotFoundException.class);
     }
 
     @Test

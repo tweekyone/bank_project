@@ -1,5 +1,6 @@
 package com.epam.bank.operatorinterface.entity;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -18,7 +20,6 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Setter;
 
 @Entity
@@ -33,13 +34,10 @@ public class Card {
     @SequenceGenerator(name = "card_id_seq", sequenceName = "card_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "card_id_seq")
     @EqualsAndHashCode.Exclude
-    private Long id;
+    private long id;
 
     @Column(name = "number", nullable = false)
     private String number;
-
-    @ManyToOne
-    private Account account;
 
     @Column(name = "pin_code", nullable = false)
     private String pinCode;
@@ -60,19 +58,23 @@ public class Card {
     @Transient
     private boolean isPinChanged = false;
 
-    public Card(
-        @NonNull Account account,
-        @NonNull String number,
-        @NonNull String pinCode,
-        @NonNull CardPlan plan
-    ) {
-        this.account = account;
+    @ManyToOne
+    @JoinColumn(name = "account_id", nullable = false)
+    private Account account;
+
+    public Card(String number, String pinCode, CardPlan plan,
+                boolean isBlocked, ZonedDateTime expirationDate, Account account) {
         this.number = number;
         this.pinCode = pinCode;
         this.plan = plan;
-        this.expirationDate = ZonedDateTime.now().plusYears(3);
-        this.isBlocked = false;
+        this.isBlocked = isBlocked;
+        this.expirationDate = expirationDate;
         this.pinCounter = 0;
+        this.account = account;
+    }
+
+    public boolean isClosed() {
+        return expirationDate.toLocalDate().isBefore(LocalDate.now());
     }
 
     @Transient

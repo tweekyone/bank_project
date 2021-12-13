@@ -1,5 +1,7 @@
 package com.epam.bank.operatorinterface.controller.advice;
 
+import com.epam.bank.operatorinterface.controller.AccountController;
+import com.epam.bank.operatorinterface.controller.UserController;
 import com.epam.bank.operatorinterface.controller.dto.response.ErrorResponse;
 import com.epam.bank.operatorinterface.exception.AccountCanNotBeClosedException;
 import com.epam.bank.operatorinterface.exception.AccountIsClosedException;
@@ -14,6 +16,8 @@ import com.epam.bank.operatorinterface.exception.ValidationException;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 import lombok.NonNull;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +30,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-@ControllerAdvice
+@ControllerAdvice(assignableTypes = {AccountController.class, UserController.class})
+@ResponseBody
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
     @Override
     protected @NonNull ResponseEntity<Object> handleMethodArgumentNotValid(

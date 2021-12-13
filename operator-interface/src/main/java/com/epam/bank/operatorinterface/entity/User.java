@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -56,14 +55,17 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Account> accounts = new ArrayList<>();
-
     @Column(name = "enabled", nullable = false, columnDefinition = "bool default true")
     private boolean enabled;
 
     @Column(name = "failed_login_attempts")
     private int failedLoginAttempts;
+
+    @OneToMany()
+    @ToString.Exclude
+    @JoinTable(name = "account", joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "account_id"))
+    private List<Account> accounts = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
