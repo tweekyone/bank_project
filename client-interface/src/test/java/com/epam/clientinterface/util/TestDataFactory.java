@@ -1,4 +1,4 @@
-package com.epam.clientinterface;
+package com.epam.clientinterface.util;
 
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
@@ -13,6 +13,33 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 
 public class TestDataFactory {
+
+    public static Account getAccountBelongsToUser() {
+        return new Account(
+            1L,
+            RandomStringUtils.randomNumeric(20),
+            RandomUtils.nextBoolean(),
+            Account.Plan.values()[RandomUtils.nextInt(0, Account.Plan.values().length)],
+            RandomUtils.nextDouble(10000.0, 100000.0),
+            UserTestData.user,
+            new ArrayList<>(),
+            null);
+    }
+
+    public static Account getClosedAccountBelongsToUser() {
+        return new Account(
+            2L,
+            RandomStringUtils.randomNumeric(20),
+            RandomUtils.nextBoolean(),
+            Account.Plan.values()[RandomUtils.nextInt(0, Account.Plan.values().length)],
+            RandomUtils.nextDouble(10000.0, 100000.0),
+            UserTestData.user,
+            new ArrayList<>(),
+            LocalDateTime.now());
+    }
+
+
+
     public static Account getAccount() {
         var account = new Account(
             RandomUtils.nextLong(),
@@ -64,7 +91,7 @@ public class TestDataFactory {
         return new Card(
             RandomUtils.nextLong(),
             RandomStringUtils.randomNumeric(16),
-            getClosedAccount(),
+            getClosedAccountBelongsToUser(),
             RandomStringUtils.randomNumeric(4),
             CardPlan.values()[RandomUtils.nextInt(0, CardPlan.values().length)],
             false,

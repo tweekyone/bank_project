@@ -1,8 +1,8 @@
 package com.epam.clientinterface.controller;
 
-import static com.epam.clientinterface.controller.util.UserTestData.getUserView;
-import static com.epam.clientinterface.controller.util.UserTestData.user;
-import static com.epam.clientinterface.controller.util.UserTestData.userToBlock;
+import static com.epam.clientinterface.util.UserTestData.getUserView;
+import static com.epam.clientinterface.util.UserTestData.user;
+import static com.epam.clientinterface.util.UserTestData.userToBlock;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
@@ -11,9 +11,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.epam.clientinterface.controller.util.AuthRequest;
 import com.epam.clientinterface.domain.dto.UserDto;
 import com.epam.clientinterface.entity.User;
+import com.epam.clientinterface.util.AuthRequest;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;

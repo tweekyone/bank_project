@@ -1,12 +1,21 @@
 package com.epam.clientinterface.controller;
 
+import static com.epam.clientinterface.util.UserTestData.user;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epam.clientinterface.configuration.ApplicationConfiguration;
 import com.epam.clientinterface.repository.UserRepository;
 import com.epam.clientinterface.service.AccountService;
+import com.epam.clientinterface.service.CardService;
 import com.epam.clientinterface.service.UserService;
+import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,13 +27,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
 @SpringJUnitWebConfig(ApplicationConfiguration.class)
 @ActiveProfiles("local")
@@ -32,13 +44,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @WebAppConfiguration
 public abstract class AbstractControllerTest {
 
-    private static final CharacterEncodingFilter CHARACTER_ENCODING_FILTER = new CharacterEncodingFilter();
     static final String LOGIN = "/login";
-
-    static {
-        CHARACTER_ENCODING_FILTER.setEncoding("UTF-8");
-        CHARACTER_ENCODING_FILTER.setForceEncoding(true);
-    }
 
     @Mock
     UserRepository userRepositoryMock;
@@ -48,6 +54,9 @@ public abstract class AbstractControllerTest {
 
     @Mock
     AccountService accountServiceMock;
+
+    @Mock
+    CardService cardServiceMock;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -73,6 +82,12 @@ public abstract class AbstractControllerTest {
         public AccountService accountServiceMock() {
             return Mockito.mock(AccountService.class);
         }
+
+        @Bean
+        @Primary
+        public CardService cardServiceMock() {
+            return Mockito.mock(CardService.class);
+        }
     }
 
     @AfterEach
@@ -80,6 +95,7 @@ public abstract class AbstractControllerTest {
         reset(userRepositoryMock);
         reset(userServiceMock);
         reset(accountServiceMock);
+        reset(cardServiceMock);
     }
 
     @BeforeEach
@@ -88,11 +104,46 @@ public abstract class AbstractControllerTest {
         // https://stackoverflow.com/a/31843799/13721689
         mockMvc = MockMvcBuilders
             .webAppContextSetup(webApplicationContext)
-            .addFilter(CHARACTER_ENCODING_FILTER)
             .apply(springSecurity())
             .build();
         this.userRepositoryMock = (UserRepository) webApplicationContext.getBean("userRepositoryMock");
         this.userServiceMock = (UserService) webApplicationContext.getBean("userServiceMock");
         this.accountServiceMock = (AccountService) webApplicationContext.getBean("accountServiceMock");
+        this.cardServiceMock = (CardService) webApplicationContext.getBean("cardServiceMock");
+    }
+
+    public ResultActions send(MediaType mediaType, String requestBody, HttpMethod method, String uri) throws Exception {
+        when(userServiceMock.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(userRepositoryMock.findByEmailWithRoles(user.getEmail())).thenReturn(Optional.of(user));
+
+        MvcResult result = mockMvc.perform(get(LOGIN).servletPath(LOGIN)
+                .header("Authorization", "Basic YWFAZW1haWwuY29tOnBhc3M="))
+            .andExpect(status().isOk()).andReturn();
+        String token = result.getResponse().getHeader("Authorization");
+
+        ResultActions resultActions;
+
+        switch (method) {
+            case PATCH:
+                resultActions = mockMvc.perform(patch(uri)
+                    .header("Authorization", String.format("Bearer %s", token))
+                    .contentType(mediaType));
+                break;
+
+            case POST:
+                resultActions = mockMvc.perform(post(uri)
+                    .header("Authorization", String.format("Bearer %s", token))
+                    .contentType(mediaType).content(requestBody));
+                break;
+
+            case DELETE:
+                resultActions = mockMvc.perform(delete(uri)
+                    .header("Authorization", String.format("Bearer %s", token))
+                    .contentType(mediaType));
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + method);
+        }
+        return resultActions;
     }
 }

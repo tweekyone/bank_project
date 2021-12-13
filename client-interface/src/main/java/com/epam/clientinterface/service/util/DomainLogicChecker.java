@@ -1,4 +1,4 @@
-package com.epam.clientinterface.service;
+package com.epam.clientinterface.service.util;
 
 import com.epam.clientinterface.domain.exception.AccountIsClosedException;
 import com.epam.clientinterface.entity.Account;
