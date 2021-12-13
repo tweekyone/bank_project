@@ -11,6 +11,7 @@ repositories {
 }
 
 dependencies {
+  implementation(project(":migration"))
   // Importing BOM
   implementation(platform(project(":bom")))
   annotationProcessor(platform(project(":bom"))) // importing bom for annotation processors
