@@ -10,7 +10,7 @@ import com.epam.clientinterface.entity.CardPlan;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.CardRepository;
 import com.epam.clientinterface.service.util.DomainLogicChecker;
-import com.epam.clientinterface.service.util.NewPinValidator;
+import com.epam.clientinterface.service.util.PinValidator;
 import java.time.ZonedDateTime;
 import javax.validation.constraints.Positive;
 import lombok.NonNull;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional() //can't mock proxy
+@Transactional //can't mock proxy
 @RequiredArgsConstructor
 public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
@@ -33,7 +33,7 @@ public class CardServiceImpl implements CardService {
             throw new CardNotFoundException(pinRequest.getCardId());
         }
 
-        NewPinValidator.validatePinCode(card, pinRequest);
+        PinValidator.validatePinCode(card, pinRequest);
 
         Integer pinCounter = card.getPinCounter();
 

@@ -11,7 +11,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 public interface CardService {
     Card changePinCode(ChangePinRequest pinRequest);
 
-    @Scheduled(cron = "${droppincounter.cron.expression}")
     void dropPinCounter();
 
     @NonNull Card releaseCard(@NonNull Long accountId, @NonNull CardPlan plan, long userId);
