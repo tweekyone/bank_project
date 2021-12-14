@@ -13,6 +13,7 @@ repositories {
 }
 
 dependencies {
+  implementation(project(":migration"))
   // Importing BOM
   implementation(platform(project(":bom")))
   annotationProcessor(platform(project(":bom"))) // importing bom for annotation processors
@@ -20,10 +21,16 @@ dependencies {
   implementation platform("org.springframework.boot:spring-boot-dependencies")
   // From Spring BOM
   implementation "org.springframework.boot:spring-boot-starter-web"
+  implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+  // Hibernate
+  implementation 'org.hibernate:hibernate-core'
 
   // Other
   compileOnly "org.projectlombok:lombok"
   implementation "org.apache.commons:commons-lang3"
+  implementation 'org.liquibase:liquibase-core'
+  implementation 'org.postgresql:postgresql'
 
   // Test
   testImplementation "org.springframework.boot:spring-boot-starter-test"

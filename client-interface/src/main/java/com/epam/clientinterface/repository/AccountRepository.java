@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 public interface AccountRepository extends JpaRepository<Account, Long> {
     Optional<Account> findByNumber(String number);
 
+    @Query("SELECT a FROM Account a JOIN FETCH a.user WHERE a.id = ?1 AND a.user.id=?2")
+    Optional<Account> findAccountByIdWithUser(long accountId, long userId);
     Account save(Account account);
 
     @Query("SELECT number FROM Account WHERE user_id = ?1")

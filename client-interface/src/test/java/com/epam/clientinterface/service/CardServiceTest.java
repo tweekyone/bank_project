@@ -1,21 +1,25 @@
 package com.epam.clientinterface.service;
 
+import static com.epam.clientinterface.util.TestDataFactory.getAccountBelongsToUser;
+import static com.epam.clientinterface.util.TestDataFactory.getCard;
+import static com.epam.clientinterface.util.TestDataFactory.getClosedAccountBelongsToUser;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.epam.clientinterface.TestDataFactory;
 import com.epam.clientinterface.domain.exception.AccountIsClosedException;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.domain.exception.CardNotFoundException;
+import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.entity.Card;
 import com.epam.clientinterface.entity.CardPlan;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.CardRepository;
+import com.epam.clientinterface.util.TestDataFactory;
+import com.epam.clientinterface.util.UserTestData;
 import java.time.ZonedDateTime;
 import java.util.Optional;
-import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,8 +30,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class CardServiceTest {
+
     @InjectMocks
-    private CardService cardService;
+    private CardServiceImpl cardService;
 
     @Mock
     private CardRepository cardRepository;
@@ -36,11 +41,12 @@ class CardServiceTest {
     private AccountRepository accountRepository;
 
     @Test
-    public void shouldReturnNewCardIfAccountIsExist() {
-        when(accountRepository.findById(1L)).thenReturn(Optional.of(TestDataFactory.getAccount()));
+    void shouldReturnNewCardIfAccountIsExist() {
+        when(accountRepository.findAccountByIdWithUser(anyLong(), anyLong()))
+            .thenReturn(Optional.of(getAccountBelongsToUser()));
 
         ZonedDateTime dateTimeBefore = ZonedDateTime.now().plusYears(3);
-        cardService.releaseCard(1L, CardPlan.BASE);
+        cardService.releaseCard(1L, CardPlan.BASE, UserTestData.user.getId());
         ZonedDateTime dateTimeAfter = ZonedDateTime.now().plusYears(3);
 
         ArgumentCaptor<Card> cardCaptor = ArgumentCaptor.forClass(Card.class);
@@ -56,25 +62,24 @@ class CardServiceTest {
                 || dateTimeAfter.isEqual(saveCard.getExpirationDate())
         );
         Assertions.assertEquals(saveCard.getPlan(), CardPlan.BASE);
-        Assertions.assertEquals(saveCard.getNumber().length(), 16);
-        Assertions.assertEquals(saveCard.getPinCode().length(), 4);
+        Assertions.assertEquals(16, saveCard.getNumber().length());
+        Assertions.assertEquals(4, saveCard.getPinCode().length());
     }
 
     @Test
-    public void shouldThrowAccountNotFoundIfAccountDoesNotExist() {
-        when(accountRepository.findById(2L)).thenReturn(Optional.empty());
-
+    void shouldThrowAccountNotFoundIfAccountDoesNotExist() {
         Assertions.assertThrows(AccountNotFoundException.class,
-            () -> cardService.releaseCard(2L, CardPlan.BASE));
+            () -> cardService.releaseCard(2L, CardPlan.BASE, 52));
     }
 
     @Test
-    public void shouldReturnDifferentCards() {
-        when(accountRepository.findById(1L)).thenReturn(Optional.of(TestDataFactory.getAccount()));
+    void shouldReturnDifferentCards() {
+        when(accountRepository.findAccountByIdWithUser(1L, UserTestData.user.getId()))
+            .thenReturn(Optional.of(getAccountBelongsToUser()));
         ArgumentCaptor<Card> cardCaptor = ArgumentCaptor.forClass(Card.class);
 
-        cardService.releaseCard(1L, CardPlan.BASE);
-        cardService.releaseCard(1L, CardPlan.BASE);
+        cardService.releaseCard(1L, CardPlan.BASE, UserTestData.user.getId());
+        cardService.releaseCard(1L, CardPlan.BASE, UserTestData.user.getId());
         verify(cardRepository, times(2)).save(cardCaptor.capture());
 
         Card card1 = cardCaptor.getAllValues().get(0);
@@ -83,30 +88,32 @@ class CardServiceTest {
     }
 
     @Test
-    public void shouldThrowAccountIsClosedIfAccountIsClosedWhenReleaseNewCard() {
-        when(this.accountRepository.findById(anyLong())).thenReturn(Optional.of(TestDataFactory.getClosedAccount()));
+    void shouldThrowAccountIsClosedIfAccountIsClosedWhenReleaseNewCard() {
+        Account acc = getClosedAccountBelongsToUser();
+        when(accountRepository.findAccountByIdWithUser(anyLong(), anyLong())).thenReturn(Optional.of(acc));
 
         Assertions.assertThrows(
             AccountIsClosedException.class,
-            () -> this.cardService.releaseCard(RandomUtils.nextLong(), CardPlan.BASE)
+            () -> cardService.releaseCard(acc.getId(), CardPlan.BASE, acc.getUser().getId())
         );
     }
 
     @Test
-    public void shouldReturnCardNumber() {
+    void shouldReturnCardNumber() {
         Assertions.assertEquals(16, cardService.randomGenerateStringOfInt(16).length());
     }
 
     @Test
-    public void shouldReturnPinCode() {
+    void shouldReturnPinCode() {
         Assertions.assertEquals(4, cardService.randomGenerateStringOfInt(4).length());
     }
 
     @Test
-    public void shouldBlockCardIfCardIsExist() {
-        when(cardRepository.findById(anyLong())).thenReturn(Optional.of(TestDataFactory.getCard()));
+    void shouldBlockCardIfCardIsExist() {
+        Card testCard = getCard();
+        when(cardRepository.findById(anyLong())).thenReturn(Optional.of(testCard));
 
-        cardService.blockCard(1L);
+        cardService.blockCard(testCard.getId(), testCard.getAccount().getUser().getId());
 
         ArgumentCaptor<Card> cardCaptor = ArgumentCaptor.forClass(Card.class);
         verify(cardRepository).save(cardCaptor.capture());
@@ -117,20 +124,20 @@ class CardServiceTest {
     }
 
     @Test
-    public void shouldThrowCardNotFoundIfCardDoesNotExist() {
+    void shouldThrowCardNotFoundIfCardDoesNotExist() {
         when(this.cardRepository.findById(1L)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(CardNotFoundException.class,
-            () -> this.cardService.blockCard(1L));
+            () -> this.cardService.blockCard(1L, UserTestData.user.getId()));
     }
 
     @Test
-    public void shouldThrowAccountIsClosedIfAccountIsClosedWhenBlockCard() {
+    void shouldThrowAccountIsClosedIfAccountIsClosedWhenBlockCard() {
         var cardFixture = TestDataFactory.getCardWithClosedAccount();
 
         when(this.cardRepository.findById(anyLong()))
             .thenReturn(Optional.of(cardFixture));
 
-        Assertions.assertThrows(AccountIsClosedException.class, () -> this.cardService.blockCard(cardFixture.getId()));
+        Assertions.assertThrows(AccountIsClosedException.class, () -> cardService.blockCard(cardFixture.getId(), 1));
     }
 }

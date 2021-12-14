@@ -1,16 +1,15 @@
 package com.epam.clientinterface.service;
 
+import static com.epam.clientinterface.util.TestDataFactory.getAccountBelongsToUser;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.epam.clientinterface.TestDataFactory;
 import com.epam.clientinterface.domain.exception.AccountIsClosedException;
 import com.epam.clientinterface.domain.exception.AccountNotFoundException;
 import com.epam.clientinterface.entity.Account;
 import com.epam.clientinterface.repository.AccountRepository;
 import java.util.Optional;
-import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,36 +31,30 @@ class AccountServiceCloseAccountTest {
     private ArgumentCaptor<Account> accountCaptor;
 
     @Test
-    public void shouldReturnNothingIfAccountExists() {
-        var accountFixture = TestDataFactory.getAccount();
+    void shouldReturnNothingIfAccountExists() {
+        var accountFixture = getAccountBelongsToUser();
+        when(accountRepositoryMock.findAccountByIdWithUser(anyLong(), anyLong()))
+            .thenReturn(Optional.of(accountFixture));
 
-        when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(accountFixture));
+        accountService.closeAccount(accountFixture.getId(), accountFixture.getUser().getId());
 
-        this.accountService.closeAccount(accountFixture.getId(), accountFixture.getUser().getId());
-
-        verify(this.accountRepositoryMock).save(this.accountCaptor.capture());
-        Assertions.assertNotNull(this.accountCaptor.getValue().getClosedAt());
+        verify(accountRepositoryMock).save(accountCaptor.capture());
+        Assertions.assertNotNull(accountCaptor.getValue().getClosedAt());
     }
 
     @Test
-    public void shouldThrowAccountNotFoundIfAccountDoesNotExist() {
-        when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.empty());
-
-        Assertions.assertThrows(
-            AccountNotFoundException.class,
-            () -> this.accountService.closeAccount(RandomUtils.nextLong(), 1L)
-        );
+    void shouldThrowAccountNotFoundIfAccountDoesNotExist() {
+        Assertions.assertThrows(AccountNotFoundException.class, () -> this.accountService.closeAccount(1L, 1L));
     }
 
     @Test
-    public void shouldThrowAccountIsClosedIfAccountIsClosed() {
-        var accountFixture = TestDataFactory.getClosedAccount();
+    void shouldThrowAccountIsClosedIfAccountIsClosed() {
+        var accountFixture = getAccountBelongsToUser();
+        accountFixture.close();
 
-        when(this.accountRepositoryMock.findById(anyLong())).thenReturn(Optional.of(accountFixture));
+        when(accountRepositoryMock.findAccountByIdWithUser(anyLong(), anyLong()))
+            .thenReturn(Optional.of(accountFixture));
 
-        Assertions.assertThrows(
-            AccountIsClosedException.class,
-            () -> this.accountService.closeAccount(accountFixture.getId(), accountFixture.getUser().getId())
-        );
+        Assertions.assertThrows(AccountIsClosedException.class, () -> accountService.closeAccount(1L, 1L));
     }
 }

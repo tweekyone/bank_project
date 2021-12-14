@@ -10,6 +10,7 @@ import com.epam.clientinterface.entity.TransactionOperationType;
 import com.epam.clientinterface.entity.TransactionState;
 import com.epam.clientinterface.repository.AccountRepository;
 import com.epam.clientinterface.repository.TransactionRepository;
+import com.epam.clientinterface.service.util.DomainLogicChecker;
 import com.fasterxml.jackson.databind.util.ArrayIterator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +22,18 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
 
-    public void internalTransfer(long sourceAccountId, long destinationAccountId, double amount) {
-        var sourceAccount = accountRepository.findById(sourceAccountId)
-            .orElseThrow(() -> new AccountNotFoundException(sourceAccountId));
-        var destinationAccount = accountRepository.findById(destinationAccountId)
-            .orElseThrow(() -> new AccountNotFoundException(destinationAccountId));
+    public void internalTransfer(long sourceAccountId, long destinationAccountId, double amount, long userId) {
+        var sourceAccount = accountRepository.findAccountByIdWithUser(sourceAccountId, userId).orElseThrow(
+            () -> new AccountNotFoundException(sourceAccountId)
+        );
+
+        checkIfAccountBelongsToUser(sourceAccount, userId);
+
+        var destinationAccount = accountRepository.findAccountByIdWithUser(destinationAccountId, userId).orElseThrow(
+            () -> new AccountNotFoundException(destinationAccountId)
+        );
+
+        checkIfAccountBelongsToUser(destinationAccount, userId);
 
         DomainLogicChecker.assertAccountIsNotClosed(sourceAccount);
         DomainLogicChecker.assertAccountIsNotClosed(destinationAccount);
@@ -55,13 +63,14 @@ public class AccountService {
         ));
     }
 
-    public void externalTransfer(long sourceAccountId, String destinationAccountNumber, double amount) {
-        var sourceAccount = accountRepository.findById(sourceAccountId)
-            .orElseThrow(() -> new AccountNotFoundException(sourceAccountId));
-
+    public void externalTransfer(long sourceAccountId, String destinationAccountNumber, double amount, long userId) {
+        var sourceAccount = accountRepository.findAccountByIdWithUser(sourceAccountId, userId).orElseThrow(
+            () -> new AccountNotFoundException(sourceAccountId)
+        );
+        checkIfAccountBelongsToUser(sourceAccount, userId);
         DomainLogicChecker.assertAccountIsNotClosed(sourceAccount);
 
-        accountRepository.findByNumber(destinationAccountNumber).ifPresent(account -> {
+        this.accountRepository.findByNumber(destinationAccountNumber).ifPresent(account -> {
             throw new AccountIsNotSupposedForExternalTransferException(account.getId());
         });
 
@@ -87,17 +96,19 @@ public class AccountService {
     }
 
     public void closeAccount(long accountId, long userId) {
-        var account = accountRepository.findById(accountId)
-            .orElseThrow(() -> new AccountNotFoundException(accountId));
+        var account = accountRepository.findAccountByIdWithUser(accountId, userId).orElseThrow(
+            () -> new AccountNotFoundException(accountId)
+        );
 
-        if (account.getUser().getId() != userId) {
-            throw new AccountNotFoundException(accountId);
-        }
-
+        checkIfAccountBelongsToUser(account, userId);
         DomainLogicChecker.assertAccountIsNotClosed(account);
-
         account.close();
-
         accountRepository.save(account);
+    }
+
+    private void checkIfAccountBelongsToUser(Account account, long userId) {
+        if (account.getUser().getId() != userId) {
+            throw new AccountNotFoundException(account.getId());
+        }
     }
 }
