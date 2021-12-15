@@ -15,7 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class NewPinValidatorTest {
+public class PinValidatorTest {
     private ChangePinRequest testChangePinRequest;
     private Card testCard;
 
@@ -30,7 +30,7 @@ public class NewPinValidatorTest {
     public void differentPins() {
         testChangePinRequest.setNewPin("1111");
         IncorrectPinException thrownException = Assertions.assertThrows(IncorrectPinException.class,
-            () -> NewPinValidator.validatePinCode(testCard, testChangePinRequest));
+            () -> PinValidator.validatePinCode(testCard, testChangePinRequest));
 
         Assertions.assertEquals("Pin is incorrect: New pin must be different", thrownException.getMessage());
     }
@@ -39,7 +39,7 @@ public class NewPinValidatorTest {
     public void pinWithNumbersOnly() {
         testChangePinRequest.setNewPin("a111");
         IncorrectPinException thrownException = Assertions.assertThrows(IncorrectPinException.class,
-            () -> NewPinValidator.validatePinCode(testCard, testChangePinRequest));
+            () -> PinValidator.validatePinCode(testCard, testChangePinRequest));
 
         Assertions.assertEquals("Pin is incorrect: Pin must contains four numbers only", thrownException.getMessage());
     }
@@ -48,7 +48,7 @@ public class NewPinValidatorTest {
     public void pinWith4Numbers() {
         testChangePinRequest.setNewPin("111");
         IncorrectPinException thrownException = Assertions.assertThrows(IncorrectPinException.class,
-            () -> NewPinValidator.validatePinCode(testCard, testChangePinRequest));
+            () -> PinValidator.validatePinCode(testCard, testChangePinRequest));
 
         Assertions.assertEquals("Pin is incorrect: Pin must contains four numbers only", thrownException.getMessage());
     }
@@ -57,7 +57,7 @@ public class NewPinValidatorTest {
     public void pinWith5Numbers() {
         testChangePinRequest.setNewPin("11111");
         IncorrectPinException thrownException = Assertions.assertThrows(IncorrectPinException.class,
-            () -> NewPinValidator.validatePinCode(testCard, testChangePinRequest));
+            () -> PinValidator.validatePinCode(testCard, testChangePinRequest));
 
         Assertions.assertEquals("Pin is incorrect: Pin must contains four numbers only", thrownException.getMessage());
     }

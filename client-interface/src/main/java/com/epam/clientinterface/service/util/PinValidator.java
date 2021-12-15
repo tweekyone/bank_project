@@ -4,7 +4,7 @@ import com.epam.clientinterface.controller.dto.request.ChangePinRequest;
 import com.epam.clientinterface.domain.exception.IncorrectPinException;
 import com.epam.clientinterface.entity.Card;
 
-public class NewPinValidator {
+public class PinValidator {
 
     public static void validatePinCode(Card card, ChangePinRequest pinRequest) {
         if (pinRequest.getNewPin().equals(card.getPinCode())) {
