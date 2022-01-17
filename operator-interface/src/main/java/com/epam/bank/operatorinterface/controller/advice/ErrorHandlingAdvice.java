@@ -6,7 +6,9 @@ import com.epam.bank.operatorinterface.exception.AccountIsClosedException;
 import com.epam.bank.operatorinterface.exception.AccountNotFoundException;
 import com.epam.bank.operatorinterface.exception.AccountNumberGenerationTriesLimitException;
 import com.epam.bank.operatorinterface.exception.UserNotFoundException;
+import com.epam.bank.operatorinterface.exception.ValidationException;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 import lombok.NonNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -47,6 +49,26 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
         );
 
         return handleExceptionInternal(ex, body, headers, HttpStatus.UNPROCESSABLE_ENTITY, request);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<Object> handleValidationException(ValidationException ex, WebRequest request) {
+        var body = new HashMap<>();
+        body.put("type", "validation");
+        body.put("status", HttpStatus.UNPROCESSABLE_ENTITY.value());
+        body.put("errors", ex.getViolations().stream()
+            .map(v -> {
+                var fieldError = new HashMap<>();
+                fieldError.put("field", v.getPropertyPath().toString());
+                fieldError.put("type", v.getConstraintDescriptor().getAnnotation().annotationType().getName());
+                fieldError.put("error", v.getMessage());
+
+                return fieldError;
+            })
+            .collect(Collectors.toList())
+        );
+
+        return new ResponseEntity<>(body, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @Override

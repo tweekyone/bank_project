@@ -2,7 +2,7 @@ package com.epam.bank.operatorinterface.controller;
 
 import com.epam.bank.operatorinterface.controller.dto.request.CreateAccountRequest;
 import com.epam.bank.operatorinterface.controller.dto.response.AccountResponse;
-import com.epam.bank.operatorinterface.controller.mapper.ResponseMapper;
+import com.epam.bank.operatorinterface.controller.mapper.AccountMapper;
 import com.epam.bank.operatorinterface.service.AccountService;
 import javax.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class AccountController {
     private final AccountService accountService;
-    private final ResponseMapper responseMapper;
+    private final AccountMapper responseMapper;
 
     @PostMapping
     public ResponseEntity<AccountResponse> create(@Valid @RequestBody CreateAccountRequest request) {
