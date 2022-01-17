@@ -1,6 +1,7 @@
 package util;
 
 import com.epam.bank.operatorinterface.controller.dto.response.AccountResponse;
+import com.epam.bank.operatorinterface.controller.dto.response.UserResponse;
 import com.epam.bank.operatorinterface.entity.Account;
 import com.epam.bank.operatorinterface.entity.AccountPlan;
 import com.epam.bank.operatorinterface.entity.Card;
@@ -107,6 +108,34 @@ public class TestDataFactory {
             RandomUtils.nextLong(),
             List.of(),
             null
+        );
+    }
+
+    public static UserResponse getUserResponse() {
+        return new UserResponse(
+            RandomUtils.nextLong(),
+            RandomStringUtils.randomAlphabetic(6),
+            RandomStringUtils.randomAlphabetic(6),
+            RandomStringUtils.randomNumeric(6),
+            RandomStringUtils.randomAlphabetic(6),
+            RandomStringUtils.randomAlphabetic(6),
+            List.of(),
+            true,
+            0
+        );
+    }
+
+    public static UserResponse getUserWithAccountResponse() {
+        return new UserResponse(
+            RandomUtils.nextLong(),
+            RandomStringUtils.randomAlphabetic(6),
+            RandomStringUtils.randomAlphabetic(6),
+            RandomStringUtils.randomNumeric(6),
+            RandomStringUtils.randomAlphabetic(6),
+            RandomStringUtils.randomAlphabetic(6),
+            List.of(getAccountResponse()),
+            true,
+            0
         );
     }
 

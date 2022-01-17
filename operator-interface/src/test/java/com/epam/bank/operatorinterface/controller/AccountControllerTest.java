@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.epam.bank.operatorinterface.controller.mapper.ResponseMapper;
+import com.epam.bank.operatorinterface.controller.mapper.AccountMapper;
 import com.epam.bank.operatorinterface.entity.Account;
 import com.epam.bank.operatorinterface.entity.AccountPlan;
 import com.epam.bank.operatorinterface.exception.AccountCanNotBeClosedException;
@@ -43,7 +43,7 @@ class AccountControllerTest {
     private AccountService accountServiceMock;
 
     @MockBean
-    private ResponseMapper responseMapper;
+    private AccountMapper responseMapper;
 
     @Test
     public void shouldReturnCreatedIfValidRequestBodyIsProvided_createEndpoint() throws Exception {

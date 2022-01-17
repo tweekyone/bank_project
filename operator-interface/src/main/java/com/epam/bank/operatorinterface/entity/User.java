@@ -73,6 +73,17 @@ public class User {
     )
     private Set<Role> roles;
 
+    public User(String name, String surname, String phone, String username, String email, String password) {
+        this.name = name;
+        this.surname = surname;
+        this.phoneNumber = phone;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.enabled = true;
+        this.failedLoginAttempts = 0;
+    }
+
     public List<Account> getActiveAccounts() {
         return accounts.stream().filter(Account::isActive).collect(Collectors.toList());
     }
