@@ -44,6 +44,9 @@ dependencies {
     api 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.0'
     api 'io.jsonwebtoken:jjwt:0.9.1'
     api 'org.javamoney:moneta:1.4.2'
+    api 'org.mapstruct:mapstruct:1.4.2.Final'
+    api 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+    api 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
     // Spring
     api 'org.springframework:spring-core:5.3.10'
