@@ -7,3 +7,8 @@ spring :
 
   liquibase :
     change-log : classpath:liquibase/changelog-master.xml
+
+app:
+  task:
+    reset-pin-counter:
+      cron: "@midnight"
