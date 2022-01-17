@@ -5,6 +5,10 @@ import com.epam.bank.operatorinterface.exception.AccountCanNotBeClosedException;
 import com.epam.bank.operatorinterface.exception.AccountIsClosedException;
 import com.epam.bank.operatorinterface.exception.AccountNotFoundException;
 import com.epam.bank.operatorinterface.exception.AccountNumberGenerationTriesLimitException;
+import com.epam.bank.operatorinterface.exception.CardIsBlockedException;
+import com.epam.bank.operatorinterface.exception.CardNotFoundException;
+import com.epam.bank.operatorinterface.exception.InvalidPinCodeFormatException;
+import com.epam.bank.operatorinterface.exception.TooManyPinCodeChangesPerDayException;
 import com.epam.bank.operatorinterface.exception.UserNotFoundException;
 import com.epam.bank.operatorinterface.exception.ValidationException;
 import java.util.HashMap;
@@ -92,7 +96,8 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({
         AccountNotFoundException.class,
-        UserNotFoundException.class
+        UserNotFoundException.class,
+        CardNotFoundException.class
     })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
@@ -102,7 +107,10 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({
         AccountIsClosedException.class,
-        AccountCanNotBeClosedException.class
+        AccountCanNotBeClosedException.class,
+        CardIsBlockedException.class,
+        InvalidPinCodeFormatException.class,
+        TooManyPinCodeChangesPerDayException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody

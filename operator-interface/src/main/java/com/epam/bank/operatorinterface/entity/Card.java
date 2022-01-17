@@ -9,8 +9,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -54,6 +57,9 @@ public class Card {
     @Column(name = "pin_counter", nullable = false)
     private Integer pinCounter;
 
+    @Transient
+    private boolean isPinChanged = false;
+
     public Card(
         @NonNull Account account,
         @NonNull String number,
@@ -67,5 +73,20 @@ public class Card {
         this.expirationDate = ZonedDateTime.now().plusYears(3);
         this.isBlocked = false;
         this.pinCounter = 0;
+    }
+
+    @Transient
+    public void changePinCode(String pinCode) {
+        this.pinCode = pinCode;
+        this.isPinChanged = true;
+    }
+
+    @PreUpdate
+    @PrePersist
+    public void onSave() {
+        if (this.isPinChanged) {
+            this.pinCounter++;
+            this.isPinChanged = false;
+        }
     }
 }

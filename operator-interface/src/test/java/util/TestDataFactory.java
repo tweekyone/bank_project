@@ -87,6 +87,20 @@ public class TestDataFactory {
         return card;
     }
 
+    public static Card getCardWithMaxPinCounter() {
+        var card = getCard();
+        card.setPinCounter(3);
+
+        return card;
+    }
+
+    public static Card getBlockedCard() {
+        var card = getCard();
+        card.setBlocked(true);
+
+        return card;
+    }
+
     public static Account getAccountWithCard() {
         return getCard().getAccount();
     }
