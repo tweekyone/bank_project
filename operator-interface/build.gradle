@@ -28,6 +28,13 @@ dependencies {
   implementation 'org.hibernate:hibernate-core'
   implementation 'org.hibernate:hibernate-validator'
   implementation 'org.hibernate.validator:hibernate-validator-annotation-processor'
+  implementation 'javax.validation:validation-api'
+  implementation 'javax.persistence:javax.persistence-api'
+  implementation 'org.hibernate:hibernate-validator'
+  implementation 'org.hibernate.validator:hibernate-validator-annotation-processor'
+  implementation 'commons-validator:commons-validator'
+
+  runtimeOnly 'org.postgresql:postgresql'
 
   // Other
   compileOnly "org.projectlombok:lombok"
@@ -35,6 +42,11 @@ dependencies {
   implementation 'org.liquibase:liquibase-core'
   implementation 'org.postgresql:postgresql'
   implementation 'org.mapstruct:mapstruct'
+
+  // Logging
+  implementation 'org.apache.logging.log4j:log4j-api'
+  implementation 'org.apache.logging.log4j:log4j-core'
+  implementation 'org.slf4j:slf4j-api'
 
   // Test
   testImplementation "org.springframework.boot:spring-boot-starter-test"
