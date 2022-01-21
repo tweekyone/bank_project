@@ -1,8 +1,7 @@
 package com.epam.bank.operatorinterface.controller.advice;
 
-import com.epam.bank.operatorinterface.controller.AccountController;
-import com.epam.bank.operatorinterface.controller.UserController;
 import com.epam.bank.operatorinterface.controller.dto.response.ErrorResponse;
+import com.epam.bank.operatorinterface.domain.exceptions.NotFoundException;
 import com.epam.bank.operatorinterface.exception.AccountCanNotBeClosedException;
 import com.epam.bank.operatorinterface.exception.AccountIsClosedException;
 import com.epam.bank.operatorinterface.exception.AccountNotFoundException;
@@ -16,8 +15,7 @@ import com.epam.bank.operatorinterface.exception.ValidationException;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 import lombok.NonNull;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +28,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-@ControllerAdvice(assignableTypes = {AccountController.class, UserController.class})
+@ControllerAdvice
 @ResponseBody
-@Order(Ordered.HIGHEST_PRECEDENCE)
+@Slf4j
 public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
     @Override
     protected @NonNull ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -92,6 +90,7 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({
+        Exception.class,
         AccountNumberGenerationTriesLimitException.class
     })
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -103,7 +102,8 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler({
         AccountNotFoundException.class,
         UserNotFoundException.class,
-        CardNotFoundException.class
+        CardNotFoundException.class,
+        NotFoundException.class
     })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
@@ -125,6 +125,7 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
     }
 
     private ErrorResponse handleException(Exception e) {
+        log.error(String.format("Catch exception %s", e.getMessage()), e);
         return new ErrorResponse(e.getClass().getName());
     }
 }

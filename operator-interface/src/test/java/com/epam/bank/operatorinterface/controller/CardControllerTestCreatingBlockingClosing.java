@@ -104,17 +104,27 @@ class CardControllerTestCreatingBlockingClosing {
                 post("/cards")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(toJson(objectMapper, request)))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isUnprocessableEntity());
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"{\"plan\":\"ghghghgh\"}", "{\"plan\":\"BASE\"", "", "{}"})
-    void shouldReturnBadRequest_IfCardPlanIsIncorrect(String requestBody) throws Exception {
+    @ValueSource(strings = {"{\"plan\":\"ghghghgh\"}", "{\"plan\":\"BASE\"", ""})
+    void shouldReturnBadRequest_IfCardPlanOrWholeRequestAreIncorrect(String requestBody) throws Exception {
         mockMvc.perform(
                 post("/cards")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(requestBody))
             .andExpect(status().isBadRequest());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"{}"})
+    void shouldReturnUnprocessableEntity_IfCardPlanIsNotProvided(String requestBody) throws Exception {
+        mockMvc.perform(
+                post("/cards")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
+            .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
