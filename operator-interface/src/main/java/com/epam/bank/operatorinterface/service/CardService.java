@@ -67,7 +67,7 @@ public class CardService {
     }
 
     public void changePinCode(long id, String pinCode) {
-        var card = cardRepository.findById(id).orElseThrow(() -> new NotFoundException(Card.class, id));
+        var card = cardRepository.findById(id).orElseThrow(() -> new CardNotFoundException(id));
 
         assertCardIsNotBlocked(card);
         assertCardPinCodeFormatIsValid(pinCode);
