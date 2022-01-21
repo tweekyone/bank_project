@@ -13,6 +13,7 @@ repositories {
 }
 
 dependencies {
+  implementation(project(":migration"))
   // Importing BOM
   implementation(platform(project(":bom")))
   annotationProcessor(platform(project(":bom")))
@@ -24,6 +25,7 @@ dependencies {
   compileOnly 'org.projectlombok:lombok'
   annotationProcessor 'org.projectlombok:lombok'
   implementation 'javax.persistence:persistence-api'
+  implementation 'org.liquibase:liquibase-core'
 
   testImplementation "org.junit.jupiter:junit-jupiter-api"
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
@@ -32,8 +34,6 @@ dependencies {
   testImplementation 'javax.servlet:javax.servlet-api'
   testImplementation 'org.mockito:mockito-core'
 }
-
-mainClassName = 'com.epam.bank.atm.App'
 
 war {
   archiveName 'atm.war'
