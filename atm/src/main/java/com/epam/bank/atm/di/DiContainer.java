@@ -18,16 +18,23 @@ import com.epam.bank.atm.service.AuthService;
 import com.epam.bank.atm.service.AuthServiceImpl;
 import com.epam.bank.atm.service.TransactionService;
 import com.epam.bank.atm.service.TransactionalService;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
+import liquibase.Liquibase;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.exception.LiquibaseException;
+import liquibase.resource.ClassLoaderResourceAccessor;
 import org.postgresql.ds.PGSimpleDataSource;
 
 public class DiContainer {
     private static volatile DiContainer instance = instance();
     private final ConcurrentHashMap<Class<?>, Object> singletons = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Class<?>, Supplier<?>> prototypes = new ConcurrentHashMap<>();
+    private final Properties properties = new Properties();
 
     public static DiContainer instance() {
         if (instance == null) {
@@ -43,6 +50,8 @@ public class DiContainer {
     }
 
     private void init() {
+        this.initProperties();
+
         this.singletons.putIfAbsent(AccountService.class, this.createAccountService());
         this.singletons.putIfAbsent(TokenSessionService.class, this.createTokenSessionService());
         this.prototypes.putIfAbsent(TokenSessionService.class, this::createTokenSessionService);
@@ -64,6 +73,24 @@ public class DiContainer {
         this.prototypes.putIfAbsent(TransactionalService.class, this::createTransactionalService);
         this.singletons.putIfAbsent(AuthService.class, this.createAuthService());
         this.prototypes.putIfAbsent(AuthService.class, this::createAuthService);
+        this.singletons.putIfAbsent(Liquibase.class, this.createLiquibase());
+        this.prototypes.putIfAbsent(Liquibase.class, this::createLiquibase);
+    }
+
+    private void initProperties() {
+        try {
+            this.properties.load(
+                Thread.currentThread().getContextClassLoader().getResourceAsStream("application.properties")
+            );
+
+            for (var entry: this.properties.entrySet()) {
+                if (System.getProperties().containsKey(entry.getKey())) {
+                    this.properties.setProperty((String) entry.getKey(), System.getProperty((String) entry.getKey()));
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public <U extends T, T> U getSingleton(Class<T> classType) {
@@ -122,21 +149,24 @@ public class DiContainer {
     }
 
     private Connection createConnection() {
-        var dataSource = new PGSimpleDataSource();
-        dataSource.setUser("user");
-        dataSource.setPassword("user");
-        dataSource.setUrl("jdbc:postgresql://epm-lstr-postgres:5432/bank");
-
-        // ToDo: make container for building app in order to work with one url
         try {
+            var dataSource = new PGSimpleDataSource();
+            dataSource.setUser(this.properties.getProperty("database.username"));
+            dataSource.setPassword(this.properties.getProperty("database.password"));
+            dataSource.setUrl(this.properties.getProperty("database.url"));
             return dataSource.getConnection();
         } catch (SQLException e) {
-            try {
-                dataSource.setUrl("jdbc:postgresql://localhost:5432/bank");
-                return dataSource.getConnection();
-            } catch (SQLException exception) {
-                throw new RuntimeException(e);
-            }
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Liquibase createLiquibase() {
+        var liquibaseConnection = new JdbcConnection(this.getSingleton(Connection.class, this::createConnection));
+        try {
+            return new Liquibase(
+                "liquibase/changelog-master.xml", new ClassLoaderResourceAccessor(), liquibaseConnection);
+        } catch (LiquibaseException e) {
+            throw new RuntimeException(e);
         }
     }
 

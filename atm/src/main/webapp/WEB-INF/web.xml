@@ -26,5 +26,9 @@
     <url-pattern>/putmoney</url-pattern>
     <url-pattern>/withdraw</url-pattern>
   </filter-mapping>
+  
+  <listener>
+    <listener-class>com.epam.bank.atm.listener.AppContextListener</listener-class>
+  </listener>
 
 </web-app>
