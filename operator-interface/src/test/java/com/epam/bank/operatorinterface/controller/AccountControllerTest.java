@@ -14,7 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.epam.bank.operatorinterface.controller.mapper.AccountMapper;
 import com.epam.bank.operatorinterface.entity.Account;
-import com.epam.bank.operatorinterface.entity.AccountPlan;
+import com.epam.bank.operatorinterface.enumerated.AccountPlan;
 import com.epam.bank.operatorinterface.exception.AccountCanNotBeClosedException;
 import com.epam.bank.operatorinterface.exception.AccountIsClosedException;
 import com.epam.bank.operatorinterface.exception.AccountNotFoundException;

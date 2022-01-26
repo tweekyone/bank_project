@@ -1,7 +1,7 @@
 package com.epam.bank.operatorinterface.service;
 
-import com.epam.bank.operatorinterface.entity.AccountPlan;
 import com.epam.bank.operatorinterface.entity.User;
+import com.epam.bank.operatorinterface.enumerated.AccountPlan;
 import com.epam.bank.operatorinterface.repository.UserRepository;
 import com.epam.bank.operatorinterface.service.dto.CreateUserDto;
 import com.epam.bank.operatorinterface.util.ValidationFacade;

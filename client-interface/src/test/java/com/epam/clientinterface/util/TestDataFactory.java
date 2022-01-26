@@ -18,7 +18,7 @@ import org.apache.commons.lang3.RandomUtils;
 
 public class TestDataFactory {
 
-    private static final String zone = "Europe/Moscow";
+    private static final String ZONE = "Europe/Moscow";
 
     public static Account getDebitAccountBelongsToUser() {
         Account account = getDebitAccount();
@@ -100,7 +100,7 @@ public class TestDataFactory {
             .current()
             .nextLong(startEpochDay, endEpochDay);
 
-        return ZonedDateTime.ofInstant(Instant.ofEpochSecond(randomSec), TimeZone.getTimeZone(zone).toZoneId());
+        return ZonedDateTime.ofInstant(Instant.ofEpochSecond(randomSec), TimeZone.getTimeZone(ZONE).toZoneId());
     }
 
     public static Card getCard() {

@@ -1,6 +1,6 @@
 package com.epam.bank.operatorinterface.controller.dto.request;
 
-import com.epam.bank.operatorinterface.entity.AccountPlan;
+import com.epam.bank.operatorinterface.enumerated.AccountPlan;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import lombok.AllArgsConstructor;

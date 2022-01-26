@@ -19,7 +19,7 @@ import com.epam.bank.operatorinterface.domain.dto.CardResponse;
 import com.epam.bank.operatorinterface.domain.exceptions.NotFoundException;
 import com.epam.bank.operatorinterface.entity.Account;
 import com.epam.bank.operatorinterface.entity.Card;
-import com.epam.bank.operatorinterface.entity.CardPlan;
+import com.epam.bank.operatorinterface.enumerated.CardPlan;
 import com.epam.bank.operatorinterface.service.CardService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;

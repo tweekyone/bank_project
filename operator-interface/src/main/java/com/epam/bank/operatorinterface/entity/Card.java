@@ -1,5 +1,6 @@
 package com.epam.bank.operatorinterface.entity;
 
+import com.epam.bank.operatorinterface.enumerated.CardPlan;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import javax.persistence.Column;
