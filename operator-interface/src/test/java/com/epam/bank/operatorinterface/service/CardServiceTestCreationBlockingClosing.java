@@ -17,7 +17,7 @@ import com.epam.bank.operatorinterface.domain.dto.CardResponse;
 import com.epam.bank.operatorinterface.domain.exceptions.NotFoundException;
 import com.epam.bank.operatorinterface.entity.Account;
 import com.epam.bank.operatorinterface.entity.Card;
-import com.epam.bank.operatorinterface.entity.CardPlan;
+import com.epam.bank.operatorinterface.enumerated.CardPlan;
 import com.epam.bank.operatorinterface.repository.AccountRepository;
 import com.epam.bank.operatorinterface.repository.CardRepository;
 import java.time.LocalDate;

@@ -1,5 +1,7 @@
 package com.epam.bank.operatorinterface.entity;
 
+import com.epam.bank.operatorinterface.enumerated.AccountPlan;
+import com.epam.bank.operatorinterface.enumerated.AccountType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -60,11 +62,16 @@ public class Account {
     @Column(name = "closed_at", nullable = false)
     private LocalDateTime closedAt;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private AccountType type;
+
     public Account(User user, String number, boolean isDefault, AccountPlan plan) {
         this.user = user;
         this.number = number;
         this.isDefault = isDefault;
         this.plan = plan;
+        this.type = AccountType.DEBIT;
         this.amount = 0D;
     }
 

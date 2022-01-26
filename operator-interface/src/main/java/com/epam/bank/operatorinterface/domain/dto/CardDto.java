@@ -1,7 +1,7 @@
 package com.epam.bank.operatorinterface.domain.dto;
 
 import com.epam.bank.operatorinterface.entity.Card;
-import com.epam.bank.operatorinterface.entity.CardPlan;
+import com.epam.bank.operatorinterface.enumerated.CardPlan;
 import java.time.ZonedDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;

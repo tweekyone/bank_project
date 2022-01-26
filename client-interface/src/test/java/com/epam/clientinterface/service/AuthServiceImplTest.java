@@ -25,12 +25,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class AuthServiceImplTest {
 
-    private static final String name = randomAlphabetic(2, 30);
-    private static final String surname = randomAlphabetic(2, 30);
-    private static final String phoneNumber = randomNumeric(9, 15);
-    private static final String username = randomAlphanumeric(3, 20);
-    private static final String email = randomAlphabetic(2, 30);
-    private static final String password = randomAlphanumeric(6, 30);
+    private static final String NAME = randomAlphabetic(2, 30);
+    private static final String SURNAME = randomAlphabetic(2, 30);
+    private static final String PHONE_NUMBER = randomNumeric(9, 15);
+    private static final String USERNAME = randomAlphanumeric(3, 20);
+    private static final String EMAIL = randomAlphabetic(2, 30);
+    private static final String PASSWORD = randomAlphanumeric(6, 30);
 
     @Mock
     private UserService userService;
@@ -39,7 +39,7 @@ class AuthServiceImplTest {
         new Account.AsFirstFactory(RandomStringUtils.randomNumeric(20));
 
     private final User mockedUser =
-        new User(name, surname, phoneNumber, username, email, password, firstFactory);
+        new User(NAME, SURNAME, PHONE_NUMBER, USERNAME, EMAIL, PASSWORD, firstFactory);
 
     @Mock
     private UserRepository userRepository;
@@ -49,29 +49,29 @@ class AuthServiceImplTest {
 
     @Test
     void shouldSignUpWithNewEmail() {
-        when(userRepository.existsByEmail(email))
+        when(userRepository.existsByEmail(EMAIL))
             .thenReturn(false);
-        when(userService.create(name, surname, phoneNumber, username, email, password))
+        when(userService.create(NAME, SURNAME, PHONE_NUMBER, USERNAME, EMAIL, PASSWORD))
             .thenReturn(mockedUser);
 
-        User user = authService.signUp(name, surname, phoneNumber, username, email, password);
+        User user = authService.signUp(NAME, SURNAME, PHONE_NUMBER, USERNAME, EMAIL, PASSWORD);
         Assertions.assertEquals(mockedUser, user);
 
-        verify(userRepository, times(1)).existsByEmail(eq(email));
+        verify(userRepository, times(1)).existsByEmail(eq(EMAIL));
         verify(userService, times(1)).create(any(), any(), any(), any(), any(), any());
     }
 
     // sign up with existing email
     @Test
     void shouldThrowUserAlreadyExistException() {
-        when(userRepository.existsByEmail(email))
+        when(userRepository.existsByEmail(EMAIL))
             .thenReturn(true);
 
         Assertions.assertThrows(UserAlreadyExistException.class,
             () -> authService.signUp(
-                name, surname, phoneNumber,
-                username, email, password)
+                NAME, SURNAME, PHONE_NUMBER,
+                USERNAME, EMAIL, PASSWORD)
         );
-        verify(userRepository).existsByEmail(eq(email));
+        verify(userRepository).existsByEmail(eq(EMAIL));
     }
 }

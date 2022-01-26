@@ -3,10 +3,15 @@ package util;
 import com.epam.bank.operatorinterface.controller.dto.response.AccountResponse;
 import com.epam.bank.operatorinterface.controller.dto.response.UserResponse;
 import com.epam.bank.operatorinterface.entity.Account;
-import com.epam.bank.operatorinterface.entity.AccountPlan;
 import com.epam.bank.operatorinterface.entity.Card;
-import com.epam.bank.operatorinterface.entity.CardPlan;
+import com.epam.bank.operatorinterface.entity.Transaction;
+import com.epam.bank.operatorinterface.entity.TransactionAccountData;
 import com.epam.bank.operatorinterface.entity.User;
+import com.epam.bank.operatorinterface.enumerated.AccountPlan;
+import com.epam.bank.operatorinterface.enumerated.AccountType;
+import com.epam.bank.operatorinterface.enumerated.CardPlan;
+import com.epam.bank.operatorinterface.enumerated.TransactionOperationType;
+import com.epam.bank.operatorinterface.enumerated.TransactionState;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,13 +53,21 @@ public class TestDataFactory {
         return user;
     }
 
+    public static Account getInvestAccount() {
+        var account = getAccount();
+        account.setType(AccountType.INVEST);
+
+        return account;
+    }
+
     public static Account getAccount() {
         var account = new Account();
         account.setId(RandomUtils.nextLong());
         account.setNumber(RandomStringUtils.randomNumeric(20));
         account.setDefault(true);
         account.setPlan(getAccountPlan());
-        account.setAmount(RandomUtils.nextDouble());
+        account.setAmount(RandomUtils.nextDouble(1000.0, 10000.0));
+        account.setType(AccountType.DEBIT);
 
         var user = getUser();
         user.setAccounts(new ArrayList<>(List.of(account)));

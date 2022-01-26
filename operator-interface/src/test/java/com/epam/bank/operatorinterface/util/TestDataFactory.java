@@ -8,11 +8,12 @@ import com.epam.bank.operatorinterface.domain.dto.CardDto;
 import com.epam.bank.operatorinterface.domain.dto.CardRequest;
 import com.epam.bank.operatorinterface.domain.dto.CardResponse;
 import com.epam.bank.operatorinterface.entity.Account;
-import com.epam.bank.operatorinterface.entity.AccountPlan;
 import com.epam.bank.operatorinterface.entity.Card;
-import com.epam.bank.operatorinterface.entity.CardPlan;
 import com.epam.bank.operatorinterface.entity.Role;
 import com.epam.bank.operatorinterface.entity.User;
+import com.epam.bank.operatorinterface.enumerated.AccountPlan;
+import com.epam.bank.operatorinterface.enumerated.AccountType;
+import com.epam.bank.operatorinterface.enumerated.CardPlan;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
@@ -41,17 +42,17 @@ public class TestDataFactory {
 
     public static Account getAccount(long id) {
         return new Account(id, randomNumeric(20), true, AccountPlan.BASE, 100.12, new User(), List.of(getCard(152)),
-            LocalDateTime.of(2025, 12, 12, 0, 0, 1));
+            LocalDateTime.of(2025, 12, 12, 0, 0, 1), AccountType.DEBIT);
     }
 
     public static Account getClosedAccount(long id) {
         return new Account(id, randomNumeric(20), true, AccountPlan.BASE, 100.12, new User(), List.of(getCard(152)),
-            LocalDateTime.now().minusDays(1));
+            LocalDateTime.now().minusDays(1), AccountType.DEBIT);
     }
 
     public static Account getAccountWithUser(long id) {
         return new Account(id, randomNumeric(20), true, AccountPlan.BASE, 100.12, getUser(), List.of(getCard(152)),
-            LocalDateTime.of(2025, 12, 12, 0, 0, 1));
+            LocalDateTime.of(2025, 12, 12, 0, 0, 1), AccountType.DEBIT);
     }
 
     public static User getUser() {

@@ -1,6 +1,5 @@
 package com.epam.bank.operatorinterface.controller.dto.response;
 
-import com.epam.bank.operatorinterface.entity.AccountPlan;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
