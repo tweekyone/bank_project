@@ -37,27 +37,27 @@ class SignUpControllerTest {
     @Mock
     private AuthService authService;
 
-    private static final String name = randomAlphabetic(2, 30);
-    private static final String surname = randomAlphabetic(2, 30);
-    private static final String phoneNumber = "+" + randomNumeric(9, 15);
-    private static final String username = randomAlphanumeric(3, 20);
-    private static final String password = randomAlphanumeric(6, 30);
+    private static final String NAME = randomAlphabetic(2, 30);
+    private static final String SURNAME = randomAlphabetic(2, 30);
+    private static final String PHONE_NUMBER = "+" + randomNumeric(9, 15);
+    private static final String USERNAME = randomAlphanumeric(3, 20);
+    private static final String PASSWORD = randomAlphanumeric(6, 30);
 
     // example "vanok@gmail.com";
-    private static final String email = randomAlphanumeric(2, 20) + "@"
+    private static final String EMAIL = randomAlphanumeric(2, 20) + "@"
         + randomAlphanumeric(2, 20) + "." + randomAlphabetic(2, 5);
 
-    private static final Account.AsFirstFactory accountFactory =
+    private static final Account.AsFirstFactory ACCOUNT_FACTORY =
         new Account.AsFirstFactory(RandomStringUtils.randomNumeric(19));
 
-    private static final User newUser =
-        new User(name, surname, phoneNumber, username, email, password, accountFactory);
+    private static final User NEW_USER =
+        new User(NAME, SURNAME, PHONE_NUMBER, USERNAME, EMAIL, PASSWORD, ACCOUNT_FACTORY);
 
     private final String signUpUserData = String.format(
         "{\"name\":\"%s\",\"surname\":\"%s\", "
             + "\"phoneNumber\":\"%s\",\"username\":\"%s\","
             + "\"email\":\"%s\", \"password\":\"%s\"}",
-        name, surname, phoneNumber, username, email, password
+        NAME, SURNAME, PHONE_NUMBER, USERNAME, EMAIL, PASSWORD
     );
 
     @BeforeEach
@@ -70,8 +70,8 @@ class SignUpControllerTest {
 
     @Test
     void shouldRegisterNewUserAccount() throws Exception {
-        when(authService.signUp(name, surname, phoneNumber, username, email, password))
-            .thenReturn(newUser);
+        when(authService.signUp(NAME, SURNAME, PHONE_NUMBER, USERNAME, EMAIL, PASSWORD))
+            .thenReturn(NEW_USER);
 
         mockMvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON)

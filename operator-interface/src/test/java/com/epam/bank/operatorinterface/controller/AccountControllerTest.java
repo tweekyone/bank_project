@@ -21,6 +21,7 @@ import com.epam.bank.operatorinterface.exception.AccountNotFoundException;
 import com.epam.bank.operatorinterface.exception.AccountNumberGenerationTriesLimitException;
 import com.epam.bank.operatorinterface.exception.UserNotFoundException;
 import com.epam.bank.operatorinterface.service.AccountService;
+import com.epam.bank.operatorinterface.service.UserDetailsServiceImpl;
 import java.util.Map;
 import net.minidev.json.JSONObject;
 import org.apache.commons.lang3.RandomUtils;
@@ -44,6 +45,9 @@ class AccountControllerTest {
 
     @MockBean
     private AccountMapper responseMapper;
+
+    @MockBean
+    private UserDetailsServiceImpl userDetailsService;
 
     @Test
     public void shouldReturnCreatedIfValidRequestBodyIsProvided_createEndpoint() throws Exception {
