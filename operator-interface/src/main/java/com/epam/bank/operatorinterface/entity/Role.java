@@ -30,5 +30,5 @@ public class Role {
     @Column(name = "name")
     @NotBlank
     @Size(min = 4)
-    private String authority;
+    private String role;
 }

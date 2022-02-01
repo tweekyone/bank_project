@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.epam.bank.operatorinterface.controller.mapper.UserMapper;
 import com.epam.bank.operatorinterface.exception.ValidationException;
+import com.epam.bank.operatorinterface.service.UserDetailsServiceImpl;
 import com.epam.bank.operatorinterface.service.UserService;
 import java.lang.annotation.Annotation;
 import java.util.Map;
@@ -41,6 +42,9 @@ public class UserControllerTest {
 
     @MockBean
     private UserMapper responseMapper;
+
+    @MockBean
+    private UserDetailsServiceImpl userDetailsService;
 
     @Test
     public void shouldReturnCreatedIfValidRequestBodyIsProvided_createEndpoint() throws Exception {

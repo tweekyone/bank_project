@@ -15,6 +15,7 @@ import com.epam.bank.operatorinterface.exception.CardNotFoundException;
 import com.epam.bank.operatorinterface.exception.InvalidPinCodeFormatException;
 import com.epam.bank.operatorinterface.exception.TooManyPinCodeChangesPerDayException;
 import com.epam.bank.operatorinterface.service.CardService;
+import com.epam.bank.operatorinterface.service.UserDetailsServiceImpl;
 import java.util.Map;
 import net.minidev.json.JSONObject;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -35,6 +36,9 @@ class CardControllerTest {
 
     @MockBean
     private CardService cardServiceMock;
+
+    @MockBean
+    private UserDetailsServiceImpl userDetailsService;
 
     @Test
     void shouldReturnNoContentIfValidRequestBodyIsProvided_changePinCodeEndpoint() throws Exception {
