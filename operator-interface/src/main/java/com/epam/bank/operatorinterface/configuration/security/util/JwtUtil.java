@@ -1,4 +1,4 @@
-package com.epam.bank.operatorinterface.util;
+package com.epam.bank.operatorinterface.configuration.security.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

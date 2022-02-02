@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.epam.bank.operatorinterface.configuration.security.util.JwtUtil;
 import com.epam.bank.operatorinterface.exception.CardIsBlockedException;
 import com.epam.bank.operatorinterface.exception.CardNotFoundException;
 import com.epam.bank.operatorinterface.exception.InvalidPinCodeFormatException;
@@ -39,6 +40,9 @@ class CardControllerTest {
 
     @MockBean
     private UserDetailsServiceImpl userDetailsService;
+
+    @MockBean
+    private JwtUtil jwtUtil;
 
     @Test
     void shouldReturnNoContentIfValidRequestBodyIsProvided_changePinCodeEndpoint() throws Exception {

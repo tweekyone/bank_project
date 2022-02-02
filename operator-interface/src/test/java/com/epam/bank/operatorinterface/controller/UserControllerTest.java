@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.epam.bank.operatorinterface.configuration.security.util.JwtUtil;
 import com.epam.bank.operatorinterface.controller.mapper.UserMapper;
 import com.epam.bank.operatorinterface.exception.ValidationException;
 import com.epam.bank.operatorinterface.service.UserDetailsServiceImpl;
@@ -41,10 +42,13 @@ public class UserControllerTest {
     private UserService userServiceMock;
 
     @MockBean
+    private UserDetailsServiceImpl userDetailsService;
+
+    @MockBean
     private UserMapper responseMapper;
 
     @MockBean
-    private UserDetailsServiceImpl userDetailsService;
+    private JwtUtil jwtUtil;
 
     @Test
     public void shouldReturnCreatedIfValidRequestBodyIsProvided_createEndpoint() throws Exception {

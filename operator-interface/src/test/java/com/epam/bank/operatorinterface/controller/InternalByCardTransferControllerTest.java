@@ -10,12 +10,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.epam.bank.operatorinterface.configuration.security.util.JwtUtil;
 import com.epam.bank.operatorinterface.exception.AccountIsClosedException;
 import com.epam.bank.operatorinterface.exception.AccountIsNotSupposedForWithdrawException;
 import com.epam.bank.operatorinterface.exception.CardNotFoundException;
 import com.epam.bank.operatorinterface.exception.NotEnoughMoneyException;
 import com.epam.bank.operatorinterface.exception.TransferException;
 import com.epam.bank.operatorinterface.service.AccountService;
+import com.epam.bank.operatorinterface.service.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -33,6 +35,12 @@ public class InternalByCardTransferControllerTest {
 
     @MockBean
     private AccountService accountServiceMock;
+
+    @MockBean
+    private UserDetailsServiceImpl userDetailsServiceImpl;
+
+    @MockBean
+    private JwtUtil jwtUtil;
 
     @Test
     public void shouldReturnCreatedIfRequestIsValid() throws Exception {
