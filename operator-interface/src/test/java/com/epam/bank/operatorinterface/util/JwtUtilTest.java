@@ -1,5 +1,6 @@
 package com.epam.bank.operatorinterface.util;
 
+import com.epam.bank.operatorinterface.configuration.security.util.JwtUtil;
 import com.epam.bank.operatorinterface.domain.UserDetailsAuthImpl;
 import com.epam.bank.operatorinterface.entity.Role;
 import com.epam.bank.operatorinterface.entity.User;

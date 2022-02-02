@@ -1,4 +1,4 @@
-package com.epam.bank.operatorinterface.configuration.security;
+package com.epam.bank.operatorinterface.configuration.security.handler;
 
 import java.io.IOException;
 import javax.servlet.ServletException;

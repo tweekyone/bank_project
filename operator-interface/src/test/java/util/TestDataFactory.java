@@ -2,6 +2,7 @@ package util;
 
 import com.epam.bank.operatorinterface.controller.dto.response.AccountResponse;
 import com.epam.bank.operatorinterface.controller.dto.response.UserResponse;
+import com.epam.bank.operatorinterface.domain.UserDetailsAuthImpl;
 import com.epam.bank.operatorinterface.entity.Account;
 import com.epam.bank.operatorinterface.entity.Card;
 import com.epam.bank.operatorinterface.entity.Transaction;
@@ -32,6 +33,18 @@ public class TestDataFactory {
         user.setFailedLoginAttempts(0);
 
         return user;
+    }
+
+    public static User getUserAuth() {
+        var user = getUser();
+        user.setPassword("$2a$10$g2SYZuOzPlc5l9a9FPF7ReW09tmapH2VI86W/uv2V/eICElXqxm6u");
+        user.setEmail("test@test.com");
+        return user;
+    }
+
+    public static UserDetailsAuthImpl getUserDetailsAuth() {
+        var user = getUserAuth();
+        return new UserDetailsAuthImpl(user.getPassword(), user.getEmail(), user.getRoles(), true);
     }
 
     public static User getUserWithAccount() {
