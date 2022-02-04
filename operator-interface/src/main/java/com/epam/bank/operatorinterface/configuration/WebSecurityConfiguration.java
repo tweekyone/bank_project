@@ -62,7 +62,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(initialAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         http.authorizeRequests()
-            .antMatchers("/secured/**").authenticated()
+            .antMatchers("/**").authenticated()
             .antMatchers(HttpMethod.POST,"/login").permitAll()
             .antMatchers("/registration").permitAll();
     }

@@ -24,6 +24,7 @@ import net.minidev.json.JSONObject;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import util.TestDataFactory;
 
 @WebMvcTest(UserController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -329,6 +331,7 @@ public class UserControllerTest {
     }
 
     private ResultActions sendCreateClient(String requestBody) throws Exception {
-        return mockMvc.perform(post("/users/client").contentType(MediaType.APPLICATION_JSON).content(requestBody));
+        return mockMvc.perform(post("/users/client").contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody));
     }
 }

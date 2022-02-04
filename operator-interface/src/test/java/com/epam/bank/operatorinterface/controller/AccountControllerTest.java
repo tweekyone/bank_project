@@ -28,6 +28,7 @@ import net.minidev.json.JSONObject;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -37,6 +38,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import util.TestDataFactory;
 
 @WebMvcTest(AccountController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class AccountControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -192,6 +194,7 @@ class AccountControllerTest {
     }
 
     private ResultActions sendClose(long id) throws Exception {
-        return mockMvc.perform(delete(String.format("/accounts/%d", id)).contentType(MediaType.APPLICATION_JSON));
+        return mockMvc.perform(
+            delete(String.format("/accounts/%d", id)).contentType(MediaType.APPLICATION_JSON));
     }
 }
