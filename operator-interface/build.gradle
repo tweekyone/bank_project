@@ -38,8 +38,6 @@ dependencies {
   implementation 'org.hibernate.validator:hibernate-validator-annotation-processor'
   implementation 'javax.validation:validation-api'
   implementation 'javax.persistence:javax.persistence-api'
-  implementation 'org.hibernate:hibernate-validator'
-  implementation 'org.hibernate.validator:hibernate-validator-annotation-processor'
   implementation 'commons-validator:commons-validator'
 
   runtimeOnly 'org.postgresql:postgresql'

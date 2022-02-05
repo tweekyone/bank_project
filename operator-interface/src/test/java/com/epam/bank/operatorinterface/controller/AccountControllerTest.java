@@ -22,6 +22,7 @@ import com.epam.bank.operatorinterface.exception.AccountNotFoundException;
 import com.epam.bank.operatorinterface.exception.AccountNumberGenerationTriesLimitException;
 import com.epam.bank.operatorinterface.exception.UserNotFoundException;
 import com.epam.bank.operatorinterface.service.AccountService;
+import com.epam.bank.operatorinterface.service.TransactionService;
 import com.epam.bank.operatorinterface.service.UserDetailsServiceImpl;
 import java.util.Map;
 import net.minidev.json.JSONObject;
@@ -48,6 +49,9 @@ class AccountControllerTest {
 
     @MockBean
     private AccountMapper responseMapper;
+
+    @MockBean
+    private TransactionService transactionService;
 
     @MockBean
     private UserDetailsServiceImpl userDetailsService;
