@@ -10,18 +10,6 @@ node {
     env.STARTED_BY_USER_ID = jobUserId
 }
 
-node {
-    def jobUserId, jobUserName
-    // setting up username env variables
-    // see https://plugins.jenkins.io/build-user-vars-plugin/
-    wrap([$class: 'BuildUser']) {
-        jobUserId = "${BUILD_USER_ID}"
-        jobUserName = "${BUILD_USER}"
-    }
-    env.STARTED_BY = jobUserName
-    env.STARTED_BY_USER_ID = jobUserId
-}
-
 pipeline {
 
     agent any
