@@ -44,7 +44,7 @@ pipeline {
 
         stage('Gradle Build') {
             steps {
-                sh 'gradle:atm build'
+                sh 'gradle atm:build'
             }
         }
     }
