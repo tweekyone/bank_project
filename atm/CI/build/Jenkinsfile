@@ -27,7 +27,7 @@ pipeline {
     agent any
 
     tools {
-        maven 'maven_3.6.3'
+        gradle "gradle-7.3.3"
     }
 
     options {
