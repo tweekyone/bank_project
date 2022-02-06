@@ -27,34 +27,16 @@ pipeline {
     agent any
 
     tools {
-        gradle "gradle-7.3.3"
-    }
-
-    options {
-        buildDiscarder(logRotator(numToKeepStr: env.BRANCH_NAME == 'master' ? '50' : '10'))
+        gradle "Gradle 7.3.3"
     }
 
     environment {
-        CONTAINER_NAME = "parking_be"
-        BACKEND_PORT = "8080"
-        BACKEND_EXPOSE_PORT = "8080"
     }
 
     parameters {
-        choice (
-            name: 'DEPLOY_TO_ENVIRONMENT',
-            choices: ['', 'dev', 'stage', 'prod'],
-            description: 'The target environment to deploy to. Leave blank to build only but not deploy.'
-        )
-        string(
-            name: 'CONTAINER_OPTIONAL_VERSION',
-            defaultValue: '',
-            description: "Additional application version. Leave empty for 'latest' tag"
-        )
     }
 
     stages {
-
         stage('Gradle Build') {
             steps {
                 sh 'gradle build'
