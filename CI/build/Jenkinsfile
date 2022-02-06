@@ -1,0 +1,81 @@
+node {
+    def jobUserId, jobUserName
+    // setting up username env variables
+    // see https://plugins.jenkins.io/build-user-vars-plugin/
+    wrap([$class: 'BuildUser']) {
+        jobUserId = "${BUILD_USER_ID}"
+        jobUserName = "${BUILD_USER}"
+    }
+    env.STARTED_BY = jobUserName
+    env.STARTED_BY_USER_ID = jobUserId
+}
+
+pipeline {
+
+    agent any
+
+    tools {
+        gradle "Gradle 7.3.3"
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: env.BRANCH_NAME == 'master' ? '50' : '10'))
+    }
+
+    parameters {
+        choice (
+            name: 'IS_DEPLOYING',
+            choices: ['No', 'Yes'],
+            description: '[WIP]Do you want to deploy?'
+        )
+        choice (
+            name: 'DEPLOYING_MODULE',
+            choices: ['atm', 'client-interface', 'operator-interface'],
+            description: '[WIP]Which module to deploy?'
+        )
+    }
+
+    stages {
+
+        stage('Prepare') {
+            steps {
+                env.IS_DEPLOYING = false
+                env.DEPLOYING_MODULE = ''
+                if (params.IS_DEPLOYING == 'Yes') {
+                    env.IS_DEPLOYING = true
+                    env.DEPLOYING_MODULE = params.DEPLOYING_MODULE
+                }
+                sh "printenv"
+            }
+        }
+
+        stage('Build atm module') {
+            steps {
+                sh 'gradle atm:build'
+            }
+        }
+        stage('Build client-interface module') {
+            steps {
+                sh 'gradle client-interface:build'
+            }
+        }
+        stage('Build operator-interface module') {
+            steps {
+                sh 'gradle operator-interface:build'
+            }
+        }
+        stage('[WIP]Deploy') {
+            when { expression { return env.IS_DEPLOYING.toBoolean() } }
+            steps {
+                echo "Deploy is in WIP stage"
+            }
+        }
+
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
