@@ -16,6 +16,7 @@ dependencies {
   implementation(project(":migration"))
   // Importing BOM
   implementation(platform(project(":bom")))
+  implementation 'junit:junit:4.13.1'
   annotationProcessor(platform(project(":bom"))) // importing bom for annotation processors
   testAnnotationProcessor(platform(project(":bom"))) // importing bom for annotation processors
   implementation platform("org.springframework.boot:spring-boot-dependencies")
@@ -37,8 +38,6 @@ dependencies {
   implementation 'org.hibernate.validator:hibernate-validator-annotation-processor'
   implementation 'javax.validation:validation-api'
   implementation 'javax.persistence:javax.persistence-api'
-  implementation 'org.hibernate:hibernate-validator'
-  implementation 'org.hibernate.validator:hibernate-validator-annotation-processor'
   implementation 'commons-validator:commons-validator'
 
   runtimeOnly 'org.postgresql:postgresql'

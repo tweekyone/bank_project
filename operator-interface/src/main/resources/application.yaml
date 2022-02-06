@@ -11,6 +11,9 @@ spring :
   liquibase :
     change-log : classpath:liquibase/changelog-master.xml
 
+  jpa:
+    open-in-view: false
+
 app:
   task:
     reset-pin-counter:

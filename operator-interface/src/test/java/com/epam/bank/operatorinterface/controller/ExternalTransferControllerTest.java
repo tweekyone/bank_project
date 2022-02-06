@@ -13,16 +13,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.epam.bank.operatorinterface.configuration.security.util.JwtUtil;
 import com.epam.bank.operatorinterface.exception.AccountIsClosedException;
 import com.epam.bank.operatorinterface.exception.AccountIsNotSupposedForExternalTransferException;
 import com.epam.bank.operatorinterface.exception.AccountIsNotSupposedForWithdrawException;
 import com.epam.bank.operatorinterface.exception.CardNotFoundException;
 import com.epam.bank.operatorinterface.exception.NotEnoughMoneyException;
 import com.epam.bank.operatorinterface.service.AccountService;
+import com.epam.bank.operatorinterface.service.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -30,6 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import util.TestRequestFactory;
 
 @WebMvcTest(TransferController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class ExternalTransferControllerTest {
 
     private final String url = "/transfer/external";
@@ -39,6 +43,12 @@ public class ExternalTransferControllerTest {
 
     @MockBean
     private AccountService accountServiceMock;
+
+    @MockBean
+    private UserDetailsServiceImpl userDetailsServiceImpl;
+
+    @MockBean
+    private JwtUtil jwtUtil;
 
     @ParameterizedTest
     @ValueSource(strings = {

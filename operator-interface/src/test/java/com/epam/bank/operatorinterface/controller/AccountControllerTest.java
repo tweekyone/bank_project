@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.epam.bank.operatorinterface.configuration.security.util.JwtUtil;
 import com.epam.bank.operatorinterface.controller.mapper.AccountMapper;
 import com.epam.bank.operatorinterface.entity.Account;
 import com.epam.bank.operatorinterface.enumerated.AccountPlan;
@@ -21,12 +22,14 @@ import com.epam.bank.operatorinterface.exception.AccountNotFoundException;
 import com.epam.bank.operatorinterface.exception.AccountNumberGenerationTriesLimitException;
 import com.epam.bank.operatorinterface.exception.UserNotFoundException;
 import com.epam.bank.operatorinterface.service.AccountService;
+import com.epam.bank.operatorinterface.service.TransactionService;
 import com.epam.bank.operatorinterface.service.UserDetailsServiceImpl;
 import java.util.Map;
 import net.minidev.json.JSONObject;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -36,6 +39,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import util.TestDataFactory;
 
 @WebMvcTest(AccountController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class AccountControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -47,7 +51,13 @@ class AccountControllerTest {
     private AccountMapper responseMapper;
 
     @MockBean
+    private TransactionService transactionService;
+
+    @MockBean
     private UserDetailsServiceImpl userDetailsService;
+
+    @MockBean
+    private JwtUtil jwtUtil;
 
     @Test
     public void shouldReturnCreatedIfValidRequestBodyIsProvided_createEndpoint() throws Exception {
@@ -188,6 +198,7 @@ class AccountControllerTest {
     }
 
     private ResultActions sendClose(long id) throws Exception {
-        return mockMvc.perform(delete(String.format("/accounts/%d", id)).contentType(MediaType.APPLICATION_JSON));
+        return mockMvc.perform(
+            delete(String.format("/accounts/%d", id)).contentType(MediaType.APPLICATION_JSON));
     }
 }

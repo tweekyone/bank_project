@@ -13,6 +13,7 @@ import com.epam.bank.operatorinterface.exception.CardNotFoundException;
 import com.epam.bank.operatorinterface.exception.InvalidPinCodeFormatException;
 import com.epam.bank.operatorinterface.exception.NotEnoughMoneyException;
 import com.epam.bank.operatorinterface.exception.TooManyPinCodeChangesPerDayException;
+import com.epam.bank.operatorinterface.exception.TransactionNotFoundException;
 import com.epam.bank.operatorinterface.exception.TransferException;
 import com.epam.bank.operatorinterface.exception.UserNotFoundException;
 import com.epam.bank.operatorinterface.exception.ValidationException;
@@ -107,6 +108,7 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
         AccountNotFoundException.class,
         UserNotFoundException.class,
         CardNotFoundException.class,
+        TransactionNotFoundException.class,
         NotFoundException.class
     })
     @ResponseStatus(HttpStatus.NOT_FOUND)

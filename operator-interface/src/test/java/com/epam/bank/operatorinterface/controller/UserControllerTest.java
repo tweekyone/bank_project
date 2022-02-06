@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.epam.bank.operatorinterface.configuration.security.util.JwtUtil;
 import com.epam.bank.operatorinterface.controller.mapper.UserMapper;
 import com.epam.bank.operatorinterface.exception.ValidationException;
 import com.epam.bank.operatorinterface.service.UserDetailsServiceImpl;
@@ -23,6 +24,7 @@ import net.minidev.json.JSONObject;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
@@ -33,6 +35,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import util.TestDataFactory;
 
 @WebMvcTest(UserController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -41,10 +44,13 @@ public class UserControllerTest {
     private UserService userServiceMock;
 
     @MockBean
+    private UserDetailsServiceImpl userDetailsService;
+
+    @MockBean
     private UserMapper responseMapper;
 
     @MockBean
-    private UserDetailsServiceImpl userDetailsService;
+    private JwtUtil jwtUtil;
 
     @Test
     public void shouldReturnCreatedIfValidRequestBodyIsProvided_createEndpoint() throws Exception {
@@ -325,6 +331,7 @@ public class UserControllerTest {
     }
 
     private ResultActions sendCreateClient(String requestBody) throws Exception {
-        return mockMvc.perform(post("/users/client").contentType(MediaType.APPLICATION_JSON).content(requestBody));
+        return mockMvc.perform(post("/users/client").contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody));
     }
 }

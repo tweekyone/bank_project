@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.epam.bank.operatorinterface.configuration.security.util.JwtUtil;
 import com.epam.bank.operatorinterface.exception.CardIsBlockedException;
 import com.epam.bank.operatorinterface.exception.CardNotFoundException;
 import com.epam.bank.operatorinterface.exception.InvalidPinCodeFormatException;
@@ -22,6 +23,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -30,6 +32,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 @WebMvcTest(CardController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class CardControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -39,6 +42,9 @@ class CardControllerTest {
 
     @MockBean
     private UserDetailsServiceImpl userDetailsService;
+
+    @MockBean
+    private JwtUtil jwtUtil;
 
     @Test
     void shouldReturnNoContentIfValidRequestBodyIsProvided_changePinCodeEndpoint() throws Exception {
@@ -97,8 +103,8 @@ class CardControllerTest {
 
     @Test
     void shouldReturnUnprocessableEntityIfPinCodeIsNotProvided_changePinCodeEndpoint() throws Exception {
-        var errTypes = new String[]{"NotBlank", "NotNull"};
-        var errMsgs = new String[]{"must not be blank", "must not be null"};
+        var errTypes = new String[] {"NotBlank", "NotNull"};
+        var errMsgs = new String[] {"must not be blank", "must not be null"};
 
         sendChangePinCode(RandomUtils.nextLong(), "{}")
             .andExpect(status().isUnprocessableEntity())
@@ -110,8 +116,8 @@ class CardControllerTest {
 
     @Test
     void shouldReturnUnprocessableEntityIfPinCodeIsInvalid_changePinCodeEndpoint() throws Exception {
-        var errTypes = new String[]{"Pattern"};
-        var errMsgs = new String[]{"must match \"[0-9]{4}\""};
+        var errTypes = new String[] {"Pattern"};
+        var errMsgs = new String[] {"must match \"[0-9]{4}\""};
 
         sendChangePinCode(RandomUtils.nextLong(), "{\"pinCode\": \"12qw\"}")
             .andExpect(status().isUnprocessableEntity())

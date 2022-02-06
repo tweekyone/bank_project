@@ -1,20 +1,22 @@
 package com.epam.bank.operatorinterface.configuration;
 
-import com.epam.bank.operatorinterface.configuration.security.JwtAccessDeniedHandler;
 import com.epam.bank.operatorinterface.configuration.security.JwtAuthenticationEntryPoint;
+import com.epam.bank.operatorinterface.configuration.security.filter.BasicAuthenticationFilter;
+import com.epam.bank.operatorinterface.configuration.security.handler.BasicAuthenticationSuccessHandler;
+import com.epam.bank.operatorinterface.configuration.security.handler.JwtAccessDeniedHandler;
+import com.epam.bank.operatorinterface.configuration.security.provider.BasicAuthenticationProvider;
+import com.epam.bank.operatorinterface.configuration.security.util.JwtUtil;
 import com.epam.bank.operatorinterface.service.UserDetailsServiceImpl;
-import com.epam.bank.operatorinterface.util.JwtUtil;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,6 +28,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -34,7 +37,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private UserDetailsServiceImpl userDetailsServiceImpl;
     private JwtUtil jwtUtil;
-    private List<AuthenticationProvider> providers;
 
     //set up credentials source for authentication
     @Override
@@ -56,9 +58,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             .jwt()
             .jwtAuthenticationConverter(new JwtAuthenticationConverter());
 
+        http.authenticationProvider(initialAuthenticationProvider());
+        http.addFilterBefore(initialAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
         http.authorizeRequests()
-            .antMatchers("/secured/**").authenticated()
-            .antMatchers("/login").permitAll()
+            .antMatchers("/**").authenticated()
+            .antMatchers(HttpMethod.POST,"/login").permitAll()
             .antMatchers("/registration").permitAll();
     }
 
@@ -93,5 +98,21 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .build();
             }
         };
+    }
+
+    @Bean
+    BasicAuthenticationSuccessHandler initialAuthenticationSuccessHandler() {
+        return  new BasicAuthenticationSuccessHandler();
+    }
+
+    @Bean
+    BasicAuthenticationFilter initialAuthenticationFilter() throws Exception {
+        return new BasicAuthenticationFilter(authenticationManagerBean(),
+            initialAuthenticationSuccessHandler());
+    }
+
+    @Bean
+    BasicAuthenticationProvider initialAuthenticationProvider() {
+        return new BasicAuthenticationProvider(userDetailsServiceImpl, getPasswordEncoder(), jwtUtil);
     }
 }
