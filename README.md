@@ -1,5 +1,7 @@
 # EPM-LSTR-VENUS Bank project
 
+TEST
+
 **System requirements:**
 1. Java 11
 2. docker 19.03.0+
