@@ -3,7 +3,7 @@ target/
 ### gradle ###
 **/.gradle
 **/build
-
+!/atm/CI/build/Jenkinsfile
 
 ### IntelliJ IDEA ###
 .idea

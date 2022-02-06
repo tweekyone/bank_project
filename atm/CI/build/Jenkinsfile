@@ -1,0 +1,71 @@
+node {
+    def jobUserId, jobUserName
+    // setting up username env variables
+    // see https://plugins.jenkins.io/build-user-vars-plugin/
+    wrap([$class: 'BuildUser']) {
+        jobUserId = "${BUILD_USER_ID}"
+        jobUserName = "${BUILD_USER}"
+    }
+    env.STARTED_BY = jobUserName
+    env.STARTED_BY_USER_ID = jobUserId
+}
+
+node {
+    def jobUserId, jobUserName
+    // setting up username env variables
+    // see https://plugins.jenkins.io/build-user-vars-plugin/
+    wrap([$class: 'BuildUser']) {
+        jobUserId = "${BUILD_USER_ID}"
+        jobUserName = "${BUILD_USER}"
+    }
+    env.STARTED_BY = jobUserName
+    env.STARTED_BY_USER_ID = jobUserId
+}
+
+pipeline {
+
+    agent any
+
+    tools {
+        maven 'maven_3.6.3'
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: env.BRANCH_NAME == 'master' ? '50' : '10'))
+    }
+
+    environment {
+        CONTAINER_NAME = "parking_be"
+        BACKEND_PORT = "8080"
+        BACKEND_EXPOSE_PORT = "8080"
+    }
+
+    parameters {
+        choice (
+            name: 'DEPLOY_TO_ENVIRONMENT',
+            choices: ['', 'dev', 'stage', 'prod'],
+            description: 'The target environment to deploy to. Leave blank to build only but not deploy.'
+        )
+        string(
+            name: 'CONTAINER_OPTIONAL_VERSION',
+            defaultValue: '',
+            description: "Additional application version. Leave empty for 'latest' tag"
+        )
+    }
+
+    stages {
+
+        stage('Gradle Build') {
+            steps {
+                sh 'gradle build'
+            }
+        }
+
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
