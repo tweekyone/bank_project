@@ -29,15 +29,19 @@ pipeline {
     tools {
         gradle "Gradle 7.3.3"
     }
-    
+
     options {
         buildDiscarder(logRotator(numToKeepStr: env.BRANCH_NAME == 'master' ? '50' : '10'))
     }
 
     stages {
+
         stage('Prepare') {
-            sh "printenv"
+            steps {
+                sh "printenv"
+            }
         }
+
         stage('Gradle Build') {
             steps {
                 sh 'gradle:atm build'
