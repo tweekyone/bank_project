@@ -30,12 +30,6 @@ pipeline {
         gradle "Gradle 7.3.3"
     }
 
-    environment {
-    }
-
-    parameters {
-    }
-
     stages {
         stage('Gradle Build') {
             steps {
