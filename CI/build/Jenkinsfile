@@ -39,13 +39,15 @@ pipeline {
 
         stage('Prepare') {
             steps {
-                env.IS_DEPLOYING = false
-                env.DEPLOYING_MODULE = ''
-                if (params.IS_DEPLOYING == 'Yes') {
-                    env.IS_DEPLOYING = true
-                    env.DEPLOYING_MODULE = params.DEPLOYING_MODULE
+                script {
+                    env.IS_DEPLOYING = false
+                    env.DEPLOYING_MODULE = ''
+                    if (params.IS_DEPLOYING == 'Yes') {
+                        env.IS_DEPLOYING = true
+                        env.DEPLOYING_MODULE = params.DEPLOYING_MODULE
+                    }
+                    sh "printenv"
                 }
-                sh "printenv"
             }
         }
 
