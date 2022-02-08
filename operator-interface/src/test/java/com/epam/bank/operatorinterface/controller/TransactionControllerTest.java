@@ -3,43 +3,29 @@ package com.epam.bank.operatorinterface.controller;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.epam.bank.operatorinterface.controller.advice.ErrorHandlingAdvice;
 import com.epam.bank.operatorinterface.entity.Transaction;
 import com.epam.bank.operatorinterface.exception.TransactionNotFoundException;
 import com.epam.bank.operatorinterface.service.TransactionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.RandomUtils;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-@ExtendWith(MockitoExtension.class)
-public class TransactionControllerTest {
+@WebMvcTest(TransactionController.class)
+@AutoConfigureMockMvc(addFilters = false)
+class TransactionControllerTest extends AbstractControllerTest {
 
     private final String url = "/transactions/{transactionId}";
+    private final ObjectMapper mapper = new ObjectMapper();
 
-    private MockMvc mockMvc;
-
-    @Mock
+    @MockBean
     TransactionService transactionService;
-
-    ObjectMapper mapper = new ObjectMapper();
-
-    @BeforeEach
-    public void beforeEach() {
-        this.mockMvc = MockMvcBuilders
-            .standaloneSetup(new TransactionController(transactionService))
-            .setControllerAdvice(ErrorHandlingAdvice.class)
-            .build();
-    }
 
     @Test
     void shouldReturnTransactionById() throws Exception {

@@ -81,6 +81,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+
     @Bean
     public JwtDecoder jwtDecoder() {
         return new JwtDecoder() {

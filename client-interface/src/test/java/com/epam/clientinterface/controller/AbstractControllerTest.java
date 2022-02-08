@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.epam.clientinterface.config.MockConfig;
 import com.epam.clientinterface.configuration.ApplicationConfiguration;
 import com.epam.clientinterface.repository.UserRepository;
 import com.epam.clientinterface.service.AccountService;
@@ -18,30 +19,19 @@ import com.epam.clientinterface.service.UserService;
 import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-@SpringJUnitWebConfig(ApplicationConfiguration.class)
-@ActiveProfiles("local")
-@ExtendWith(MockitoExtension.class)
-@WebAppConfiguration
+@SpringJUnitWebConfig({ApplicationConfiguration.class, MockConfig.class})
 public abstract class AbstractControllerTest {
 
     static final String LOGIN = "/login";
@@ -63,41 +53,6 @@ public abstract class AbstractControllerTest {
 
     MockMvc mockMvc;
 
-    @Configuration
-    static class Config {
-        @Bean
-        @Primary
-        public UserRepository userRepositoryMock() {
-            return Mockito.mock(UserRepository.class);
-        }
-
-        @Bean
-        @Primary
-        public UserService userServiceMock() {
-            return Mockito.mock(UserService.class);
-        }
-
-        @Bean
-        @Primary
-        public AccountService accountServiceMock() {
-            return Mockito.mock(AccountService.class);
-        }
-
-        @Bean
-        @Primary
-        public CardService cardServiceMock() {
-            return Mockito.mock(CardService.class);
-        }
-    }
-
-    @AfterEach
-    void tearDown() {
-        reset(userRepositoryMock);
-        reset(userServiceMock);
-        reset(accountServiceMock);
-        reset(cardServiceMock);
-    }
-
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
@@ -110,6 +65,14 @@ public abstract class AbstractControllerTest {
         this.userServiceMock = (UserService) webApplicationContext.getBean("userServiceMock");
         this.accountServiceMock = (AccountService) webApplicationContext.getBean("accountServiceMock");
         this.cardServiceMock = (CardService) webApplicationContext.getBean("cardServiceMock");
+    }
+
+    @AfterEach
+    void tearDown() {
+        reset(userRepositoryMock);
+        reset(userServiceMock);
+        reset(accountServiceMock);
+        reset(cardServiceMock);
     }
 
     public ResultActions send(MediaType mediaType, String requestBody, HttpMethod method, String uri) throws Exception {

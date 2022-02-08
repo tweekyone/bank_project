@@ -14,41 +14,30 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epam.bank.operatorinterface.config.WithMockAdmin;
-import com.epam.bank.operatorinterface.configuration.security.util.JwtUtil;
 import com.epam.bank.operatorinterface.exception.AccountIsClosedException;
 import com.epam.bank.operatorinterface.exception.AccountIsNotSupposedForExternalTransferException;
 import com.epam.bank.operatorinterface.exception.AccountIsNotSupposedForWithdrawException;
 import com.epam.bank.operatorinterface.exception.CardNotFoundException;
 import com.epam.bank.operatorinterface.exception.NotEnoughMoneyException;
 import com.epam.bank.operatorinterface.service.AccountService;
-import com.epam.bank.operatorinterface.service.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import util.TestRequestFactory;
 
 @WebMvcTest(TransferController.class)
 @WithMockAdmin
-public class ExternalTransferControllerTest {
+@AutoConfigureMockMvc(addFilters = false)
+class ExternalTransferControllerTest extends AbstractControllerTest {
 
     private final String url = "/transfer/external";
 
-    @Autowired
-    private MockMvc mockMvc;
-
     @MockBean
     private AccountService accountServiceMock;
-
-    @MockBean
-    private UserDetailsServiceImpl userDetailsServiceImpl;
-
-    @MockBean
-    private JwtUtil jwtUtil;
 
     @ParameterizedTest
     @ValueSource(strings = {
@@ -58,7 +47,7 @@ public class ExternalTransferControllerTest {
             + "\"amount\": -100"
             + "}",
     })
-    public void shouldReturnValidationErrorResponseIfRequestIsInvalid(String requestBody) throws Exception {
+    void shouldReturnValidationErrorResponseIfRequestIsInvalid(String requestBody) throws Exception {
         mockMvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
@@ -81,21 +70,21 @@ public class ExternalTransferControllerTest {
         "{",
         ""
     })
-    public void shouldReturnBadRequestIfRequestIsIncorrect(String requestBody) throws Exception {
+    void shouldReturnBadRequestIfRequestIsIncorrect(String requestBody) throws Exception {
         mockMvc.perform(post(url)
             .contentType(MediaType.APPLICATION_JSON)
             .content(requestBody)).andExpect(status().isBadRequest());
     }
 
     @Test
-    public void shouldReturnUnsupportedMediaTypeIfContentTypeIsNotJson() throws Exception {
+    void shouldReturnUnsupportedMediaTypeIfContentTypeIsNotJson() throws Exception {
         mockMvc.perform(post(url)
             .contentType(MediaType.TEXT_HTML)
             .content("")).andExpect(status().isUnsupportedMediaType());
     }
 
     @Test
-    public void shouldReturnCreatedIfRequestIsValid() throws Exception {
+    void shouldReturnCreatedIfRequestIsValid() throws Exception {
         doNothing().when(accountServiceMock).externalTransferByAccount(anyLong(), anyString(), anyDouble());
         mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON)
                 .content((TestRequestFactory.getExternalRequestBody())))
@@ -103,7 +92,7 @@ public class ExternalTransferControllerTest {
     }
 
     @Test
-    public void shouldReturnNotFoundIfServiceThrowsCardNotFound() throws Exception {
+    void shouldReturnNotFoundIfServiceThrowsCardNotFound() throws Exception {
         doThrow(CardNotFoundException.class)
             .when(accountServiceMock).externalTransferByAccount(anyLong(), anyString(), anyDouble());
 
@@ -114,7 +103,7 @@ public class ExternalTransferControllerTest {
     }
 
     @Test
-    public void shouldReturnBadRequestIfServiceThrowsNotEnoughMoney() throws Exception {
+    void shouldReturnBadRequestIfServiceThrowsNotEnoughMoney() throws Exception {
         doThrow(NotEnoughMoneyException.class)
             .when(accountServiceMock).externalTransferByAccount(anyLong(), anyString(), anyDouble());
 
@@ -125,7 +114,7 @@ public class ExternalTransferControllerTest {
     }
 
     @Test
-    public void shouldReturnBadRequestIfServiceThrowsAccountIsClosed() throws Exception {
+    void shouldReturnBadRequestIfServiceThrowsAccountIsClosed() throws Exception {
         doThrow(AccountIsClosedException.class)
             .when(accountServiceMock).externalTransferByAccount(anyLong(), anyString(), anyDouble());
 
@@ -136,7 +125,7 @@ public class ExternalTransferControllerTest {
     }
 
     @Test
-    public void shouldReturnBadRequestIfServiceThrowsAccountIsNotSupposedForWithdraw() throws Exception {
+    void shouldReturnBadRequestIfServiceThrowsAccountIsNotSupposedForWithdraw() throws Exception {
         doThrow(AccountIsNotSupposedForWithdrawException.class)
             .when(accountServiceMock).externalTransferByAccount(anyLong(), anyString(), anyDouble());
 
@@ -147,7 +136,7 @@ public class ExternalTransferControllerTest {
     }
 
     @Test
-    public void shouldReturnBadRequestIfServiceThrowsAccountIsNotSupposedForExternal() throws Exception {
+    void shouldReturnBadRequestIfServiceThrowsAccountIsNotSupposedForExternal() throws Exception {
         doThrow(AccountIsNotSupposedForExternalTransferException.class)
             .when(accountServiceMock).externalTransferByAccount(anyLong(), anyString(), anyDouble());
 
