@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.epam.bank.operatorinterface.config.WithMockAdmin;
 import com.epam.bank.operatorinterface.configuration.security.util.JwtUtil;
 import com.epam.bank.operatorinterface.exception.AccountIsClosedException;
 import com.epam.bank.operatorinterface.exception.AccountIsNotSupposedForWithdrawException;
@@ -20,7 +21,6 @@ import com.epam.bank.operatorinterface.service.AccountService;
 import com.epam.bank.operatorinterface.service.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -28,7 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import util.TestRequestFactory;
 
 @WebMvcTest(TransferController.class)
-@AutoConfigureMockMvc(addFilters = false)
+@WithMockAdmin
 public class InternalByAccountTransferControllerTest {
 
     private final String url = "/transfer/internal";

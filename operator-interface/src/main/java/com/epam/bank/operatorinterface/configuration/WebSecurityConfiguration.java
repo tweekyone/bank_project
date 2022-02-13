@@ -89,7 +89,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             public Jwt decode(String token) throws JwtException {
                 final JWT jwt = JWTParser.parse(token);
                 Map<String, Object> claims = jwt.getJWTClaimsSet().getClaims();
-                Map<String, Object> headers = new LinkedHashMap<>(jwt.getHeader().toJSONObject());
+                Map<String, Object> headers = jwt.getHeader().toJSONObject();
                 return Jwt.withTokenValue(token)
                     .headers(h -> h.putAll(headers))
                     .claims(c -> c.putAll(claims))
