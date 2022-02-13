@@ -69,6 +69,35 @@ pipeline {
         stage('[WIP]Deploy') {
             when { expression { return env.IS_DEPLOYING.toBoolean() } }
             steps {
+                switch(env.DEPLOY_TO_ENVIRONMENT) {
+                    case 'atm':
+                        sh '''
+                        #!/bin/bash
+
+                        echo "This is just a bash script"
+                        echo "There should be commands to deploy 'ATM' module"
+
+                        '''
+                        break
+                    case 'client-interface':
+                        sh '''
+                        #!/bin/bash
+
+                        echo "This is just a bash script"
+                        echo "There should be commands to deploy 'client-interface' module"
+
+                        '''
+                        break
+                    case 'operator-interface':
+                        sh '''
+                        #!/bin/bash
+
+                        echo "This is just a bash script"
+                        echo "There should be commands to deploy 'operator-interface' module"
+
+                        '''
+                        break
+                }
                 echo "Deploy is in WIP stage"
             }
         }
