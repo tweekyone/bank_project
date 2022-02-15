@@ -15,7 +15,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epam.bank.operatorinterface.config.WithMockAdmin;
-import com.epam.bank.operatorinterface.configuration.security.util.JwtUtil;
 import com.epam.bank.operatorinterface.domain.dto.CardRequest;
 import com.epam.bank.operatorinterface.domain.dto.CardResponse;
 import com.epam.bank.operatorinterface.domain.exceptions.NotFoundException;
@@ -23,41 +22,27 @@ import com.epam.bank.operatorinterface.entity.Account;
 import com.epam.bank.operatorinterface.entity.Card;
 import com.epam.bank.operatorinterface.enumerated.CardPlan;
 import com.epam.bank.operatorinterface.service.CardService;
-import com.epam.bank.operatorinterface.service.UserDetailsServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import org.apache.commons.validator.routines.checkdigit.LuhnCheckDigit;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 @WebMvcTest(CardController.class)
 @WithMockAdmin
-class CardControllerTestCreatingBlockingClosing {
+@AutoConfigureMockMvc(addFilters = false)
+class CardControllerTestCreatingBlockingClosing extends AbstractControllerTest {
 
-    private final MockMvc mockMvc;
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @MockBean
     CardService cardService;
-
-    @MockBean
-    private UserDetailsServiceImpl userDetailsServiceImpl;
-
-    @MockBean
-    private JwtUtil jwtUtil;
-
-    @Autowired
-    public CardControllerTestCreatingBlockingClosing(MockMvc mockMvc, ObjectMapper objectMapper) {
-        this.mockMvc = mockMvc;
-        this.objectMapper = objectMapper;
-    }
 
     @Test
     void createCardSuccess() throws Exception {

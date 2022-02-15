@@ -10,10 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epam.bank.operatorinterface.config.WithMockAdmin;
-import com.epam.bank.operatorinterface.configuration.security.util.JwtUtil;
 import com.epam.bank.operatorinterface.controller.mapper.UserMapper;
 import com.epam.bank.operatorinterface.exception.ValidationException;
-import com.epam.bank.operatorinterface.service.UserDetailsServiceImpl;
 import com.epam.bank.operatorinterface.service.UserService;
 import java.lang.annotation.Annotation;
 import java.util.Map;
@@ -25,35 +23,28 @@ import net.minidev.json.JSONObject;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import util.TestDataFactory;
 
 @WebMvcTest(UserController.class)
+@AutoConfigureMockMvc(addFilters = false)
 @WithMockAdmin
-public class UserControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
+class UserControllerTest extends AbstractControllerTest {
 
     @MockBean
     private UserService userServiceMock;
 
     @MockBean
-    private UserDetailsServiceImpl userDetailsService;
-
-    @MockBean
     private UserMapper responseMapper;
 
-    @MockBean
-    private JwtUtil jwtUtil;
-
     @Test
-    public void shouldReturnCreatedIfValidRequestBodyIsProvided_createEndpoint() throws Exception {
+    void shouldReturnCreatedIfValidRequestBodyIsProvided_createEndpoint() throws Exception {
         var userFixture = TestDataFactory.getUser();
         var userResponseFixture = TestDataFactory.getUserResponse();
 
@@ -75,7 +66,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldReturnUnprocessableEntityIfServiceThrowsValidationException_createEndpoint() throws Exception {
+    void shouldReturnUnprocessableEntityIfServiceThrowsValidationException_createEndpoint() throws Exception {
         var propertyPathMock = mock(Path.class);
         var constraintDescriptorMock = mock(ConstraintDescriptor.class);
         var annotationMock = new Annotation() {
@@ -109,21 +100,21 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldReturnBadRequestIfRequestBodyIsEmpty_createEndpoint() throws Exception {
+    void shouldReturnBadRequestIfRequestBodyIsEmpty_createEndpoint() throws Exception {
         sendCreate("")
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.type").value(HttpMessageNotReadableException.class.getName()));
     }
 
     @Test
-    public void shouldReturnBadRequestIfRequestBodyIsInvalid_createEndpoint() throws Exception {
+    void shouldReturnBadRequestIfRequestBodyIsInvalid_createEndpoint() throws Exception {
         sendCreate("{invalidRequest")
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.type").value(HttpMessageNotReadableException.class.getName()));
     }
 
     @Test
-    public void shouldReturnUnprocessableEntityIfRequestBodyIsEmptyJson_createEndpoint() throws Exception {
+    void shouldReturnUnprocessableEntityIfRequestBodyIsEmptyJson_createEndpoint() throws Exception {
         var fields = new String[]{"name", "surname", "phoneNumber", "username", "email", "rawPassword"};
 
         var nameErrTypes = new String[]{"NotNull", "NotBlank"};
@@ -159,7 +150,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldReturnUnprocessableEntityIfRequestBodyHasInvalidEmail_createEndpoint() throws Exception {
+    void shouldReturnUnprocessableEntityIfRequestBodyHasInvalidEmail_createEndpoint() throws Exception {
         var field = "email";
         var fieldErrType = "Email";
         var fieldErrMsg = "must be a well-formed email address";
@@ -173,7 +164,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldReturnCreatedIfValidRequestBodyIsProvided_createClientEndpoint() throws Exception {
+    void shouldReturnCreatedIfValidRequestBodyIsProvided_createClientEndpoint() throws Exception {
         var userFixture = TestDataFactory.getUser();
         var userResponseFixture = TestDataFactory.getUserWithAccountResponse();
         var accountFixture = userResponseFixture.getAccounts().get(0);
@@ -203,7 +194,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldReturnUnprocessableEntityIfServiceThrowsValidationException_createClientEndpoint()
+    void shouldReturnUnprocessableEntityIfServiceThrowsValidationException_createClientEndpoint()
         throws Exception {
 
         var propertyPathMock = mock(Path.class);
@@ -239,21 +230,21 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldReturnBadRequestIfRequestBodyIsEmpty_createClientEndpoint() throws Exception {
+    void shouldReturnBadRequestIfRequestBodyIsEmpty_createClientEndpoint() throws Exception {
         sendCreateClient("")
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.type").value(HttpMessageNotReadableException.class.getName()));
     }
 
     @Test
-    public void shouldReturnBadRequestIfRequestBodyIsInvalid_createClientEndpoint() throws Exception {
+    void shouldReturnBadRequestIfRequestBodyIsInvalid_createClientEndpoint() throws Exception {
         sendCreateClient("{invalidRequest")
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.type").value(HttpMessageNotReadableException.class.getName()));
     }
 
     @Test
-    public void shouldReturnUnprocessableEntityIfRequestBodyIsEmptyJson_createClientEndpoint() throws Exception {
+    void shouldReturnUnprocessableEntityIfRequestBodyIsEmptyJson_createClientEndpoint() throws Exception {
         var fields = new String[]{"name", "surname", "phoneNumber", "username", "email", "rawPassword"};
 
         var nameErrTypes = new String[]{"NotNull", "NotBlank"};
@@ -289,7 +280,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldReturnUnprocessableEntityIfRequestBodyHasInvalidEmail_createClientEndpoint() throws Exception {
+    void shouldReturnUnprocessableEntityIfRequestBodyHasInvalidEmail_createClientEndpoint() throws Exception {
         var field = "email";
         var fieldErrType = "Email";
         var fieldErrMsg = "must be a well-formed email address";

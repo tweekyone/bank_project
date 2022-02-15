@@ -1,5 +1,6 @@
 package com.epam.bank.operatorinterface.controller.mapper;
 
+import com.epam.bank.operatorinterface.controller.AbstractControllerTest;
 import com.epam.bank.operatorinterface.controller.dto.response.AccountResponse;
 import com.epam.bank.operatorinterface.controller.dto.response.CardResponse;
 import com.epam.bank.operatorinterface.controller.dto.response.UserResponse;
@@ -10,11 +11,11 @@ import org.assertj.core.api.Assertions;
 import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import util.TestDataFactory;
 
-@SpringBootTest(classes = {AccountMapperImpl.class, UserMapperImpl.class, CardMapperImpl.class})
-public class ResponseMapperTest {
+@WebMvcTest(controllers = {AccountMapperImpl.class, UserMapperImpl.class, CardMapperImpl.class})
+public class ResponseMapperTest extends AbstractControllerTest {
     @Autowired
     private AccountMapper accountMapper;
 

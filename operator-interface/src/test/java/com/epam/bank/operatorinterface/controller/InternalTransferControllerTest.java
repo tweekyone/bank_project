@@ -9,35 +9,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epam.bank.operatorinterface.config.WithMockAdmin;
-import com.epam.bank.operatorinterface.configuration.security.util.JwtUtil;
 import com.epam.bank.operatorinterface.service.AccountService;
-import com.epam.bank.operatorinterface.service.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(TransferController.class)
 @WithMockAdmin
-public class InternalTransferControllerTest {
+@AutoConfigureMockMvc(addFilters = false)
+class InternalTransferControllerTest extends AbstractControllerTest {
 
     private final String url = "/transfer/internal";
 
-    @Autowired
-    private MockMvc mockMvc;
-
     @MockBean
     private AccountService accountServiceMock;
-
-    @MockBean
-    private UserDetailsServiceImpl userDetailsServiceImpl;
-
-    @MockBean
-    private JwtUtil jwtUtil;
 
     @ParameterizedTest
     @ValueSource(strings = {
@@ -54,7 +44,7 @@ public class InternalTransferControllerTest {
             + "\"amount\": -100"
             + "}"
     })
-    public void shouldReturnValidationErrorResponseIfRequestIsInvalid(String requestBody) throws Exception {
+    void shouldReturnValidationErrorResponseIfRequestIsInvalid(String requestBody) throws Exception {
         mockMvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
@@ -80,14 +70,14 @@ public class InternalTransferControllerTest {
         "{",
         ""
     })
-    public void shouldReturnBadRequestIfRequestIsIncorrect(String requestBody) throws Exception {
+    void shouldReturnBadRequestIfRequestIsIncorrect(String requestBody) throws Exception {
         mockMvc.perform(post(url)
             .contentType(MediaType.APPLICATION_JSON)
             .content(requestBody)).andExpect(status().isBadRequest());
     }
 
     @Test
-    public void shouldReturnUnsupportedMediaTypeIfContentTypeIsNotJson() throws Exception {
+    void shouldReturnUnsupportedMediaTypeIfContentTypeIsNotJson() throws Exception {
         mockMvc.perform(post(url)
             .contentType(MediaType.TEXT_HTML)
             .content("")).andExpect(status().isUnsupportedMediaType());

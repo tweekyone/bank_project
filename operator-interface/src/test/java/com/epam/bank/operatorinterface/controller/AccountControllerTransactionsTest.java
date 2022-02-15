@@ -4,7 +4,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.epam.bank.operatorinterface.controller.advice.ErrorHandlingAdvice;
 import com.epam.bank.operatorinterface.controller.mapper.AccountMapper;
 import com.epam.bank.operatorinterface.entity.Transaction;
 import com.epam.bank.operatorinterface.service.AccountService;
@@ -17,21 +16,18 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-
-@ExtendWith(MockitoExtension.class)
-class AccountControllerTransactionsTest {
+@WebMvcTest(AccountController.class)
+@AutoConfigureMockMvc(addFilters = false)
+class AccountControllerTransactionsTest extends AbstractControllerTest {
 
     private final String urlFull = "/accounts/{accountNumber}/transactions";
     private final String accountNumber = RandomStringUtils.randomNumeric(20);
@@ -40,26 +36,16 @@ class AccountControllerTransactionsTest {
     private final ObjectMapper mapper = new ObjectMapper();
     private final String expectedJson = mapper.writeValueAsString(transactions);
 
-    private MockMvc mockMvc;
-
-    @Mock
+    @MockBean
     private AccountService accountServiceMock;
 
-    @Mock
+    @MockBean
     private AccountMapper responseMapper;
 
-    @Mock
+    @MockBean
     TransactionService transactionService;
 
     AccountControllerTransactionsTest() throws JsonProcessingException {
-    }
-
-    @BeforeEach
-    public void beforeEach() {
-        this.mockMvc = MockMvcBuilders
-            .standaloneSetup(new AccountController(accountServiceMock, responseMapper, transactionService))
-            .setControllerAdvice(ErrorHandlingAdvice.class)
-            .build();
     }
 
     @Test

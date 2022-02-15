@@ -11,41 +11,30 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epam.bank.operatorinterface.config.WithMockAdmin;
-import com.epam.bank.operatorinterface.configuration.security.util.JwtUtil;
 import com.epam.bank.operatorinterface.exception.AccountIsClosedException;
 import com.epam.bank.operatorinterface.exception.AccountIsNotSupposedForWithdrawException;
 import com.epam.bank.operatorinterface.exception.CardNotFoundException;
 import com.epam.bank.operatorinterface.exception.NotEnoughMoneyException;
 import com.epam.bank.operatorinterface.exception.TransferException;
 import com.epam.bank.operatorinterface.service.AccountService;
-import com.epam.bank.operatorinterface.service.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import util.TestRequestFactory;
 
 @WebMvcTest(TransferController.class)
 @WithMockAdmin
-public class InternalByCardTransferControllerTest {
+@AutoConfigureMockMvc(addFilters = false)
+class InternalByCardTransferControllerTest extends AbstractControllerTest {
     private final String url = "/transfer/internal";
-
-    @Autowired
-    private MockMvc mockMvc;
 
     @MockBean
     private AccountService accountServiceMock;
 
-    @MockBean
-    private UserDetailsServiceImpl userDetailsServiceImpl;
-
-    @MockBean
-    private JwtUtil jwtUtil;
-
     @Test
-    public void shouldReturnCreatedIfRequestIsValid() throws Exception {
+    void shouldReturnCreatedIfRequestIsValid() throws Exception {
         doNothing().when(accountServiceMock).internalTransferByCard(anyLong(), anyString(), anyDouble());
         mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON)
                 .content((TestRequestFactory.getInternalByCardRequestBody())))
@@ -53,7 +42,7 @@ public class InternalByCardTransferControllerTest {
     }
 
     @Test
-    public void shouldReturnNotFoundIfServiceThrowsCardNotFound() throws Exception {
+    void shouldReturnNotFoundIfServiceThrowsCardNotFound() throws Exception {
         doThrow(CardNotFoundException.class)
             .when(accountServiceMock).internalTransferByCard(anyLong(), anyString(), anyDouble());
 
@@ -64,7 +53,7 @@ public class InternalByCardTransferControllerTest {
     }
 
     @Test
-    public void shouldReturnBadRequestIfServiceThrowsNotEnoughMoney() throws Exception {
+    void shouldReturnBadRequestIfServiceThrowsNotEnoughMoney() throws Exception {
         doThrow(NotEnoughMoneyException.class)
             .when(accountServiceMock).internalTransferByCard(anyLong(), anyString(), anyDouble());
 
@@ -75,7 +64,7 @@ public class InternalByCardTransferControllerTest {
     }
 
     @Test
-    public void shouldReturnBadRequestIfServiceThrowsAccountIsClosed() throws Exception {
+    void shouldReturnBadRequestIfServiceThrowsAccountIsClosed() throws Exception {
         doThrow(AccountIsClosedException.class)
             .when(accountServiceMock).internalTransferByCard(anyLong(), anyString(), anyDouble());
 
@@ -86,7 +75,7 @@ public class InternalByCardTransferControllerTest {
     }
 
     @Test
-    public void shouldReturnBadRequestIfServiceThrowsAccountIsNotSupposedForWithdraw() throws Exception {
+    void shouldReturnBadRequestIfServiceThrowsAccountIsNotSupposedForWithdraw() throws Exception {
         doThrow(AccountIsNotSupposedForWithdrawException.class)
             .when(accountServiceMock).internalTransferByCard(anyLong(), anyString(), anyDouble());
 
@@ -97,7 +86,7 @@ public class InternalByCardTransferControllerTest {
     }
 
     @Test
-    public void shouldReturnBadRequestIfServiceThrowsTransferException() throws Exception {
+    void shouldReturnBadRequestIfServiceThrowsTransferException() throws Exception {
         doThrow(TransferException.class)
             .when(accountServiceMock).internalTransferByCard(anyLong(), anyString(), anyDouble());
 

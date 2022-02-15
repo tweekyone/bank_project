@@ -13,7 +13,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epam.bank.operatorinterface.config.WithMockAdmin;
-import com.epam.bank.operatorinterface.configuration.security.util.JwtUtil;
 import com.epam.bank.operatorinterface.controller.mapper.AccountMapper;
 import com.epam.bank.operatorinterface.entity.Account;
 import com.epam.bank.operatorinterface.enumerated.AccountPlan;
@@ -24,25 +23,22 @@ import com.epam.bank.operatorinterface.exception.AccountNumberGenerationTriesLim
 import com.epam.bank.operatorinterface.exception.UserNotFoundException;
 import com.epam.bank.operatorinterface.service.AccountService;
 import com.epam.bank.operatorinterface.service.TransactionService;
-import com.epam.bank.operatorinterface.service.UserDetailsServiceImpl;
 import java.util.Map;
 import net.minidev.json.JSONObject;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import util.TestDataFactory;
 
 @WebMvcTest(AccountController.class)
 @WithMockAdmin
-class AccountControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
+@AutoConfigureMockMvc(addFilters = false)
+class AccountControllerTest extends AbstractControllerTest {
 
     @MockBean
     private AccountService accountServiceMock;
@@ -53,14 +49,8 @@ class AccountControllerTest {
     @MockBean
     private TransactionService transactionService;
 
-    @MockBean
-    private UserDetailsServiceImpl userDetailsService;
-
-    @MockBean
-    private JwtUtil jwtUtil;
-
     @Test
-    public void shouldReturnCreatedIfValidRequestBodyIsProvided_createEndpoint() throws Exception {
+    void shouldReturnCreatedIfValidRequestBodyIsProvided_createEndpoint() throws Exception {
         var accountFixture = TestDataFactory.getAccount();
         var accountResponseFixture = TestDataFactory.getAccountResponse();
 
@@ -80,7 +70,7 @@ class AccountControllerTest {
     }
 
     @Test
-    public void shouldReturnNotFoundIfServiceCanNotFoundUser_createEndpoint() throws Exception {
+    void shouldReturnNotFoundIfServiceCanNotFoundUser_createEndpoint() throws Exception {
         when(accountServiceMock.create(anyLong(), any(AccountPlan.class))).thenThrow(UserNotFoundException.class);
 
         sendCreate(getCreateRequestBody())
@@ -89,7 +79,7 @@ class AccountControllerTest {
     }
 
     @Test
-    public void shouldReturnInternalServerErrorIfAccountNumberGenerationFailed_createEndpoint() throws Exception {
+    void shouldReturnInternalServerErrorIfAccountNumberGenerationFailed_createEndpoint() throws Exception {
         when(accountServiceMock.create(anyLong(), any(AccountPlan.class)))
             .thenThrow(AccountNumberGenerationTriesLimitException.class);
 
@@ -99,21 +89,21 @@ class AccountControllerTest {
     }
 
     @Test
-    public void shouldReturnBadRequestIfRequestBodyIsEmpty_createEndpoint() throws Exception {
+    void shouldReturnBadRequestIfRequestBodyIsEmpty_createEndpoint() throws Exception {
         sendCreate("")
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.type", is(HttpMessageNotReadableException.class.getName())));
     }
 
     @Test
-    public void shouldReturnBadRequestIfRequestBodyIsInvalid_createEndpoint() throws Exception {
+    void shouldReturnBadRequestIfRequestBodyIsInvalid_createEndpoint() throws Exception {
         sendCreate("{invalidRequest")
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.type", is(HttpMessageNotReadableException.class.getName())));
     }
 
     @Test
-    public void shouldReturnBadRequestWithValidationErrorsIfRequestBodyIsIncorrect_createEndpoint() throws Exception {
+    void shouldReturnBadRequestWithValidationErrorsIfRequestBodyIsIncorrect_createEndpoint() throws Exception {
         sendCreate("{}")
             .andExpect(status().isUnprocessableEntity())
             .andExpect(jsonPath("$.type", is("validation")))
@@ -125,19 +115,19 @@ class AccountControllerTest {
     }
 
     @Test
-    public void shouldReturnBadRequestIfRequestBodyContainsUnsupportedPlan_createEndpoint() throws Exception {
+    void shouldReturnBadRequestIfRequestBodyContainsUnsupportedPlan_createEndpoint() throws Exception {
         sendCreate("{\"plan\": \"invalidPlan\"}")
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.type", is(HttpMessageNotReadableException.class.getName())));
     }
 
     @Test
-    public void shouldReturnNoContentIfServiceReturnsNothing_makeDefaultEndpoint() throws Exception {
+    void shouldReturnNoContentIfServiceReturnsNothing_makeDefaultEndpoint() throws Exception {
         sendMakeDefault(RandomUtils.nextLong()).andExpect(status().isNoContent());
     }
 
     @Test
-    public void shouldReturnNotFoundIfServiceCanNotFoundAccount_makeDefaultEndpoint() throws Exception {
+    void shouldReturnNotFoundIfServiceCanNotFoundAccount_makeDefaultEndpoint() throws Exception {
         doThrow(AccountNotFoundException.class).when(accountServiceMock).makeDefault(anyLong());
 
         sendMakeDefault(RandomUtils.nextLong())
@@ -146,7 +136,7 @@ class AccountControllerTest {
     }
 
     @Test
-    public void shouldReturnBadRequestIfAccountIsClosed_makeDefaultEndpoint() throws Exception {
+    void shouldReturnBadRequestIfAccountIsClosed_makeDefaultEndpoint() throws Exception {
         doThrow(AccountIsClosedException.class).when(accountServiceMock).makeDefault(anyLong());
 
         sendMakeDefault(RandomUtils.nextLong())
@@ -155,12 +145,12 @@ class AccountControllerTest {
     }
 
     @Test
-    public void shouldReturnNoContentIfServiceReturnsNothing_closeEndpoint() throws Exception {
+    void shouldReturnNoContentIfServiceReturnsNothing_closeEndpoint() throws Exception {
         sendClose(RandomUtils.nextLong()).andExpect(status().isNoContent());
     }
 
     @Test
-    public void shouldReturnBadRequestIfAccountIsClosed_closeEndpoint() throws Exception {
+    void shouldReturnBadRequestIfAccountIsClosed_closeEndpoint() throws Exception {
         doThrow(AccountIsClosedException.class).when(accountServiceMock).close(anyLong());
 
         sendClose(RandomUtils.nextLong())
@@ -169,7 +159,7 @@ class AccountControllerTest {
     }
 
     @Test
-    public void shouldReturnBadRequestIfAccountCanNotBeClosed_closeEndpoint() throws Exception {
+    void shouldReturnBadRequestIfAccountCanNotBeClosed_closeEndpoint() throws Exception {
         doThrow(AccountCanNotBeClosedException.class).when(accountServiceMock).close(anyLong());
 
         sendClose(RandomUtils.nextLong())
