@@ -69,6 +69,7 @@ public class AccountService {
         userRepository.save(account.getUser());
     }
 
+    @Transactional
     public void close(long accountId) {
         var account = accountRepository.findById(accountId).orElseThrow(() -> new AccountNotFoundException(accountId));
 

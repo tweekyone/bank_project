@@ -60,7 +60,6 @@ public class Card {
     private boolean isPinChanged = false;
 
     @ManyToOne
-    @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
     public Card(String number, String pinCode, CardPlan plan,
