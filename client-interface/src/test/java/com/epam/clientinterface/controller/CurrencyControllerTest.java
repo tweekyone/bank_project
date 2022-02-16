@@ -107,7 +107,7 @@ class CurrencyControllerTest {
 
         Mockito.doThrow(CurrencyNotFoundException.class)
             .when(rateService)
-            .getRatesFromOneToAnotherCurrency(randomInput1, randomInput2);
+            .getRatesFromOneToAnotherCurrency(anyString(), anyString());
 
         mockMvc.perform(get(url + "/{from}/{to}", randomInput1, randomInput2))
             .andExpect(status().isNotFound());

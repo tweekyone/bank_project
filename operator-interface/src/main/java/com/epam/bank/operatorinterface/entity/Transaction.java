@@ -76,4 +76,19 @@ public class Transaction {
         this.operationType = operationType;
         this.state = state;
     }
+
+    public Transaction(TransactionAccountData sourceAccount,
+                       TransactionAccountData destinationAccount,
+                       double amount,
+                       ZonedDateTime dateTime,
+                       TransactionOperationType operationType,
+                       TransactionState state) {
+        this.sourceAccount = sourceAccount;
+        this.destinationAccount = destinationAccount;
+        this.amount = amount;
+        this.dateTime = dateTime;
+        this.operationType = operationType;
+        this.state = state;
+    }
+
 }

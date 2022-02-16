@@ -13,10 +13,12 @@ import com.epam.bank.operatorinterface.exception.CardNotFoundException;
 import com.epam.bank.operatorinterface.exception.InvalidPinCodeFormatException;
 import com.epam.bank.operatorinterface.exception.NotEnoughMoneyException;
 import com.epam.bank.operatorinterface.exception.TooManyPinCodeChangesPerDayException;
+import com.epam.bank.operatorinterface.exception.TransactionCsvImportException;
 import com.epam.bank.operatorinterface.exception.TransactionNotFoundException;
 import com.epam.bank.operatorinterface.exception.TransferException;
 import com.epam.bank.operatorinterface.exception.UserNotFoundException;
 import com.epam.bank.operatorinterface.exception.ValidationException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 import lombok.NonNull;
@@ -96,7 +98,8 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({
         Exception.class,
-        AccountNumberGenerationTriesLimitException.class
+        AccountNumberGenerationTriesLimitException.class,
+        TransactionCsvImportException.class
     })
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
@@ -131,6 +134,12 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorResponse handleBadRequest(Exception e) {
+        return handleException(e);
+    }
+
+    @ExceptionHandler(IOException.class)
+    @ResponseBody
+    public ErrorResponse handleIoException(Exception e) {
         return handleException(e);
     }
 

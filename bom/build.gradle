@@ -32,7 +32,6 @@ dependencies {
     api 'com.google.code.gson:gson:2.8.8'
     api 'org.apache.commons:commons-lang3:3.12.0'
     api 'commons-validator:commons-validator:1.7'
-    api 'javax.persistence:persistence-api:1.0.2'
     api 'org.postgresql:postgresql:42.2.24'
     api 'org.apache.logging.log4j:log4j-api:2.14.1'
     api 'org.apache.logging.log4j:log4j-core:2.14.1'
@@ -48,6 +47,7 @@ dependencies {
     api 'org.mapstruct:mapstruct:1.4.2.Final'
     api 'org.mapstruct:mapstruct-processor:1.4.2.Final'
     api 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+    api 'com.opencsv:opencsv:5.5.2'
 
     // Spring
     api 'org.springframework:spring-core:5.3.10'
