@@ -10,7 +10,9 @@ import com.epam.bank.operatorinterface.enumerated.TransactionOperationType;
 import com.epam.bank.operatorinterface.enumerated.TransactionState;
 import com.epam.bank.operatorinterface.exception.TransactionNotFoundException;
 import com.epam.bank.operatorinterface.repository.TransactionRepository;
+import com.epam.bank.operatorinterface.service.importpkg.TransactionImporterCsv;
 import com.epam.bank.operatorinterface.util.DateFormatter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZonedDateTime;
@@ -56,6 +58,9 @@ class TransactionServiceTest {
 
     @Mock
     private TransactionRepository transactionRepository;
+
+    @Mock
+    private TransactionImporterCsv importerCsv;
 
     @InjectMocks
     private TransactionService transactionService;
@@ -159,6 +164,20 @@ class TransactionServiceTest {
             .hasMessageContaining(String.valueOf(transactionId));
 
         Mockito.verify(transactionRepository).findById(anyLong());
+    }
+
+    @Test
+    void shouldImportTransactionsFromCsv() throws IOException {
+        Mockito.when(importerCsv.importCsv(any()))
+            .thenReturn(expectedTransactions);
+
+        List<Transaction> resultTransactions = importerCsv.importCsv(any());
+
+        Assertions.assertThat(resultTransactions)
+            .usingRecursiveComparison()
+            .isEqualTo(expectedTransactions);
+
+        Mockito.verify(importerCsv).importCsv(any());
     }
 
     private static <T> T getRandomEnumType(T[] array) {
