@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -53,8 +55,13 @@ public class JwtUtil {
             .compact();
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public Boolean validateToken(String token, UserDetailsService detailsService) {
         String email = extractEmail(token);
-        return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        UserDetails userDetails = detailsService.loadUserByUsername(email);
+        if (userDetails.isEnabled() && !isTokenExpired(token)) {
+            return true;
+        } else {
+            throw new InvalidBearerTokenException("Jwt token is not valid!");
+        }
     }
 }

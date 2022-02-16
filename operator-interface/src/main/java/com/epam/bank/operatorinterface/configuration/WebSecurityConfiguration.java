@@ -9,7 +9,6 @@ import com.epam.bank.operatorinterface.configuration.security.util.JwtUtil;
 import com.epam.bank.operatorinterface.service.UserDetailsServiceImpl;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -91,6 +90,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 final JWT jwt = JWTParser.parse(token);
                 Map<String, Object> claims = jwt.getJWTClaimsSet().getClaims();
                 Map<String, Object> headers = jwt.getHeader().toJSONObject();
+                jwtUtil.validateToken(token, userDetailsServiceImpl);
                 return Jwt.withTokenValue(token)
                     .headers(h -> h.putAll(headers))
                     .claims(c -> c.putAll(claims))

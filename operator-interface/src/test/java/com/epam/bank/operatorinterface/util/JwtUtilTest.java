@@ -4,6 +4,7 @@ import com.epam.bank.operatorinterface.configuration.security.util.JwtUtil;
 import com.epam.bank.operatorinterface.domain.UserDetailsAuthImpl;
 import com.epam.bank.operatorinterface.entity.Role;
 import com.epam.bank.operatorinterface.entity.User;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.lang.reflect.Field;
@@ -15,23 +16,28 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 @ExtendWith(MockitoExtension.class)
 class JwtUtilTest {
 
     @Mock
     private JwtUtil testingJwtUtil;
+    @Mock
+    private UserDetailsService mockUserDetailsService;
 
     private User testUserEntity;
     private String testSecretKey;
     private String testToken;
+    private UserDetails testUserDetails;
 
     @BeforeEach
     public void setUp() {
@@ -55,7 +61,14 @@ class JwtUtilTest {
             testUserEntity.getPassword(),
             testUserEntity.getEmail(),
             testUserEntity.getRoles(),
-            testUserEntity.isEnabled())
+            testUserEntity.isEnabled()),
+            1000L * 60L * 60L * 24L
+        );
+        testUserDetails = new UserDetailsAuthImpl(
+            testUserEntity.getPassword(),
+            testUserEntity.getEmail(),
+            testUserEntity.getRoles(),
+            testUserEntity.isEnabled()
         );
 
         Class jwtUtilClass = testingJwtUtil.getClass();
@@ -77,68 +90,58 @@ class JwtUtilTest {
             testUserEntity.isEnabled())
         );
 
-        Assertions.assertEquals(testToken, result);
+        Assertions.assertThat(testToken).isEqualTo(result);
     }
 
     @Test
     public void extractUsernameShouldReturnEmail() {
         String result = testingJwtUtil.extractEmail(testToken);
 
-        Assertions.assertEquals(testUserEntity.getEmail(), result);
+        Assertions.assertThat(testUserEntity.getEmail()).isEqualTo(result);
     }
 
     @Test
     public void extractExpirationShouldReturnDate() {
         Date result = testingJwtUtil.extractExpiration(testToken);
 
-        Assertions.assertEquals(
-            LocalDateTime.now().getDayOfYear() + 1,
-            result.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().getDayOfYear());
+        Assertions.assertThat(LocalDateTime.now().getDayOfYear() + 1)
+            .isEqualTo(result.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().getDayOfYear());
     }
 
     @Test
     public void validateTokenShouldReturnTrueIfTokenCorrect() {
-        Assertions.assertTrue(testingJwtUtil.validateToken(
+        Mockito.when(mockUserDetailsService.loadUserByUsername(Mockito.anyString()))
+            .thenReturn(testUserDetails);
+
+        Assertions.assertThat(testingJwtUtil.validateToken(
             testToken,
-            new UserDetailsAuthImpl(
-                testUserEntity.getPassword(),
-                testUserEntity.getEmail(),
-                testUserEntity.getRoles(),
-                testUserEntity.isEnabled())
-        ));
+            mockUserDetailsService)
+        ).isEqualTo(true);
     }
 
     @Test
-    public void validateTokenShouldReturnFalseIfTokenIncorrect() {
-        UserDetailsAuthImpl userWithWrongEmail = new UserDetailsAuthImpl(
-            testUserEntity.getPassword(),
-            RandomStringUtils.random(5),
-            testUserEntity.getRoles(),
-            testUserEntity.isEnabled());
+    public void validateTokenShouldReturnFalseIfTokenIsExpired() {
+        String fakeToken = generateToken(testUserDetails, 0);
 
-        String fakeToken = generateToken(userWithWrongEmail);
+        Throwable exception =
+            Assertions.catchThrowable(() -> {
+                testingJwtUtil.validateToken(fakeToken, mockUserDetailsService);
+            });
 
-        Assertions.assertFalse(testingJwtUtil.validateToken(
-            fakeToken,
-            new UserDetailsAuthImpl(
-                testUserEntity.getPassword(),
-                testUserEntity.getEmail(),
-                testUserEntity.getRoles(),
-                testUserEntity.isEnabled())
-        ));
+        Assertions.assertThat(exception).isInstanceOf(ExpiredJwtException.class);
     }
 
-    private String generateToken(UserDetails userDetails) {
+    private String generateToken(UserDetails userDetails, long expirationMillis) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userDetails.getUsername());
+        return createToken(claims, userDetails.getUsername(), expirationMillis);
     }
 
-    private String createToken(Map<String, Object> claims, String subject) {
+    private String createToken(Map<String, Object> claims, String subject, long expirationMillis) {
         return Jwts.builder()
             .setClaims(claims)
             .setSubject(subject)
             .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+            .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
             .signWith(SignatureAlgorithm.HS512, testSecretKey)
             .compact();
     }

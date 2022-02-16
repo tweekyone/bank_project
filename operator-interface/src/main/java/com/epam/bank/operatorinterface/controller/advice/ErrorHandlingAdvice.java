@@ -18,6 +18,7 @@ import com.epam.bank.operatorinterface.exception.TransactionNotFoundException;
 import com.epam.bank.operatorinterface.exception.TransferException;
 import com.epam.bank.operatorinterface.exception.UserNotFoundException;
 import com.epam.bank.operatorinterface.exception.ValidationException;
+import io.jsonwebtoken.ExpiredJwtException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.stream.Collectors;
@@ -27,6 +28,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -134,6 +136,16 @@ public class ErrorHandlingAdvice extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorResponse handleBadRequest(Exception e) {
+        return handleException(e);
+    }
+
+    @ExceptionHandler({
+        ExpiredJwtException.class,
+        InvalidBearerTokenException.class
+    })
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public ErrorResponse handleUnauthorized(Exception e) {
         return handleException(e);
     }
 
