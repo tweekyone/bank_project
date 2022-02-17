@@ -20,6 +20,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -29,7 +30,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 @ExtendWith(MockitoExtension.class)
 class JwtUtilTest {
 
-    @Mock
+    @InjectMocks
     private JwtUtil testingJwtUtil;
     @Mock
     private UserDetailsService mockUserDetailsService;
@@ -41,7 +42,7 @@ class JwtUtilTest {
 
     @BeforeEach
     public void setUp() {
-        testingJwtUtil = new JwtUtil();
+        //testingJwtUtil = new JwtUtil();
 
         testUserEntity = new User(
             1L,
@@ -113,19 +114,15 @@ class JwtUtilTest {
         Mockito.when(mockUserDetailsService.loadUserByUsername(Mockito.anyString()))
             .thenReturn(testUserDetails);
 
-        Assertions.assertThat(testingJwtUtil.validateToken(
-            testToken,
-            mockUserDetailsService)
-        ).isEqualTo(true);
+        Assertions.assertThat(testingJwtUtil.validateToken(testToken)).isEqualTo(true);
     }
 
     @Test
     public void validateTokenShouldReturnFalseIfTokenIsExpired() {
         String fakeToken = generateToken(testUserDetails, 0);
 
-        Throwable exception =
-            Assertions.catchThrowable(() -> {
-                testingJwtUtil.validateToken(fakeToken, mockUserDetailsService);
+        Throwable exception = Assertions.catchThrowable(() -> {
+                testingJwtUtil.validateToken(fakeToken);
             });
 
         Assertions.assertThat(exception).isInstanceOf(ExpiredJwtException.class);

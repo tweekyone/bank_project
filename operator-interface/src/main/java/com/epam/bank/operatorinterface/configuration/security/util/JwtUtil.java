@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,10 +17,15 @@ import org.springframework.security.oauth2.server.resource.InvalidBearerTokenExc
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class JwtUtil {
 
     @Value("${spring.security.secret-key}")
     private String secretKey;
+
+    @NonNull
+    @Autowired
+    UserDetailsService detailsService;
 
     public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -55,7 +63,7 @@ public class JwtUtil {
             .compact();
     }
 
-    public Boolean validateToken(String token, UserDetailsService detailsService) {
+    public Boolean validateToken(String token) {
         String email = extractEmail(token);
         UserDetails userDetails = detailsService.loadUserByUsername(email);
         if (userDetails.isEnabled() && !isTokenExpired(token)) {
