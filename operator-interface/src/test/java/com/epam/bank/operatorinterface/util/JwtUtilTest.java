@@ -42,8 +42,6 @@ class JwtUtilTest {
 
     @BeforeEach
     public void setUp() {
-        //testingJwtUtil = new JwtUtil();
-
         testUserEntity = new User(
             1L,
             RandomStringUtils.random(5),
@@ -121,7 +119,8 @@ class JwtUtilTest {
     public void validateTokenShouldReturnFalseIfTokenIsExpired() {
         String fakeToken = generateToken(testUserDetails, 0);
 
-        Throwable exception = Assertions.catchThrowable(() -> {
+        Throwable exception = Assertions.catchThrowable(
+            () -> {
                 testingJwtUtil.validateToken(fakeToken);
             });
 
